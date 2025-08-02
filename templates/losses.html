@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .compact-cell {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  line-height: 1; /* щоб не було додаткових інтерліньяжів */
+}
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    {#<a class="navbar-brand" href="#">{{ records }}{{ serch_result }}</a>#}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="d-flex gap-2" method="post">
+        <a href="{{ url_for('loss_add') }}"   class="btn btn-primary">➕ Додати</a>
+        <a href="{{ url_for('export_csv') }}" class="btn btn-primary">⬇️ Експортувати CSV</a>
+        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial">
+        <button class="btn btn-primary" type="submit" >Шукати</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<table class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>SDOC_ID</th>
+      <th>Номер док.</th>
+      <th>Дата док.</th>
+      <th>Дата втрати</th>
+      <th>Серійний №</th>
+      <th>Найменування</th>
+      <th>Підрозділ</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in losses %}
+    <tr>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row[0] }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row[1] }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row[2].strftime('%d.%m.%Y') }}</td>
+     {# <td class="bg-warning "        style="padding-top: 1px; padding-bottom: 1px;"> {{ row[6].strftime('%d.%m.%Y %H:%M') }}</td>#}
+      <td class="fw-bold text-danger" style="padding-top: 1px; padding-bottom: 1px;"> {{ row[6].strftime('%d.%m.%Y %H:%M') }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ row[3] }}</td>
+      <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">{{ row[4] }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row[5] }}</td>
+    </tr>
+        <tr>
+          <td colspan="7">
+                <div class="p-2 bg-light border rounded compact-cell ">
+                    <strong>Причина втрати:</strong>
+                        {{ row[8] }}
+                </div>
+                <div class="p-2 bg-light border rounded compact-cell">
+                    <strong>Місце втрати:</strong>
+                       {{ row[7] }}
+                </div>
+                <div class="p-2 bg-light border rounded compact-cell">
+                    <strong>БР:</strong>
+                       {{ row[9] }}
+                </div>
+            </td>
+<!--            <td colspan="4">-->
+<!--                <div class="p-2 bg-light border rounded compact-cell ">-->
+<!--                    <strong>Причина втрати:</strong>-->
+<!--                        {{ row[8] }}-->
+<!--                </div>-->
+<!--            </td>-->
+<!--            <td colspan="3">-->
+<!--                <div class="p-2 bg-light border rounded compact-cell">-->
+<!--                    <strong>Місце втрати:</strong>-->
+<!--                       {{ row[7] }}-->
+<!--                </div>-->
+<!--            </td>-->
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+ <label class="form-label">Всього записів : {{ total_records }}</label>
+
+<nav>
+  <ul class="pagination justify-content-center">
+
+    {% if page > 1 %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page - 1 }}">&laquo;</a>
+    </li>
+    {% endif %}
+
+    {% if page > 2 %}
+    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+    <li class="page-item disabled"><span class="page-link">…</span></li>
+    {% endif %}
+
+    {% if page > 1 %}
+    <li class="page-item"><a class="page-link" href="?page={{ page - 1 }}">{{ page - 1 }}</a></li>
+    {% endif %}
+
+    <li class="page-item active"><span class="page-link">{{ page }}</span></li>
+
+    {% if page < total_pages %}
+    <li class="page-item"><a class="page-link" href="?page={{ page + 1 }}">{{ page + 1 }}</a></li>
+    {% endif %}
+
+    {% if page < total_pages - 1 %}
+    <li class="page-item disabled"><span class="page-link">…</span></li>
+    <li class="page-item"><a class="page-link" href="?page={{ total_pages }}">{{ total_pages }}</a></li>
+    {% endif %}
+
+    {% if page < total_pages %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page + 1 }}">Наступна</a>
+    </li>
+    {% endif %}
+
+  </ul>
+</nav>
+
+{% endblock %}
+
+
+

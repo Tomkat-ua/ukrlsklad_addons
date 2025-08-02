@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+  <h3 class="mb-4">🔍 Пошук серійних номерів по ID товару</h3>
+
+  <form method="post" class="row g-2 mb-4">
+    <div class="col-auto">
+      <input type="text" name="name" class="form-control form-control-sm" placeholder="Введіть ID товару" value="{{ search_term }}" required>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary btn-sm">Пошук</button>
+    </div>
+   {% if total %}
+    <h6 class="mb-4">Знайдено {{ total }} номерів {{ tov_name }} </h6>
+   {% endif %}
+  </form>
+  {% if result %}
+    <div class="table-responsive">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Серійний номер</th>
+<!--            <th>Імʼя</th>-->
+<!--            <th>Email</th>-->
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in result %}
+          <tr>
+            <td>{{ u[0] }}</td>
+<!--            <td>{{ u[1] }}</td>-->
+<!--            <td>{{ u[2] }}</td>-->
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% elif search_term %}
+    <div class="alert alert-warning">Товар не знайдено</div>
+  {% endif %}
+</div>
+
+
+{% endblock %}
+
+
+
