@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="card shadow-sm mb-3" xmlns="http://www.w3.org/1999/html">
+  <div class="card-header bg-primary text-white">
+    Запис ID {{ row.TOVAR_ID }}
+  </div>
+
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }}</br>
+        <strong>Serial N:</strong> {{ row.TOVAR_SER_NUM }}</br>
+        <strong>Найменування:</strong> {{ row.TOV_NAME }}</br>
+        <strong>Одиниця виміру:</strong> {{ row.TOV_ED }}</br>
+        <strong>ID документу приходу:</strong> {{ row.NUM or "—" }}</br>
+        <strong>N документу приходу:</strong> {{ row.NU }}</br>
+        <strong>Дата документу приходу:</strong> {{ row.DATE_DOK.strftime('%d.%m.%Y') }}</br>
+      </div>
+       <div class="col-md-3">
+        <strong>Постачальник:</strong> {{ row.CLIENT }}</br>
+        <strong>N документу постачальника:</strong> {{ row.P_NU }}</br>
+        <strong>Дата документу постачальника:</strong> {{ row.P_DATE_DOK }}</br>
+        <strong>Ціна постачальника:</strong> {{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }}</br>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<table class="table table-sm table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+      <th>Тип документу</th>
+      <th>Назва документу</th>
+      <th>ID документу</th>
+      <th>Номер документу</th>
+      <th>Дата докуенту</th>
+      <th>ID складу</th>
+      <th>Найменування складу</th>
+      <th>Операція</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_TYPE|int }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_NAME }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_ID }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.OPER_TYPE }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+
+

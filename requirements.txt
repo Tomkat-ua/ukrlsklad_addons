@@ -6,5 +6,6 @@ asyncio
 websockets
 rich
 jsonify
+pandas
 
 

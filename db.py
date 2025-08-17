@@ -2,7 +2,7 @@ import  fdb,platform,os
 
 db_server        = os.getenv("DB_HOST", '192.168.10.5')
 db_port          = os.getenv("DB_PORT", 3053)
-db_path          = os.getenv("DB_PATH", 'sklad_dev')
+db_path          = os.getenv("DB_PATH", 'sklad_prod')
 db_user          = os.getenv("DB_USER", 'MONITOR')
 db_password      = os.getenv("DB_PASSWORD", 'inwino')
 

@@ -46,7 +46,7 @@
           <label class="form-label me-2 mb-0">Координати втрати</label>
           <input type="text" class="form-control form-control-sm" name="ACTION_COORD">
         </div>
-        <div class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center mb-3 gap-2">
               <label for="exampleSelect" class="form-label me-2 mb-0">Причина втрати</label>
               <select class="form-select" style="width: 200px;" id="exampleSelect" name = "ACTION_REASON" required>
                 <option value="РЕБ">дії РЕБ</option>
@@ -55,7 +55,18 @@
                 <option value="арт">обстріл АРТА</option>
                 <option value="КАБ">обстріл КАБ</option>
               </select>
+            <label for="teamSelect" class="form-label me-2 mb-0">Екіпаж</label>
+              {#<select class="form-select" style="width: 200px;" id="teamSelect" name = "TEAM_NAME" required>
+                <option value="Екіпаж 1 ">Екіпаж 1</option>
+              </select>#}
+                <div class="d-flex align-items-center mb-3">
+                <label class="form-label me-2 mb-0">Екіпаж</label>
+                <input type="text" class="form-control form-control-sm" name="TEAM_NAME">
         </div>
+        </div>
+
+
+
       </div>
     </div>
     <div class="d-flex justify-content-end gap-2 mt-3">

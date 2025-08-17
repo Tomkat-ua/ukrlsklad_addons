@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import os,losses,export,serials,ghist,db
+import os,losses,export,serials,ghist_,db
 # from test import gnum
 
 local_ip         = os.getenv('LOCAL_IP','192.168.10.9')
@@ -45,12 +45,14 @@ def serials_search():
 
 ########### G_HIST ############################################
 @app.route("/ghist",methods =['GET','POST'])
-def ghist_search():
-    return ghist.main_view()
+def ghist():
+    return ghist_.index()
 
-@app.route("/ghist_find",methods =['GET','POST'])
-def ghist_find():
-    return ghist.find()
+@app.route("/ghist_details/<row_id>",methods =['GET','POST'])
+def ghist_details(row_id):
+    return ghist_.datails(row_id)
+# @app.route("/edit/<int:row_id>")
+
 
 ########### MAIN ##############################################
 if __name__ == "__main__":
