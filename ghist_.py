@@ -3,7 +3,7 @@ import db
 import pandas as pd
 
 
-
+title = 'Інформація по номеру'
 
 def fetch_named(cursor):
     """Генерує записи як словники з іменами полів."""
@@ -13,26 +13,6 @@ def fetch_named(cursor):
 
 
 
-# def index():
-#     if request.method == "POST":
-#         row_id = int(request.form["ID"])
-#         for row in rows:
-#             if row["ID"] == row_id:
-#                 row["NAME"] = request.form["NAME"]
-#                 row["STATUS"] = request.form["STATUS"]
-#         return redirect(url_for("index"))
-
-#    return render_template("modal_edit.html", rows=rows)
-
-#
-# def search():
-#     query = request.form['query']
-#     con = db.get_connection()
-#     cur = con.cursor()
-#     cur.execute("SELECT CAR_ID, BRAND, MIL_NUM FROM CARS WHERE BRAND CONTAINING ?", (query,))
-#     rows = cur.fetchall()
-#     con.close()
-#     return render_template('search_results.html', rows=rows)
 
 def index():
     if request.method == "POST":
@@ -53,8 +33,8 @@ def index():
         df_display = df.fillna('')
         data = df_display.to_dict(orient='records')
         con.close()
-        return render_template('ghist_.html', title=f"Знайдено дані для {search_str}",rows = data)
-    return render_template('ghist_.html',title="Історія руху")
+        return render_template('ghist_.html', title=title,rows = data)
+    return render_template('ghist_.html',title=title)
 
 
 def datails(search_str):
@@ -86,7 +66,7 @@ def datails(search_str):
              ,pd.tov_cena ,pd.tov_ed
         from tovar_serials ts
             inner join pnakl p on p.num = ts.doc_id
-            inner join pnakl_ pd on pd.pid = p.num
+            inner join pnakl_ pd on pd.pid = p.num and pd.tovar_id = ts.tovar_id
         where ts.tovar_ser_num = ? and ts.doc_type_id = 8""",[search_str])
     rows_det = cur.fetchall()
 
@@ -96,7 +76,7 @@ def datails(search_str):
     data_datail = df_display_det.to_dict(orient='records')
     print(data_datail)
     con.close()
-    return render_template('ghist_det.html',title="Історія руху",rows = data_movies,row=data_datail[0] )
+    return render_template('ghist_det.html',title=title,rows = data_movies,row=data_datail[0] )
     # print(f"details {row_id}")
 
 
