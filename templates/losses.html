@@ -17,7 +17,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
       <form class="d-flex gap-2" method="post">
-        <a href="{{ url_for('loss_add') }}"   class="btn btn-primary">➕ Додати</a>
+        <a href="{{ url_for('loss_add',next=request.path) }}"   class="btn btn-primary">➕ Додати</a>
         <a href="{{ url_for('export_csv') }}" class="btn btn-primary">⬇️ Експортувати CSV</a>
         <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial">
         <button class="btn btn-primary" type="submit" >Шукати</button>

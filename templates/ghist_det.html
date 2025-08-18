@@ -2,33 +2,50 @@
 {% block content %}
 
 
-<div class="card shadow-sm mb-3" xmlns="http://www.w3.org/1999/html">
+<div class="card shadow-sm mb-3" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
   <div class="card-header bg-primary text-white">
-    Запис ID {{ row.TOVAR_ID }}
+    Запис SN {{ row.TOVAR_SER_NUM }}
   </div>
 
   <div class="card-body">
     <div class="row mb-2">
-      <div class="col-md-3">
-        <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }}</br>
-        <strong>Serial N:</strong> {{ row.TOVAR_SER_NUM }}</br>
-        <strong>Найменування:</strong> {{ row.TOV_NAME }}</br>
+      <div class="col-md-4">
+        <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }} </br>
+        <strong>Serial N:</strong><span class="badge rounded-pill bg-success fs-6 px-4 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>  </br>
+        <strong>Найменування:</strong> <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span></br>
         <strong>Одиниця виміру:</strong> {{ row.TOV_ED }}</br>
         <strong>ID документу приходу:</strong> {{ row.NUM or "—" }}</br>
         <strong>N документу приходу:</strong> {{ row.NU }}</br>
         <strong>Дата документу приходу:</strong> {{ row.DATE_DOK.strftime('%d.%m.%Y') }}</br>
       </div>
-       <div class="col-md-3">
+       <div class="col-md-4">
         <strong>Постачальник:</strong> {{ row.CLIENT }}</br>
         <strong>N документу постачальника:</strong> {{ row.P_NU }}</br>
         <strong>Дата документу постачальника:</strong> {{ row.P_DATE_DOK }}</br>
-        <strong>Ціна постачальника:</strong> {{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }}</br>
+        <strong>Ціна постачальника:</strong>
+        <span class="badge rounded-pill bg-warning text-dark fs-6 px-4 py-2 shadow">
+         {{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }} грн.
+        </span></br>
+        <span class="badge rounded-pill bg-secondary text-light  fs-6 px-4 py-2 shadow
+                {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено'  }} ">{{ row.STATUS }}
+        </span>
+         {#  <span>
+                 <a href="{{ url_for('loss_add',next=request.path,sn=row.TOVAR_SER_NUM) }}"   class="btn btn-primary btn-sm">➕ Додати до втрат</a>
+           </span>#}
+        <form action="{{ url_for('loss_add') }}" method="get" style="display:inline;">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="sn" value="{{ row.TOVAR_SER_NUM }}">
+        <button type="submit" class="btn btn-primary btn-sm"
+                {% if row.STATUS|trim|lower == 'втрачено' %} disabled {% endif %}>
+          ➕ Додати до втрат
+        </button>
+
+      </form>
       </div>
     </div>
   </div>
 </div>
-
-
+<h6>Рух номеру</h6>
 <table class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
     <tr>

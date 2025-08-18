@@ -15,6 +15,7 @@
       {% endif %}
       {% endwith %}
   <form method="POST">
+    <input type="hidden" name="next" value="{{ next }}">
     <div class="card shadow-sm rounded-4 p-4">
     <h5 class="mb-3">Додати втрату</h5>
     <div class="row"> <!--  row 1-->
@@ -26,7 +27,7 @@
         </div>
         <div class="d-flex align-items-center mb-3">
           <label class="form-label me-2 mb-0" >Серійний номер</label>
-          <input type="text" class="form-control form-control-sm" name="SERIAL" required >
+          <input type="text" class="form-control form-control-sm" name="SERIAL" required value="{{ sn }}">
         </div>
         <label class="form-label">Бойове розпорядження</label>
         <textarea class="form-control form-control-sm" rows="4" name="BAT_ORDER"></textarea>
@@ -64,14 +65,11 @@
                 <input type="text" class="form-control form-control-sm" name="TEAM_NAME">
         </div>
         </div>
-
-
-
       </div>
     </div>
     <div class="d-flex justify-content-end gap-2 mt-3">
           <button class="btn btn-primary corner-btn">Зберегти</button>
-          <a href="/losses" class="btn btn-outline-secondary corner-btn">Скасувати</a>
+          <a href="{{ next or url_for('index') }}" class="btn btn-outline-secondary corner-btn">Скасувати</a>
     </div>
   </div>
      <!-- Scripts -->

@@ -1,7 +1,5 @@
 import db,os
-from flask import  request, redirect, flash,render_template
-
-
+from flask import  request, redirect, flash,render_template,url_for
 
 def losses_list():
     page = int(request.args.get('page', 1))
@@ -23,8 +21,6 @@ def losses_list():
     sql = (' SELECT SDOC_ID,SDOC_NUM,SDOC_DATE,SERIAL,TOV_NAME,UNIT_NAME,action_date,action_place,ACTION_RESON,ACTION_BR,TEAM_NAME '
            ' FROM monitoring.get_losses where se = \'Літальний_апарат\' ') + where + ' order by 1 desc  '+ limit
     losses =db.get_data(sql,[offset + 1, offset + per_page])
-    # losses = config.fetchall_as_dict(losses)
-    # total_records = len(losses)
     return render_template('losses.html',losses = losses ,title = 'Втрати майна',
                            page=page,total_pages=total_pages,total_records=total_records[0],serch_result=serial,records = len(losses))
 
@@ -46,16 +42,18 @@ def loss_add():
             if response:
                 o_result = response[0]
                 if 'ERROR' in o_result.upper():
-                    # flash(f"❌ {response[0]}", "danger")
                     # можна кинути виняток або обробити як завгодно
                     raise Exception(f"Procedure error: {o_result}")
                 else:
                     flash(f"✅ Успішно: {response[0]}", "info")
-            # flash(f"✅ {response[0]}", "info")
-            #raise ValueError("Помилка обробки форми")
         except Exception as e:
             flash(f"❌ {str(e)}", "danger")  # 'danger' = Bootstrap-клас для червоного
         con.commit()
-        return redirect("/losses")
-    return render_template("lost_add.html")
+        # визначаємо куди вертатись
+        next_page = request.form.get("next") or url_for("index")
+        return redirect(next_page)
+        # return redirect("/losses")
+    sn = request.args.get("sn", "")
+    next_page = request.args.get("next") or url_for("index")
+    return render_template("lost_add.html", next=next_page,sn=sn)
 

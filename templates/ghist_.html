@@ -10,7 +10,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
       <form class="d-flex gap-2" method="post">
-        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value="%">
+        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value="{{ search_value }}">
          <button type="submit" class="btn btn-primary">Пошук</button>
       </form>
     </div>
@@ -25,6 +25,7 @@
       <th>Серійний Номер</th>
       <th>Код номенклатури</th>
       <th>Найменування</th>
+      <th>Статус</th>
       <th>Дії</th>
     </tr>
   </thead>
@@ -35,6 +36,10 @@
       <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.KOD }}</td>
       <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;"
+          class="badge rounded-pill
+                 {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено' else 'bg-secondary text-light' }}
+                 fs-6 px-2 py-2 shadow">{{ row.STATUS }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;"><a href="{{ url_for('ghist_details', row_id=row.TOVAR_SER_NUM) }}"
                                                             class="btn btn-sm btn-light">Деталі</a></td>
     </tr>
