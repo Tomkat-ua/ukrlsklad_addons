@@ -41,7 +41,7 @@
           class="badge rounded-pill
                  {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено' else 'bg-secondary text-light' }}
                  fs-6 px-2 py-2 shadow">{{ row.STATUS }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;"><a href="{{ url_for('ghist_details', row_id=row.TOVAR_SER_NUM) }}"
+      <td style="padding-top: 1px; padding-bottom: 1px;"><a href="{{ url_for('ghist_details', row_id=row.SERIAL_ID) }}"
                                                             class="btn btn-sm btn-light">Деталі</a></td>
     </tr>
     {% endfor %}

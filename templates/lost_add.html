@@ -47,23 +47,26 @@
           <label class="form-label me-2 mb-0">Координати втрати</label>
           <input type="text" class="form-control form-control-sm" name="ACTION_COORD">
         </div>
-        <div class="d-flex align-items-center mb-3 gap-2">
-              <label for="exampleSelect" class="form-label me-2 mb-0">Причина втрати</label>
-              <select class="form-select" style="width: 200px;" id="exampleSelect" name = "ACTION_REASON" required>
+        <div class="d-flex align-items-center mb-3 gap-4">
+          <!-- Перша група -->
+          <div class="d-flex align-items-center gap-2">
+            <label for="reasonSelect" class="form-label mb-0">Причина</label>
+            <select class="form-select form-select-sm" style="width: 200px;" id="reasonSelect" name="ACTION_REASON" required>
                 <option value="РЕБ">дії РЕБ</option>
+                <option value="КАБ">скид з дрона</option>
                 <option value="мін">обстріл міномет</option>
                 <option value="FPV">обстріл FPV</option>
                 <option value="арт">обстріл АРТА</option>
                 <option value="КАБ">обстріл КАБ</option>
-              </select>
-            <label for="teamSelect" class="form-label me-2 mb-0">Екіпаж</label>
-              {#<select class="form-select" style="width: 200px;" id="teamSelect" name = "TEAM_NAME" required>
-                <option value="Екіпаж 1 ">Екіпаж 1</option>
-              </select>#}
-                <div class="d-flex align-items-center mb-3">
-                <label class="form-label me-2 mb-0">Екіпаж</label>
-                <input type="text" class="form-control form-control-sm" name="TEAM_NAME">
+            </select>
+          </div>
+          <!-- Друга група -->
+          <div class="d-flex align-items-center gap-2">
+            <label class="form-label mb-0">Екіпаж</label>
+            <input type="text" class="form-control form-control-sm" name="TEAM_NAME" style="width: 200px;">
+          </div>
         </div>
+
         </div>
       </div>
     </div>

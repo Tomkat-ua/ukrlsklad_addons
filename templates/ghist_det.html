@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class="card shadow-sm mb-3" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
   <div class="card-header bg-primary text-white">
     Запис SN {{ row.TOVAR_SER_NUM }}
@@ -11,9 +10,10 @@
     <div class="row mb-2">
       <div class="col-md-5">
         <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }} </br>
-        <strong>Serial N:</strong><span class="badge rounded-pill bg-success fs-6 px-2 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>
-        <span class="badge rounded-pill text-dark fs-6 px-2 py-2 shadow">{{ row.KT }}</span>
-        <span class="badge rounded-pill bg-secondary text-light  fs-6 px-2 py-2 shadow
+        <strong>Serial N:</strong>
+        <span class="badge rounded-pill bg-success              fs-6 px-2 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>
+        <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow">{{ row.KT }}</span>
+        <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow
                 {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено'  }} ">{{ row.STATUS }}
         </span></br>
         <strong>Найменування:</strong> <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span></br>
