@@ -9,9 +9,13 @@
 
   <div class="card-body">
     <div class="row mb-2">
-      <div class="col-md-4">
+      <div class="col-md-5">
         <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }} </br>
-        <strong>Serial N:</strong><span class="badge rounded-pill bg-success fs-6 px-4 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>  </br>
+        <strong>Serial N:</strong><span class="badge rounded-pill bg-success fs-6 px-2 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>
+        <span class="badge rounded-pill text-dark fs-6 px-2 py-2 shadow">{{ row.KT }}</span>
+        <span class="badge rounded-pill bg-secondary text-light  fs-6 px-2 py-2 shadow
+                {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено'  }} ">{{ row.STATUS }}
+        </span></br>
         <strong>Найменування:</strong> <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span></br>
         <strong>Одиниця виміру:</strong> {{ row.TOV_ED }}</br>
         <strong>ID документу приходу:</strong> {{ row.NUM or "—" }}</br>
@@ -26,20 +30,12 @@
         <span class="badge rounded-pill bg-warning text-dark fs-6 px-4 py-2 shadow">
          {{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }} грн.
         </span></br>
-        <span class="badge rounded-pill bg-secondary text-light  fs-6 px-4 py-2 shadow
-                {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено'  }} ">{{ row.STATUS }}
-        </span>
-         {#  <span>
-                 <a href="{{ url_for('loss_add',next=request.path,sn=row.TOVAR_SER_NUM) }}"   class="btn btn-primary btn-sm">➕ Додати до втрат</a>
-           </span>#}
         <form action="{{ url_for('loss_add') }}" method="get" style="display:inline;">
         <input type="hidden" name="next" value="{{ request.path }}">
         <input type="hidden" name="sn" value="{{ row.TOVAR_SER_NUM }}">
         <button type="submit" class="btn btn-primary btn-sm"
-                {% if row.STATUS|trim|lower == 'втрачено' %} disabled {% endif %}>
-          ➕ Додати до втрат
+                {% if row.STATUS|trim|lower == 'втрачено' %} disabled {% endif %}> ➕ Додати до втрат
         </button>
-
       </form>
       </div>
     </div>

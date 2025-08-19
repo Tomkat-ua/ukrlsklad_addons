@@ -22,7 +22,7 @@ def index():
         print(search_str)
         con = db.get_connection()
         cur = con.cursor()
-        cur.execute(""" select distinct ts.tovar_id,ts.tovar_ser_num,tn.kod,tn.name as tov_name
+        cur.execute(""" select distinct ts.num as serial_id, ts.tovar_id,ts.tovar_ser_num,tn.kod,tn.name as tov_name
                         ,case when tss.num is not null  then 'Втрачено' else 'На обліку' end as status
                         from tovar_serials ts
                         inner join tovar_name tn on tn.num = ts.tovar_id
@@ -66,6 +66,7 @@ def datails(search_str):
     """select ts.tovar_id ,ts.tovar_ser_num ,p.client  ,p.num  ,p.nu  ,p.date_dok ,p.p_nu ,p.p_date_dok  ,pd.tov_name
              ,pd.tov_cena ,pd.tov_ed
              ,case when tss.num is not null  then 'Втрачено' else 'На обліку' end as status
+             ,utils.get_pattern_str( ts.tovar_ser_descr,'$','kt') as kt
         from tovar_serials ts
             inner join pnakl p on p.num = ts.doc_id
             inner join pnakl_ pd on pd.pid = p.num and pd.tovar_id = ts.tovar_id
