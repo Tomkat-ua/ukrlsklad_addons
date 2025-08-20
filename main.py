@@ -22,7 +22,7 @@ def inject_globals():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',title= "Головна")
 
 ############# LOSSES ######################################
 @app.route('/losses', methods=['GET', 'POST'])
