@@ -28,7 +28,7 @@ def index():
                         inner join tovar_name tn on tn.num = ts.tovar_id
                         left join tovar_serials tss on tss.tovar_ser_num = ts.tovar_ser_num and tss.doc_type_id =11
                         where ts.tovar_ser_num like ?
-                        and ts.doc_type_id = 8 """,[search_str.strip()])
+                        and ts.doc_type_id in( 8,9) """,[search_str.strip()])
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
         df = pd.DataFrame(rows, columns=columns)
@@ -63,18 +63,8 @@ def datails(search_str):
     data_movies = df_display.to_dict(orient='records')
     cur.close()
     ##### details ########
-    cur.execute(
-    """select ts.tovar_id ,ts.tovar_ser_num ,p.client  ,p.num  ,p.nu  ,p.date_dok ,p.p_nu 
-    ,case when p.p_date_dok is null then 'б/д'  else utils.datetostr(p.p_date_dok) end  as p_date_dok  
-    ,pd.tov_name
-    ,pd.tov_cena ,pd.tov_ed
-    ,case when tss.num is not null  then 'Втрачено' else 'На обліку' end as status
-    ,utils.get_pattern_str( ts.tovar_ser_descr,'$','kt') as kt
-        from tovar_serials ts
-            inner join pnakl p on p.num = ts.doc_id
-            inner join pnakl_ pd on pd.pid = p.num and pd.tovar_id = ts.tovar_id
-            left join tovar_serials tss on tss.tovar_ser_num = ts.tovar_ser_num and tss.doc_type_id =11
-        where ts.num = ? and ts.doc_type_id = 8""",[search_str])
+    cur.execute( 'select * from usa_v_ghist_details where serial_id = ?',[search_str])
+
     rows_det = cur.fetchall()
     columns_det = [desc[0] for desc in cur.description]
     df_det = pd.DataFrame(rows_det, columns=columns_det)
