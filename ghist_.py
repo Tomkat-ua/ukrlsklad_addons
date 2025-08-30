@@ -54,14 +54,15 @@ def datails(search_str):
                       inner JOIN doc_types dt ON (ts.doc_type_id = dt.num)
                       inner JOIN sklad_names sn ON (ts.sklad_id = sn.num)
                       inner join view_alldocs vd on vd.doc_type =  ts.doc_type_id
-                       and vd.num= ts.doc_id   AND vd.firma_id = 170
-                    ORDER BY VD.DATE_DOK ,vd.num ,ts.tovar_ser_kolvo """, [search_str])
+                       and vd.num= ts.doc_id   AND vd.firma_id = 170 and vd.is_move = 1   
+                    ORDER BY VD.DATE_DOK ,vd.num ,ts.tovar_ser_kolvo  """, [search_str])
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
     df = pd.DataFrame(rows, columns=columns)
     df_display = df.fillna('')
     data_movies = df_display.to_dict(orient='records')
     cur.close()
+
     ##### details ########
     cur.execute( 'select * from usa_v_ghist_details where serial_id = ?',[search_str])
 

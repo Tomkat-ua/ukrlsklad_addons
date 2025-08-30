@@ -16,7 +16,9 @@
         <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow
                 {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено'  }} ">{{ row.STATUS }}
         </span></br>
-        <strong>Найменування:</strong> <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span></br>
+        <strong>Найменування:</strong>
+          <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span>
+          <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow">{{ row.TOVAR_KOD }}</span></br>
         <strong>Одиниця виміру:</strong> {{ row.TOV_ED }}</br>
         <strong>ID документу приходу:</strong> {{ row.NUM or "—" }}</br>
         <strong>N документу приходу:</strong> {{ row.NU }}</br>
