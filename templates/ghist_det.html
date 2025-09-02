@@ -35,9 +35,9 @@
         <form action="{{ url_for('loss_add') }}" method="get" style="display:inline;">
         <input type="hidden" name="next" value="{{ request.path }}">
         <input type="hidden" name="sn" value="{{ row.TOVAR_SER_NUM }}">
-        <button type="submit" class="btn btn-primary btn-sm"
+     {#   <button type="submit" class="btn btn-primary btn-sm"
                 {% if row.STATUS|trim|lower == 'втрачено' %} disabled {% endif %}> ➕ Додати до втрат
-        </button>
+        </button> #}
       </form>
       </div>
     </div>
