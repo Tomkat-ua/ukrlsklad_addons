@@ -18,13 +18,12 @@ def serials_search():
             sklad_id = 300000001
         sql = "select sn.name from sklad_names sn where sn.num = ?"
         sklad_name = db.get_data(sql, [sklad_id], 1)
+        return render_template('serials.html', result=result, title = 'Пошук номерів',total=total,sklad_name=sklad_name[0],tov_name=str(tov_name[0]))
 
-        sql = """select sn.num as id, sn.name from sklad_names sn
-                    where sn.num >=? order by 2"""
-        sklads = db.get_data(sql,[300000000])
-
-        return render_template('serials.html',sklads=sklads, result=result, title = 'Пошук номерів',total=total,sklad_name=sklad_name[0],tov_name=str(tov_name[0]))
-    return render_template('serials.html', result=result, title='Пошук номерів', total=None, tov_name=None)
+    sql = """select sn.num as id, sn.name from sklad_names sn
+                where sn.num >=? order by 2"""
+    sklads = db.get_data(sql, [300000001])
+    return render_template('serials.html', sklads=sklads,result=result, title='Пошук номерів', total=None, tov_name=None)
 
 
 
