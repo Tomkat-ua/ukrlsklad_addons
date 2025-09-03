@@ -1,0 +1,22 @@
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Бренд</th>
+      <th>Держ. номер</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3" class="text-center text-muted">Нічого не знайдено</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

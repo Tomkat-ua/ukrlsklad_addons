@@ -19,7 +19,8 @@ def inject_globals():
     return {
         'version': os.getenv('APP_VERSION'),
         'appname': 'UkrSklad Addons App',
-        'dsn': dsn
+        'dsn': dsn,
+        'env': os.getenv('ENV')
     }
 
 @app.route('/')

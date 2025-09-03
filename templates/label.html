@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Бірка</title>
+  <style>
+    .label {
+        width: 250px;
+        height: 120px;
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    img.qr {
+        width: 60px;
+        height: 60px;
+        margin-top: 5px;
+    }
+    .sn {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .item-name {
+        font-size: 14px;
+    }
+    .date {
+        font-size: 12px;
+        color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="label">
+    <div class="item-name">{{ item_name }}</div>
+    <div class="sn">SN: {{ sn }}</div>
+    <img src="{{ qr_img }}" alt="QR" class="qr">
+    <div class="date">{{ date_str }}</div>
+  </div>
+
+  <button onclick="window.print()">Друкувати бірку</button>
+</body>
+</html>
