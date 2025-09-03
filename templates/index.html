@@ -1,5 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-<h3>{{ appname }}</h3>
-<h5>{{ version }}</h5>
+<h3>App name: {{ appname }}</h3>
+<h5>build version: {{ version }}</h5>
+<h5>database: {{ dsn }}</h5>
 {% endblock %}
