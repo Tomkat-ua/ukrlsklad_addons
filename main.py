@@ -2,6 +2,7 @@ import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
 import os,losses,export,serials,ghist_,db
+from dotenv import load_dotenv
 # from test import gnum
 
 local_ip         = os.getenv('LOCAL_IP','192.168.10.9')
@@ -9,13 +10,14 @@ server_port      = os.getenv('SERVER_PORT',3001)
 app = Flask(__name__)
 app.secret_key = '435343ku4vjjq3eqhdeql3545345ts2cgvfkdc'  # потрібен для flash-повідомлень
 
+load_dotenv()
 
 ########## MAIN ####################
 @app.context_processor
 def inject_globals():
     dsn = db.db_server + '/' + str(db.db_port) + ':' + db.db_path
     return {
-        'version': 'v0.0.2.100',
+        'version': os.getenv('APP_VERSION'),
         'appname': 'UkrSklad Addons App',
         'dsn': dsn
     }

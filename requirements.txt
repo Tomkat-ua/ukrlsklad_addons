@@ -2,10 +2,10 @@ flask
 fdb
 gevent
 ########
-asyncio
-websockets
-rich
+#asyncio
+#websockets
+#rich
 jsonify
 pandas
-
-
+#qrcode
+dotenv
