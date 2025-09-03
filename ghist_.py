@@ -10,8 +10,8 @@ def fetch_named(cursor):
     for row in cursor:
         yield dict(zip(columns, row))
 
-def data_for_module(param,module):
-    match module:
+def data_for_module(param,mod):
+    match mod:
         case 'list':
             sql = "select * from usadd_web.ghist_list (?) rows 1000"
         case 'header':
