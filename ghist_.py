@@ -11,15 +11,15 @@ def fetch_named(cursor):
         yield dict(zip(columns, row))
 
 def data_for_module(param,mod):
-    match mod:
-        case 'list':
-            sql = "select * from usadd_web.ghist_list (?) rows 1000"
-        case 'header':
-            sql = "select * from usadd_web.GHIST_DET_HEADER (?)"
-        case 'movies':
-            sql = "select * from usadd_web.ghist_det_movies (?)"
-        case _:  # optional default case
-            sql = '*'
+    if mod == 'list':
+        sql = "select * from usadd_web.ghist_list (?) rows 1000"
+    elif mod == 'header':
+        sql = "select * from usadd_web.GHIST_DET_HEADER (?)"
+    elif mod == 'movies':
+        sql = "select * from usadd_web.ghist_det_movies (?)"
+    else:
+        sql = '*'
+    print('mod=',mod,'sql=',sql)
     con = db.get_connection()
     cur = con.cursor()
     cur.execute(sql, [param])
