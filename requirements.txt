@@ -8,4 +8,4 @@ gevent
 jsonify
 pandas
 #qrcode
-dotenv
+#dotenv
