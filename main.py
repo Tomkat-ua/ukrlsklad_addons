@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import db,losses,export,serials,ghist_,config
+import losses,export,serials,ghist_,config
 
 app = Flask(__name__)
 
