@@ -1,26 +1,24 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import os,losses,export,serials,ghist_,db
-from dotenv import load_dotenv
-# from test import gnum
+import db,losses,export,serials,ghist_,config
 
-local_ip         = os.getenv('LOCAL_IP','192.168.10.9')
-server_port      = os.getenv('SERVER_PORT',3001)
 app = Flask(__name__)
-app.secret_key = '435343ku4vjjq3eqhdeql3545345ts2cgvfkdc'  # потрібен для flash-повідомлень
 
-load_dotenv()
+local_ip         = config.local_ip
+
+app.secret_key = config.api_key  # потрібен для flash-повідомлень
+
 
 ########## MAIN ####################
 @app.context_processor
 def inject_globals():
-    dsn = db.db_server + '/' + str(db.db_port) + ':' + db.db_path
+    dsn =  str(config.db_server) + '/' + str(config.db_port)+ ':' + str(config.db_path)
     return {
-        'version': os.getenv('APP_VERSION'),
+        'version': config.app_version,
         'appname': 'UkrSklad Addons App',
         'dsn': dsn,
-        'env': os.getenv('ENV')
+        'env': config.env
     }
 
 @app.route('/')
@@ -60,9 +58,9 @@ def ghist_details(row_id):
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':
-        http_server = WSGIServer((local_ip, int(server_port)), app)
-        print(f"Running HTTP-SERVER on port - http://" + local_ip + ':' + str(server_port))
+        http_server = WSGIServer((local_ip,config.server_port), app)
+        print(f"Running HTTP-SERVER on port - http://" + local_ip + ':' + str(config.server_port))
     else:
-        http_server = WSGIServer(('', int(server_port)), app)
-        print(f"Running HTTP-SERVER on port :" + str(server_port))
+        http_server = WSGIServer(('', int(config.server_port)), app)
+        print(f"Running HTTP-SERVER on port :" + str(config.server_port))
     http_server.serve_forever()

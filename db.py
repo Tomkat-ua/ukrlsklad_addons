@@ -1,34 +1,26 @@
-import  fdb,platform,os
-
-db_server        = os.getenv("DB_HOST", '192.168.10.5')
-db_port          = os.getenv("DB_PORT", 3053)
-db_path          = os.getenv("DB_PATH", 'sklad_prod')
-db_user          = os.getenv("DB_USER", 'MONITOR')
-db_password      = os.getenv("DB_PASSWORD", 'inwino')
-
-
-
+import  fdb,platform
+import config
 
 def get_connection():
     if platform.system() == 'Windows':
         return fdb.connect(
             # dsn='192.168.10.9/3053:D:/data/database1.fdb',
             # dsn = '192.168.10.5/3053:sklad_dev',
-            host=db_server,
-            port=db_port,
-            database=db_path,
-            user=db_user,
-            password=db_password,
+            host=config.db_server,
+            port=config.db_port,
+            database=config.db_path,
+            user=config.db_user,
+            password=config.db_password,
             fb_library_name="C:/sklad/x64/fbclient.dll",
             charset="utf-8"
         )
     else:
         return fdb.connect(
-            host=db_server,
-            port=db_port,
-            database=db_path,
-            user=db_user,
-            password=db_password,
+            host=config.db_server,
+            port=config.db_port,
+            database=config.db_path,
+            user=config.db_user,
+            password=config.db_password,
             charset="utf-8"
         )
 
