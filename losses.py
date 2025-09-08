@@ -1,5 +1,22 @@
 import db,os
 from flask import  request, redirect, flash,render_template,url_for
+import pandas as pd
+
+def data_for_module(param,sql):
+    print('sql=',sql,param)
+    con = db.get_connection()
+    cur = con.cursor()
+    cur.execute(sql, [param])
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    df = pd.DataFrame(rows, columns=columns)
+    # df['ACTION_DATE_TIME_STR'] = df['ACTION_DATE_TIME'].apply(
+    #     lambda x: x.strftime('%d.%m.%Y %H:%M') if pd.notna(x) else '-' )
+    df_display = df.fillna('')
+    data = df_display.to_dict(orient='records')
+    con.close()
+    return data
+
 
 def losses_list():
     page = int(request.args.get('page', 1))
@@ -24,12 +41,13 @@ def losses_list():
     return render_template('losses.html',losses = losses ,title = 'Втрати майна',
                            page=page,total_pages=total_pages,total_records=total_records[0],serch_result=serial,records = len(losses))
 
+
 def loss_add():
     if request.method == "POST":
         con = db.get_connection()
         cur = con.cursor()
         try:
-            cur.callproc('import.i_snakl',[None,
+            cur.callproc('import.i_lost',[None,
                 request.form["SERIAL"],
                 request.form["BAT_ORDER"],
                 request.form["ACTION_DATE"],
@@ -57,3 +75,24 @@ def loss_add():
     next_page = request.args.get("next") or url_for("index")
     return render_template("lost_add.html", next=next_page,sn=sn)
 
+###################################33
+
+def loss_list():
+    if request.method == "POST":
+        # search_str = request.form.get('tov_serial')
+        search_str = request.form['tov_serial']
+        print('search_str',search_str)
+        sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
+        data = data_for_module(search_str,sql)
+        return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
+    return render_template('losses2.html', losses='', title='Втрати майна' ,search=''   )
+
+def loss_edit(id):
+    print('search_str', id)
+    sql = "select * from usadd.get_losses where UDOC_ID = ?"
+    data = data_for_module(id, sql)
+    # sql = " select num as id, name from sklad_names sn where sn.visible = ? and sn.firma_id =170  order by 2 "
+    # sklads = data_for_module(1, sql)
+    # sql = "select c.num as id,  c.fio as name  from client c where c.tip = ? order by 2"
+    # teams = data_for_module(300000127, sql)
+    return render_template('loss_edit.html', losses='', title='Втрати майна',data=data[0],sklads='',teams='')

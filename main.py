@@ -28,11 +28,15 @@ def index():
 ############# LOSSES ######################################
 @app.route('/losses', methods=['GET', 'POST'])
 def losses_list():
-    return losses.losses_list()
+    return losses.loss_list()
 
 @app.route("/lost_add", methods=["GET", "POST"])
 def loss_add():
     return losses.loss_add()
+
+@app.route("/loss_edit/<int:id>", methods=["GET", "POST"])
+def loss_edit(id):
+    return losses.loss_edit(id)
 
 ############ EXPORT ########################################
 @app.route("/export")

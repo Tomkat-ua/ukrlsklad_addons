@@ -1,0 +1,225 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+<style>
+  .compact-cell {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  line-height: 1;
+}
+</style>
+
+
+  <div class="row">
+   <div class="col-md-6">
+    </div>
+
+   <div class="col-md-6">
+
+    </div>
+   </div>
+
+<div class="accordion" id="detailsAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+        Основна інформація : документ по втраті {{ data.SERIAL }} , №: {{ data.UDOC_NU }} , дата: {{ data.UDOC_DATE.strftime('%d.%m.%Y') if data.UDOC_DATE else '' }}
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" >
+      <div class="accordion-body">
+
+          <div class="row">
+             <div class="col-md-4" style="width:360px;">
+              <div class="mb-0 row align-items-center" >
+                <label class="col-auto col-form-label text-start col ">DOC_ID:</label>
+                <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.UDOC_ID }}">
+              </div>
+            </div>
+
+            <div class="col-md-4" style="width:360px;">
+                 <div class="mb-0 row align-items-center" >
+                    <label class="col-auto col-form-label text-start col" >Дата документу втрати:</label>
+                    <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.UDOC_DATE.strftime('%d.%m.%Y') }}">
+                    {#<input type="date" class="form-control form-control-sm col"  readonly value="{{ data.UDOC_DATE.strftime('%Y-%m-%d') if data.UDOC_DATE else '' }}">#}
+                 </div>
+            </div>
+            <div class="col-md-4" style="width:360px;">
+              <div class="mb-0 row align-items-center" >
+                <label class="col-auto col-form-label text-start " >Номер документу втрати:</label>
+                <input type="text" class="form-control form-control-sm col" readonly value="{{ data.UDOC_NU }}">
+              </div>
+            </div>
+          </div>
+            <div class="row">
+            <div class="col-md-4" style="width:360px;">
+              <div class="mb-0 row align-items-center" >
+                <label class="col-auto col-form-label text-start  " >Серійний номер:</label>
+                <input type="text" class="form-control form-control-sm col"    readonly      value="{{ data.SERIAL }}">
+              </div>
+            </div>
+            <div class="col-md-4" style="width:360px;">
+              <div class="mb-0 row align-items-center" >
+                <label class="col-auto col-form-label text-start  " >Дата події:</label>
+                <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.ACTION_DATE_TIME.strftime('%d.%m.%Y') }}">
+                {#<input type="date" class="form-control form-control-sm col" readonly
+                       value="{{ data.ACTION_DATE_TIME.strftime('%Y-%m-%d') if data.ACTION_DATE_TIME else '' }}">#}
+              </div>
+            </div>
+            <div class="col-md-4" style="width:360px;">
+              <div class="mb-0 row align-items-center" >
+                  <label class="col-auto col-form-label text-start" style="width:120px;">Підрозділ:</label>
+                  <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.SKLAD_NAME }}">
+                 {#   <select  class="form-select form-select-sm col"  name="SKLAD_ID">
+                      <option  value="">-- Виберіть склад --</option>
+                      {% for sklad in sklads %}
+                        <option value="{{ sklad.ID }}"
+                          {% if (sklad.ID|string) == (data.SKLAD_ID|string) %} selected {% endif %}>
+                          {{ sklad.NAME }}
+                        </option>
+                      {% endfor %}
+                    </select> #}
+              </div>
+            </div>
+            </div>
+          </div>
+      </div>
+
+      <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+              Додаткова інформація
+          </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse " >
+        <div class="accordion-body">
+
+            <div class="row">
+                     <div class="col-md-6 col" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Місце втрати:</label>
+                            <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.ACTION_PLACE }}">
+                          </div>
+                     </div>
+                     <div class="col-md-6" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Координати втрати:</label>
+                            <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.ACTION_COORD }}">
+                          </div>
+                     </div>
+            </div>
+            <div class="row">
+                     <div class="col-md-6 col" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Причина втрати:</label>
+                            <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.ACTION_REASON }}">
+                          </div>
+                     </div>
+                     <div class="col-md-6" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Екіпаж:</label>
+                            <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.TEAM_NAME }}">
+                             {#   <select class="form-select form-select-sm col" name="TEAM_ID">
+                                  {% for team in teams %}
+                                    <option value="{{ team.ID }}"
+                                      {% if (team.ID|string) == (data.TEAM_ID|string) %} selected {% endif %}>
+                                      {{ team.NAME }}
+                                    </option>
+                                  {% endfor %}
+                                </select>#}
+                          </div>
+                     </div>
+            </div>
+              <div class="row  align-items-center">
+                <label class="col-auto col-form-label" style="width:300px;">Бойове розпорядження:</label>
+                <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.ACTION_BR }}">
+              </div>
+
+              <div class="row  align-items-center">
+                <label class="col-auto col-form-label" style="width:300px;">Наказ на початок розслідування:</label>
+                <input type="text" class="form-control form-control-sm col" readonly value="{{ data.ORDER_B }}">
+              </div>
+
+              <div class="row  align-items-center">
+                <label class="col-auto col-form-label" style="width:300px;">Наказ на закінчення розслідування:</label>
+                <input type="text" class="form-control form-control-sm col" readonly value="{{ data.ORDER_E }}">
+              </div>
+           </div>
+          </div>
+
+    <h2 class="accordion-header" id="heading3">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+        Фінансова інформація
+      </button>
+    </h2>
+    <div id="collapse3" class="accordion-collapse collapse " >
+      <div class="accordion-body">
+            <!-- row 1-->
+            <div class="row">
+                     <div class="col-md-4 col" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Постачальник:</label>
+                            <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.CLIENT_NAME }}">
+                          </div>
+                     </div>
+            </div>
+            <!-- row 2-->
+            <div class="row">
+                     <div class="col-md-4 col" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Номер документу приходу:</label>
+                            <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.IDOC_NU }}">
+                          </div>
+                     </div>
+
+                     <div class="col-md-4 col" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Номер документу постачальника:</label>
+                            <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.CLIENT_DOC_NU }}">
+                          </div>
+                     </div>
+
+            </div>
+            <!-- row 3 -->
+            <div class="row">
+                     <div class="col-md-4 col " >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Дата документу приходу:</label>
+                            <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.IDOC_DATE.strftime('%d.%m.%Y') }}">
+                        {#    <input type="date" class="form-control form-control-sm col" readonly
+                       value="{{ data.IDOC_DATE.strftime('%Y-%m-%d') if data.IDOC_DATE else '' }}">#}
+                          </div>
+                     </div>
+                     <div class="col-md-4" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Дата документу постачальника:</label>
+                            <input type="text" class="form-control form-control-sm col" readonly  value="{{ data.CLIENT_DOC_DATE.strftime('%d.%m.%Y') }}">
+                          {#  <input type="date" class="form-control form-control-sm col" disabled
+                       value="{{ data.CLIENT_DOC_DATE.strftime('%Y-%m-%d') if data.CLIENT_DOC_DATE else '' }}"> #}
+                          </div>
+                     </div>
+            </div>
+            <!-- row 4 -->
+            <div class="row">
+                     <div class="col-md-4" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Ціна поставки:</label>
+                            <input type="number" class="form-control form-control-sm col" step="0.01" readonly  value= "{{ '%.2f' % data.IDOC_PRICE }}">
+                          </div>
+                     </div>
+                     <div class="col-md-4" >
+                          <div class="mb-0 row align-items-center " >
+                            <label class="col-auto col-form-label text-start col ">Ціна списання:</label>
+                            <input type="number" class="form-control form-control-sm col" step="0.01" readonly  value= "{{ '%.2f' % data.UDOC_PRICE }}">
+                          </div>
+                     </div>
+            </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
+

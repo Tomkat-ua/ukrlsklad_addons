@@ -4,7 +4,7 @@ import db
 
 def serials_search():
     result = []
-    search_term = ''
+    # search_term = ''
     sql = """select sn.num as id, sn.name from sklad_names sn
                 where  sn.visible =1 and sn.num >=? order by 2"""
     sklads = db.get_data(sql, [300000001])
@@ -22,7 +22,7 @@ def serials_search():
             sklad_id = 300000001
         sql = "select sn.name from sklad_names sn where sn.num = ?"
         sklad_name = db.get_data(sql, [sklad_id], 1)
-        # print('sklad_id=',request.form.get('sklad_id'))
+
         return render_template('serials.html', result=result, sklads=sklads,search_tovar=tov_id
                                ,title = 'Пошук номерів',total=total,sklad_name=sklad_name[0]
                                ,tov_name=str(tov_name[0] if tov_name else '' ))
