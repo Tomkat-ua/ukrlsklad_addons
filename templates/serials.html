@@ -14,6 +14,7 @@
 
   <div class="me-2">
       <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;">
+        <option value="None">-- всі склади --</option>
         {% for id, name in sklads %}
           <option value="{{ id }}">{{ name }}</option>
         {% endfor %}
