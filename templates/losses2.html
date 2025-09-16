@@ -25,12 +25,13 @@
         {#<a href="{{ url_for('loss_add',next=request.path) }}"   class="btn btn-primary">➕ Додати</a>#}
         <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
         <button class="btn btn-primary" type="submit" >Шукати</button>
+        <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
       </form>
     </div>
   </div>
 </nav>
 
-<table class="table table-sm table-striped table-bordered">
+<table id="tList" class="table table-sm table-striped table-bordered">
   <thead class="table-dark">
     <tr>
       <th>UDOC_ID</th>
@@ -62,6 +63,18 @@
   </tbody>
 </table>
 
+<script>
+function copyTable() {
+    let table = document.getElementById("tList");
+    let range = document.createRange();
+    range.selectNode(table);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+    alert("Таблицю скопійовано в буфер 📋");
+}
+</script>
 
 {% endblock %}
 
