@@ -12,7 +12,7 @@ def fetch_named(cursor):
 
 def data_for_module(param,mod):
     if mod == 'list':
-        sql = "select * from usadd_web.ghist_list (?) rows 1000"
+        sql = "select * from usadd_web.ghist_list (?) "
     elif mod == 'header':
         sql = "select * from usadd_web.GHIST_DET_HEADER (?)"
     elif mod == 'movies':
