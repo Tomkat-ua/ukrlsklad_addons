@@ -1,4 +1,4 @@
-from flask import  request,render_template
+from flask import  request,render_template,flash,redirect,url_for
 import db
 import pandas as pd
 
@@ -39,7 +39,11 @@ def index():
         print('search_str',search_str)
         # data = data_for_list(search_str)
         data = data_for_module(search_str,'list')
-        return render_template('ghist_.html', title=title,rows = data,search_value=search_str.strip())
+        if data:
+            return render_template('ghist_.html', title=title,rows = data,search_value=search_str.strip())
+        else:
+            flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
+            return redirect(url_for("ghist"))
     return render_template('ghist_.html',title=title)
 
 ######## DETAILS ######################################

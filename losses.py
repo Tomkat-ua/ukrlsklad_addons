@@ -84,7 +84,11 @@ def loss_list():
         print('search_str',search_str)
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
         data = data_for_module(search_str,sql)
-        return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
+        if data:
+            return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
+        else:
+            flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
+            return redirect(url_for("losses_list"))
     return render_template('losses2.html', losses='', title='Втрати майна' ,search=''   )
 
 def loss_edit(id):

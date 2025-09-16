@@ -1,4 +1,4 @@
-from flask import  request,render_template
+from flask import  request,render_template,flash,redirect,url_for
 import db
 
 
@@ -22,11 +22,13 @@ def serials_search():
         tov_name = db.get_data(sql, [tov_id],1)
         sql = "select sn.name from sklad_names sn where sn.num = ?"
         sklad_name = db.get_data(sql, [sklad_id], 1)
-
-        return render_template('serials.html', result=result if result else '', sklads=sklads,search_tovar=tov_id
+        if result:
+            return render_template('serials.html', result=result if result else '', sklads=sklads,search_tovar=tov_id
                                ,title = 'Пошук номерів',total=total,sklad_name=sklad_name[0] if sklad_name else ''
                                ,tov_name=str(tov_name[0] if tov_name else '' ))
-
+        else:
+            flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
+            return redirect(url_for("serials_search"))
     return render_template('serials.html', sklads=sklads,result=result, title='Пошук номерів', total=None, tov_name=None)
 
 
