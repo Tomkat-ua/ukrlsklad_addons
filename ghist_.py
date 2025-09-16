@@ -12,7 +12,7 @@ def fetch_named(cursor):
 
 def data_for_module(param,mod):
     if mod == 'list':
-        sql = "select * from usadd_web.ghist_list (?) "
+        sql = "select * from usadd_web.ghist_list (?,?) "
     elif mod == 'header':
         sql = "select * from usadd_web.GHIST_DET_HEADER (?)"
     elif mod == 'movies':
@@ -22,7 +22,9 @@ def data_for_module(param,mod):
     print('mod=',mod,'sql=',sql)
     con = db.get_connection()
     cur = con.cursor()
-    cur.execute(sql, [param])
+    param = [p if p != '' else None for p in param]
+    print(param)
+    cur.execute(sql, param)
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
     df = pd.DataFrame(rows, columns=columns)
@@ -35,12 +37,14 @@ def index():
     ######### LIST #######################
     if request.method == "POST":
         # search_str = request.form.get('tov_serial')
-        search_str = request.form['tov_serial']
-        print('search_str',search_str)
+        tov_serial = request.form['tov_serial']
+        tov_name   = request.form['tov_name']
+        print('tov_serial=',tov_serial)
+        print('tov_name=', tov_name)
         # data = data_for_list(search_str)
-        data = data_for_module(search_str,'list')
+        data = data_for_module([tov_serial,tov_name],'list')
         if data:
-            return render_template('ghist_.html', title=title,rows = data,search_value=search_str.strip())
+            return render_template('ghist_.html', title=title,rows = data,search_value=tov_serial.strip())
         else:
             flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
             return redirect(url_for("ghist"))
@@ -52,9 +56,9 @@ def datails(search_str):
     search_str = int(search_str)
 
 ##### movies #########
-    data_movies = data_for_module(search_str,'movies')
+    data_movies = data_for_module([search_str],'movies')
 ##### details ########
-    data_header = data_for_module(search_str,'header')
+    data_header = data_for_module([search_str],'header')
     # print(data_header[0])
     # con.close()
     return render_template('ghist_det.html',title=title,rows = data_movies,row=data_header[0] )
