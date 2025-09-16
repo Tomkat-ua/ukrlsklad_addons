@@ -8,9 +8,6 @@
   <div class="me-2">
     <input type="text" name="search_tovar" class="form-control form-control-sm" placeholder="Введіть ID товару" value="{{ search_tovar }}" required>
   </div>
-  {#<div class="me-2">
-    <input type="text" name="search_sklad" class="form-control form-control-sm" placeholder="Введіть ID складу" value="{{ search_sklad }}" >
-  </div>#}
 
   <div class="me-2">
       <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;">
@@ -32,9 +29,11 @@
   </div>
    {% endif %}
   </form>
+
+
   {% if result %}
     <div class="table-responsive">
-      <table class="table table-sm table-striped table-bordered">
+      <table id="tList" class="table table-sm table-striped table-bordered">
         <thead class="table-dark">
           <tr>
             <th>Серійний номер</th>
@@ -59,6 +58,11 @@
 </div>
 
 
+<script>
+$(document).ready(function() {
+    $('#tList').DataTable();
+});
+</script>
 {% endblock %}
 
 

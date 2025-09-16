@@ -22,7 +22,6 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
       <form class="d-flex gap-2" method="post">
-        {#<a href="{{ url_for('loss_add',next=request.path) }}"   class="btn btn-primary">➕ Додати</a>#}
         <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
         <button class="btn btn-primary" type="submit" >Шукати</button>
         <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
@@ -44,24 +43,34 @@
       <th>Дії</th>
     </tr>
   </thead>
-  <td>
-    {% for row in losses %}
-    <tr>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_ID }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_DATE.strftime('%d.%m.%Y') }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_NU }}</td>
-      <td class="fw-bold text-danger"  style="padding-top: 1px; padding-bottom: 1px;"> {{ row.ACTION_DATE_TIME.strftime('%d.%m.%Y %H:%M') }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;"> {{ row.SERIAL }}</td>
-      <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;"> {{ row.TOVAR_NAME_ }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_PARENT_NAME }}</td>
-      <td>
-          <a href="/loss_edit/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Edit">
-            <i class="bi bi-pencil"></i>
-          </a>
-      </td>
-    {% endfor %}
-  </tbody>
+<tbody>
+  {% for row in losses %}
+  <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_ID }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_DATE.strftime('%d.%m.%Y') }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.UDOC_NU }}</td>
+    <td class="fw-bold text-danger"  style="padding-top: 1px; padding-bottom: 1px;">
+      {{ row.ACTION_DATE_TIME.strftime('%d.%m.%Y %H:%M') }}
+    </td>
+    <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">
+      {{ row.SERIAL }}
+    </td>
+    <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">
+      {{ row.TOVAR_NAME_ }}
+    </td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">
+      {{ row.SKLAD_PARENT_NAME }}
+    </td>
+    <td>
+      <a href="/loss_edit/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Edit">
+        <i class="bi bi-pencil"></i>
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
 </table>
+
 
 <script>
 function copyTable() {
@@ -75,6 +84,12 @@ function copyTable() {
     alert("Таблицю скопійовано в буфер 📋");
 }
 </script>
+<script>
+$(document).ready(function() {
+    $('#tList').DataTable();
+});
+</script>
+
 
 {% endblock %}
 
