@@ -10,7 +10,7 @@
   </div>
 
   <div class="me-2">
-      <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;">
+      <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;" value = "{{ sklad_name }}">
         <option value="None">-- всі склади --</option>
         {% for id, name in sklads %}
           <option value="{{ id }}">{{ name }}</option>
@@ -20,6 +20,7 @@
     <div class="me-2">
     <button type="submit" class="btn btn-primary btn-sm">Пошук</button>
   </div>
+  <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
 </div>
 
    {% if total %}
@@ -59,10 +60,18 @@
 
 
 <script>
-$(document).ready(function() {
-    $('#tList').DataTable();
-});
+function copyTable() {
+    let table = document.getElementById("tList");
+    let range = document.createRange();
+    range.selectNode(table);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+    alert("Таблицю скопійовано в буфер 📋");
+}
 </script>
+
 {% endblock %}
 
 
