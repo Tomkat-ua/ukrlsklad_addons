@@ -1,12 +1,16 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <body class="p-4 bg-light">
 
 <div class="container">
     <h2 class="mb-4">{{ repname }}</h2>
     <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+    <button class="btn btn-sm btn-primary" onclick="downloadTableAsCSV('{{ repname }}')">Зберегти як CSV</button>
+    <button class="btn btn-sm btn-primary" onclick="downloadTableAsXLSX('{{ repname }}')">Зберегти як XLSX</button>
     <div class="table-responsive">
         <table id="tList" class="table table-striped table-bordered align-middle">
             <thead class="table-dark">
@@ -41,6 +45,54 @@ function copyTable() {
     window.getSelection().removeAllRanges();
     alert("Таблицю скопійовано в буфер 📋");
 }
+
+function downloadTableAsCSV(fileName) {
+    let table = document.getElementById("tList");
+    let rows = table.querySelectorAll("tr");
+    let csv = [];
+
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("th, td");
+        let rowData = [];
+        cols.forEach(col => rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'));
+        csv.push(rowData.join(","));
+    });
+
+        const now = new Date();
+        const datePart = now.toISOString().split('T')[0]; // 2025-10-09
+        const time = now.toTimeString().split(' ')[0];    // 16:47:33
+        const [hours, minutes] = time.split(':');
+        const timePart = `${hours}-${minutes}`;           // 16-47
+      const fileNameFull = `${fileName}_${datePart}_${timePart}`;
+
+    // Створюємо файл
+    let csvString = csv.join("\n");
+    let blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileNameFull +".csv";  // назва файлу
+    link.click();
+    alert(`✅ Файл "${fileNameFull}.csv" збережено`);
+}
+
+function downloadTableAsXLSX(fileName) {
+    if (!fileName) fileName = "table"; // дефолт
+
+        const now = new Date();
+        const datePart = now.toISOString().split('T')[0]; // 2025-10-09
+        const time = now.toTimeString().split(' ')[0];    // 16:47:33
+        const [hours, minutes] = time.split(':');
+        const timePart = `${hours}-${minutes}`;           // 16-47
+      const fileNameFull = `${fileName}_${datePart}_${timePart}`;
+
+    let table = document.getElementById("tList");
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.table_to_sheet(table);
+    XLSX.utils.book_append_sheet(wb, ws, "Таблиця");
+    XLSX.writeFile(wb, fileNameFull + ".xlsx");
+    alert(`✅ Файл "${fileNameFull}.xlsx" збережено`);
+}
+
 </script>
 
 {% endblock %}
