@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config#,sklads
+import losses,export,serials,ghist_,config,reports#,sklads
 #from proxy_module import get_arrived_history
 
 app = Flask(__name__)
@@ -76,10 +76,24 @@ def sklad_save():
 def sklad_update():
     return
 
+############ REPORTS #########################
+@app.route("/reports",methods = ['GET','POST'])
+def reports_list():
+    return reports.reports_list()
+@app.route("/reports/<int:report_id>",methods = ['GET','POST'])
+def report(report_id):
+    return reports.report(report_id)
+
+
+
+
 ########### TEST #############################
 @app.route("/test/<doc_id>")
 def proxy_arrived(doc_id):
     return get_arrived_history(doc_id)
+
+
+
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':

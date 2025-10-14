@@ -24,7 +24,7 @@ def serials_search():
         sklad_name = db.get_data(sql, [sklad_id], 1)
         if result:
             return render_template('serials.html', result=result if result else '', sklads=sklads,search_tovar=tov_id
-                               ,title = 'Пошук номерів',total=total,sklad_name=sklad_name[0] if sklad_name else ''
+                               ,title = 'Пошук номерів',total=total,sklad_name=sklad_name[0] if sklad_name else '',sklad_search = sklad_name
                                ,tov_name=str(tov_name[0] if tov_name else '' ))
         else:
             flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)

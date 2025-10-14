@@ -1,0 +1,28 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<table id="tList" class="table table-sm table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Назва</th>
+      <th>ID запиту</th>
+      <th>Дії</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for report in reports %}
+    <tr>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ report.ID }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.NAME }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.QRY_ID }}</td>
+      <td>
+        <a href="/reports/{{ report.ID }} " class="btn btn-sm btn-outline-secondary" title="Edit">
+          <i class="bi bi-pencil"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
