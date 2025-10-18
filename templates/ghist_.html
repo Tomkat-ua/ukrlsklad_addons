@@ -14,7 +14,7 @@
         <strong> АБО </strong>
         <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"   minlength="5" name = "tov_serial" value="{{ search_value }}">
         <button type="submit" class="btn btn-primary">Пошук</button>
-        <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
       </form>
     </div>
   </div>
@@ -49,19 +49,6 @@
     {% endfor %}
   </tbody>
 </table>
-
-<script>
-function copyTable() {
-    let table = document.getElementById("tList");
-    let range = document.createRange();
-    range.selectNode(table);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
-    alert("Таблицю скопійовано в буфер 📋");
-}
-</script>
 
 
 {% endblock %}

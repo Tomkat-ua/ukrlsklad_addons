@@ -1,8 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports#,sklads
-#from proxy_module import get_arrived_history
+import losses,export,serials,ghist_,config,reports
 
 app = Flask(__name__)
 
@@ -84,7 +83,9 @@ def reports_list():
 def report(report_id):
     return reports.report(report_id)
 
-
+@app.route('/reports2/<int:rep_id>', methods=['GET','POST'])
+def reports_list2(rep_id):
+    return reports.reports_list2(rep_id)
 
 
 ########### TEST #############################

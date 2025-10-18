@@ -6,18 +6,16 @@
     <tr>
       <th>ID</th>
       <th>Назва</th>
-      <th>ID запиту</th>
       <th>Дії</th>
     </tr>
   </thead>
   <tbody>
     {% for report in reports %}
     <tr>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ report.ID }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.NAME }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.QRY_ID }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ report[0] }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report[1] }}</td>
       <td>
-        <a href="/reports/{{ report.ID }} " class="btn btn-sm btn-outline-secondary" title="Edit">
+        <a href="/reports2/{{ report[0] }} " class="btn btn-sm btn-outline-secondary" title="Edit">
           <i class="bi bi-pencil"></i>
         </a>
       </td>

@@ -1,5 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+
 <style>
   .compact-cell {
   padding-top: 2px !important;
@@ -13,6 +14,7 @@
   }
 }
 </style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +26,7 @@
       <form class="d-flex gap-2" method="post">
         <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
         <button class="btn btn-primary" type="submit" >Шукати</button>
-        <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
       </form>
     </div>
   </div>
@@ -70,22 +72,6 @@
   {% endfor %}
 </tbody>
 </table>
-
-
-<script>
-function copyTable() {
-    let table = document.getElementById("tList");
-    let range = document.createRange();
-    range.selectNode(table);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
-    alert("Таблицю скопійовано в буфер 📋");
-}
-</script>
-
-
 
 {% endblock %}
 
