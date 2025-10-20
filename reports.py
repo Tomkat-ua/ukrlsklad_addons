@@ -1,6 +1,8 @@
 from flask import  request,render_template,render_template_string #,flash,redirect,url_for
 import db,json,re #,html
+from datetime import date
 
+today = date.today().isoformat()
 
 # reports = [
 #      {"ID": 1, "NAME": "Склад"}
@@ -56,26 +58,28 @@ def reports_list2(rep_id):
                     f'<option value="{r[0]}" {"selected" if str(r[0]) == val else ""}>{r[1]}</option>'
                     for r in cur.fetchall()
                 )
+                default_val=p["default"]
                 form_html += f"""
                 <div class="mb-2 d-flex align-items-center">
                     <label class="me-2 mb-0" style="min-width: 120px;">{p['label']}:</label>
-                    <select class="form-select-sm" style="width: 400px;" name="{name}">
+                    <select class="form-select-sm" style="width: 400px;" value="{default_val}" name="{name}">
                         {options}
                     </select>
                 </div>
                 """
             elif p["type"] == "date":
+                print(p["default"])
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
-                        <input type="date" class="form-control-sm" name="{name}" value="{val}">
+                        <input type="date" class="form-control-sm" name="{name}" value="{today}">
                     </div>
                 """
             elif p["type"] == "number":
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
-                        <input type="number" class="form-control-sm" name="{name}" value="{val}" placeholder="Введіть число">
+                        <input type="number" class="form-control-sm" name="{name}" value=0 style="width: 112px;" placeholder="Введіть число">
                     </div>
                 """
             elif p["type"] == "boolean":
@@ -104,13 +108,22 @@ def reports_list2(rep_id):
         cur.execute(q)
         rows = cur.fetchall()
         cols = [desc[0] for desc in cur.description]
-        result_html = ("<table id='tList' class='table table-striped table-bordered align-middle'><thead class='table-dark'><tr>"
-                       + "".join(f"<th>{c}</th>" for c in cols) + "</tr></thead><tbody>")
+
+        result_html = ("<table id='tList' class='table table-striped table-bordered align-middle' >"
+                       "<thead class='table-dark' ><tr>"
+                       + "".join(f"<th>{c}</th>" for c in cols)
+                       + "</tr></thead><tbody style='line-height: 1; padding: 0.25rem;'>")
 
 
         for r in rows:
             result_html += "<tr>" + "".join(f"<td>{v}</td>" for v in r) + "</tr>"
-        result_html += "</tbody></table>"
+        result_html += ("</tbody>  "
+                          "<tfoot style='font-weight: bold;'>"
+                           "<tr> "
+                            "<td>Всього:</td> <td id='total'></td>"
+                           "</tr>"
+                          "</tfoot>"
+                        "</table>")
 
     con.close()
 
