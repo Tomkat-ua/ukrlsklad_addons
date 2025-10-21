@@ -280,15 +280,6 @@ function downloadTableAsXLSX(fileName, widths=null) {
     XLSX.writeFile(wb, fileNameFull + ".xlsx");
     alert(`✅ Файл "${fileNameFull}.xlsx" збережено`);
 }
-document.addEventListener('DOMContentLoaded', function() {
-  let totalPrice = 0;
-  const priceCells = document.querySelectorAll('tbody tr td:nth-child(2)'); // Selects the second td in each tbody row
-  priceCells.forEach(cell => {
-    const priceText = cell.textContent.replace('$', ''); // Remove currency symbol
-    totalPrice += parseFloat(priceText);
-  });
-  document.getElementById('total').textContent = totalPrice.toFixed(0); // Display with two decimal places
-});
 
 </script>
 

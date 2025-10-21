@@ -2,7 +2,7 @@ from flask import  request,render_template,render_template_string #,flash,redire
 import db,json,re #,html
 from datetime import date
 
-today = date.today().isoformat()
+
 
 # reports = [
 #      {"ID": 1, "NAME": "Склад"}
@@ -25,7 +25,7 @@ def reports_list():
     return render_template("reports.html",title='Звіти',reports = reports)
 
 def reports_list2(rep_id):
-
+    today = date.today().isoformat()
 
     """Відображення сторінки звіту з параметрами та результатом"""
     con = db.get_connection()
@@ -89,13 +89,13 @@ def reports_list2(rep_id):
                         <input class="form-check-input-sm" type="checkbox" name="{name}" value="{val}" id="flexCheckDefault">
                     </div>
                 """
-            else:
-                form_html += f"""
-                    <div class="mb-3">
-                        <label>{p['label']}</label>
-                        <input type="text" class="form-control-sm" name="{name}" value="{val}">
-                    </div>
-                """
+            # else:
+            #     form_html += f"""
+            #         <div class="mb-3">
+            #             <label>{p['label']}</label>
+            #             <input type="text" class="form-control-sm" name="{name}" value="{val}">
+            #         </div>
+            #     """
 
     # --- Якщо форма відправлена, підставляємо параметри ---
     result_html = ""
@@ -117,13 +117,14 @@ def reports_list2(rep_id):
 
         for r in rows:
             result_html += "<tr>" + "".join(f"<td>{v}</td>" for v in r) + "</tr>"
-        result_html += ("</tbody>  "
-                          "<tfoot style='font-weight: bold;'>"
-                           "<tr> "
-                            "<td>Всього:</td> <td id='total'></td>"
-                           "</tr>"
-                          "</tfoot>"
-                        "</table>")
+        result_html += (html_content)
+        # result_html += ("</tbody>  "
+        #                   "<tfoot style='font-weight: bold;'>"
+        #                    "<tr> "
+        #                     "<td>Всього:</td> <td id='total1'>Всього:</td>"
+        #                    "</tr>"
+        #                   "</tfoot>"
+        #                 "</table>")
 
     con.close()
 
