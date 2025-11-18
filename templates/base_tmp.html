@@ -156,21 +156,39 @@ toggleBtn.addEventListener("click", () => {
       toast.show();
     })
   });
-</script>
 
-<script>
+
 $(document).ready(function() {
-    $('#tList').DataTable({
-        pageLength: 20,
+    const tableElement = $('#tList');
+
+    // 1. ПЕРЕВІРКА: Чи існує таблиця
+    if (!tableElement.length) {
+        return;
+    }
+    // 2. ПЕРЕВІРКА: Чи вже ініціалізовано
+    if ($.fn.DataTable.isDataTable('#tList')) {
+        // Якщо таблиця вже є DataTables, не ініціалізуємо повторно
+        return;
+    }
+    const defaultPageLengthString = tableElement.data('defaultLength');
+
+    // 3. ПЕРЕТВОРЕННЯ: parseInt + надійний fallback
+    const parsedLength = parseInt(defaultPageLengthString);
+
+    // finalPageLength буде числом > 0 або 20
+    const finalPageLength = (isNaN(parsedLength) || parsedLength <= 0) ? -1 : parsedLength;
+
+    // 4. ІНІЦІАЛІЗАЦІЯ
+    tableElement.DataTable({
+        pageLength: finalPageLength,
+        // Зверніть увагу, що -1 також є дійсним значенням у lengthMenu
         lengthMenu: [ [20, 30, 50, -1], [20, 30, 50, "Усі"] ],
          language: {
             url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json"
         }
     });
 });
-</script>
 
-<script>
 async function copyTable() {
     const table = document.getElementById("tList");
     const clone = table.cloneNode(true);
