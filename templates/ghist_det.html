@@ -34,6 +34,7 @@
          {#{{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }} грн.#}
             {{ row.TOV_CENA }} грн.
         </span></br>
+        <strong>Місце знаходження:</strong> {{ row.SKLAD_PLACE }}({{ row.SKLAD_ID }})</br>
         <form action="{{ url_for('loss_add') }}" method="get" style="display:inline;">
         <input type="hidden" name="next" value="{{ request.path }}">
         <input type="hidden" name="sn" value="{{ row.TOVAR_SER_NUM }}">
