@@ -10,17 +10,29 @@
   </div>
 
   <div class="me-2">
-      <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;" value = "{{ sklad_name }}">
-        <option value="None">-- всі склади --</option>
+  {#    <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;" >
+        <option value="{{ sklad_id }}">-- всі склади --</option>
         {% for id, name in sklads %}
           <option value="{{ id }}">{{ name }}</option>
         {% endfor %}
+      </select>#}
+      <select class="form-select form-select-sm" name="sklad_id" style="width: 200px;" >
+          <option value="None" {% if sklad_id == "None" %}selected{% endif %}>
+              -- всі склади --
+          </option>
+          {% for id, name in sklads %}
+              <option value="{{ id }}"
+                      {% if id | string == sklad_id %}selected{% endif %}>
+                      {{ name }}
+              </option>
+          {% endfor %}
       </select>
+
   </div>
     <div class="me-2">
     <button type="submit" class="btn btn-primary btn-sm">Пошук</button>
   </div>
-  <button class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+  <button class="btn btn-sm btn-primary" type="button" onclick="copyTable()">📋 Копіювати таблицю</button>
 </div>
 
    {% if total %}
@@ -31,21 +43,17 @@
    {% endif %}
   </form>
 
-
   {% if result %}
     <div class="table-responsive">
       <table id="tList" class="table table-sm table-striped table-bordered">
         <thead class="table-dark">
           <tr>
             <th>Серійний номер</th>
-
           </tr>
         </thead>
         <tbody>
           {% for u in result %}
-          <tr>
-            <td>{{ u[0] }}</td>
-          </tr>
+          <tr><td>{{ u[0] }}</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -55,19 +63,6 @@
   {% endif %}
 </div>
 
-
-<script>
-function copyTable() {
-    let table = document.getElementById("tList");
-    let range = document.createRange();
-    range.selectNode(table);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
-    alert("Таблицю скопійовано в буфер 📋");
-}
-</script>
 
 {% endblock %}
 

@@ -23,9 +23,17 @@ def serials_search():
         sql = "select sn.name from sklad_names sn where sn.num = ?"
         sklad_name = db.get_data(sql, [sklad_id], 1)
         if result:
-            return render_template('serials.html', result=result if result else '', sklads=sklads,search_tovar=tov_id
-                               ,title = 'Пошук номерів',total=total,sklad_name=sklad_name[0] if sklad_name else '',sklad_search = sklad_name
-                               ,tov_name=str(tov_name[0] if tov_name else '' ))
+            return render_template('serials.html'
+                                   ,result=result if result else ''
+                                   ,sklads=sklads
+                                   ,search_tovar=tov_id
+                                   ,title = 'Пошук номерів'
+                                   ,total=total
+                                   ,sklad_name=sklad_name[0] if sklad_name else ''
+                                   ,sklad_search = sklad_name
+                                   ,tov_name=str(tov_name[0] if tov_name else '' )
+                                   ,sklad_id = sklad_id
+                                   )
         else:
             flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
             return redirect(url_for("serials_search"))
