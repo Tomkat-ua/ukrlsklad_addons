@@ -88,7 +88,8 @@ def loss_list():
             return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
         else:
             flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
-            return redirect(url_for("losses_list"))
+            # return redirect(url_for("losses_list"))
+            return render_template('losses2.html', losses='', title='Втрати майна', search=search_str)
     return render_template('losses2.html', losses='', title='Втрати майна' ,search=''   )
 
 def loss_edit(id):
