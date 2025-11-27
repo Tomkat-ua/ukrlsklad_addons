@@ -3,19 +3,6 @@ import db,json,re #,html
 from datetime import date
 
 
-
-# reports = [
-#      {"ID": 1, "NAME": "Склад"}
-# ]
-
-# with open('reports.json', 'r', encoding='utf-8') as f:
-#     # reports = json.load(f)
-#     con = db.get_connection()
-#     cur = con.cursor()
-#     cur.execute("SELECT NUM, REP_NAME FROM REPORTS_WEB ")
-#     reports = cur.fetchall()
-#     con.close()
-
 def reports_list():
     con = db.get_connection()
     cur = con.cursor()
@@ -147,25 +134,25 @@ def reports_list2(rep_id):
 
     return render_template_string(html_template)
 
-
-def report(id):
-    record = next((item for item in reports if item["ID"] == id), None)
-    qry_id = record['QRY_ID']
-    repname = record['NAME']
-
-    con = db.get_connection()
-    cur = con.cursor()
-    cur.execute( 'select qry from QUERYS where num = ? ',[qry_id])
-    row = cur.fetchone()
-    clean_sql=''
-    if row:  # row — це кортеж
-        sql_text = row[0]  # беремо перше поле
-        clean_sql = re.sub(r'\s+', ' ', sql_text).strip()
-
-    cur.execute(clean_sql)
-    columns = [desc[0] for desc in cur.description]
-    rows = cur.fetchall()
-    con.close()
-
-    return render_template('report.html', columns=columns, rows=rows,repname=repname)
-
+#
+# def report(id):
+#     record = next((item for item in reports if item["ID"] == id), None)
+#     qry_id = record['QRY_ID']
+#     repname = record['NAME']
+#
+#     con = db.get_connection()
+#     cur = con.cursor()
+#     cur.execute( 'select qry from QUERYS where num = ? ',[qry_id])
+#     row = cur.fetchone()
+#     clean_sql=''
+#     if row:  # row — це кортеж
+#         sql_text = row[0]  # беремо перше поле
+#         clean_sql = re.sub(r'\s+', ' ', sql_text).strip()
+#
+#     cur.execute(clean_sql)
+#     columns = [desc[0] for desc in cur.description]
+#     rows = cur.fetchall()
+#     con.close()
+#
+#     return render_template('report.html', columns=columns, rows=rows,repname=repname,default_page_length_value=50)
+#

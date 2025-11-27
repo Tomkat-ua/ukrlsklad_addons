@@ -8,7 +8,8 @@
     <button class="btn btn-sm btn-primary" onclick="downloadTableAsCSV('{{ repname }}')">Зберегти як CSV</button>
     <button class="btn btn-sm btn-primary" onclick="downloadTableAsXLSX('{{ repname }}')">Зберегти як XLSX</button>
     <div class="table-responsive">
-        <table id="tList" class="table table-striped table-bordered align-middle">
+        <table id="tList" class="table table-striped table-bordered align-middle"
+               data-default-length="50">
             <thead class="table-dark">
                 <tr>
                     {% for col in columns %}
