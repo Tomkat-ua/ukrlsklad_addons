@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports
+import losses,export,serials,ghist_,config,reports,dispack,losses_nn
 
 app = Flask(__name__)
 
@@ -38,6 +38,10 @@ def loss_add():
 def loss_edit(id):
     return losses.loss_edit(id)
 
+@app.route("/losses-nn",methods=['GET', 'POST'])
+def losses_list_nn():
+    return losses_nn.losses_list()
+
 ############ EXPORT ########################################
 @app.route("/export")
 def export_csv():
@@ -59,21 +63,21 @@ def ghist_details(row_id):
 # @app.route("/edit/<int:row_id>")
 
 ########### SKLADS ###########################
-@app.route("/sklad",methods = ['GET','POST'])
-def sklad_list():
-    return sklads.get_list()
-
-@app.route("/sklad/<int:sklad_id>")
-def sklad_details(sklad_id):
-    return sklads.sklad_details(sklad_id)
-
-@app.route("/sklad/save", methods=["POST"])
-def sklad_save():
-    return sklads.sklad_save()
-
-@app.route("/sklad/update", methods=["POST"])
-def sklad_update():
-    return
+# @app.route("/sklad",methods = ['GET','POST'])
+# def sklad_list():
+#     return sklads.get_list()
+#
+# @app.route("/sklad/<int:sklad_id>")
+# def sklad_details(sklad_id):
+#     return sklads.sklad_details(sklad_id)
+#
+# @app.route("/sklad/save", methods=["POST"])
+# def sklad_save():
+#     return sklads.sklad_save()
+#
+# @app.route("/sklad/update", methods=["POST"])
+# def sklad_update():
+#     return
 
 ############ REPORTS #########################
 @app.route("/reports",methods = ['GET','POST'])
@@ -87,11 +91,14 @@ def report(report_id):
 def reports_list2(rep_id):
     return reports.reports_list2(rep_id)
 
-
+########### DISPAKING ########################
+@app.route('/dispack', methods=['GET','POST'])
+def list():
+    return dispack.dispack_list()
 ########### TEST #############################
-@app.route("/test/<doc_id>")
-def proxy_arrived(doc_id):
-    return get_arrived_history(doc_id)
+# @app.route("/test/<doc_id>")
+# def proxy_arrived(doc_id):
+#     return get_arrived_history(doc_id)
 
 
 

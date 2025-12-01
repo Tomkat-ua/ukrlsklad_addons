@@ -1,6 +1,7 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,13 +11,14 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
       <form class="d-flex gap-2" method="post">
-        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
+        <input class="form-control" style="width: 250px;" type="search" placeholder="Найменування"  name = "tov_name" value = "{{ search }}">
         <button class="btn btn-primary" type="submit" >Шукати</button>
         <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
       </form>
     </div>
   </div>
 </nav>
+
 
 <table id="tList" class="table table-sm table-striped table-bordered">
   <thead class="table-dark">
@@ -25,10 +27,8 @@
       <th class="text-wrap" style="max-width: 80px;">Дата реєстрації</th>
       <th class="text-wrap" style="max-width: 100px;">Номер док. реєстрації</th>
       <th>Дата події</th>
-      <th>Серійний №</th>
       <th>Найменування</th>
       <th>Підрозділ</th>
-      <th>Дії</th>
     </tr>
   </thead>
 <tbody>
@@ -40,19 +40,11 @@
     <td class="fw-bold text-danger"  style="padding-top: 1px; padding-bottom: 1px;">
       {{ row.ACTION_DATE_TIME.strftime('%d.%m.%Y %H:%M') }}
     </td>
-    <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">
-      {{ row.SERIAL }}
-    </td>
     <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">
       {{ row.TOVAR_NAME_ }}
     </td>
     <td style="padding-top: 1px; padding-bottom: 1px;">
       {{ row.SKLAD_NAME }}
-    </td>
-    <td>
-      <a href="/loss_edit/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Edit">
-        <i class="bi bi-pencil"></i>
-      </a>
     </td>
   </tr>
   {% endfor %}
@@ -60,6 +52,3 @@
 </table>
 
 {% endblock %}
-
-
-
