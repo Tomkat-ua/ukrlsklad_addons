@@ -1,0 +1,61 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<style>
+  .compact-cell {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  line-height: 1;
+  .table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+  }
+}
+</style>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="d-flex gap-2" method="post">
+        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
+        <button class="btn btn-primary" type="submit" >Шукати</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<table id="tList" class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>Номер акту</th>
+      <th>Найменування</th>
+      <th>Серійний номер</th>
+      <th>Документи</th>
+    </tr>
+  </thead>
+<tbody>
+  {% for row in data %}
+  <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">
+      <a href="/xxx/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Списання зі складу">Акт ВР</a>
+      <a href="/xxx/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Оприбуткування на склад">Введ. залишків</a>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
