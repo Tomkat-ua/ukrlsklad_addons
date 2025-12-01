@@ -59,7 +59,7 @@ def reports_list2(rep_id):
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
-                        <input type="date" class="form-control-sm" name="{name}" value="{today}">
+                        <input type="date" class="form-control-sm" name="{name}" >
                     </div>
                 """
             elif p["type"] == "number":
@@ -76,13 +76,6 @@ def reports_list2(rep_id):
                         <input class="form-check-input-sm" type="checkbox" name="{name}" value="{val}" id="flexCheckDefault">
                     </div>
                 """
-            # else:
-            #     form_html += f"""
-            #         <div class="mb-3">
-            #             <label>{p['label']}</label>
-            #             <input type="text" class="form-control-sm" name="{name}" value="{val}">
-            #         </div>
-            #     """
 
     # --- Якщо форма відправлена, підставляємо параметри ---
     result_html = ""
@@ -105,13 +98,6 @@ def reports_list2(rep_id):
         for r in rows:
             result_html += "<tr>" + "".join(f"<td>{v}</td>" for v in r) + "</tr>"
         result_html += (html_content)
-        # result_html += ("</tbody>  "
-        #                   "<tfoot style='font-weight: bold;'>"
-        #                    "<tr> "
-        #                     "<td>Всього:</td> <td id='total1'>Всього:</td>"
-        #                    "</tr>"
-        #                   "</tfoot>"
-        #                 "</table>")
 
     con.close()
 
@@ -134,25 +120,3 @@ def reports_list2(rep_id):
 
     return render_template_string(html_template)
 
-#
-# def report(id):
-#     record = next((item for item in reports if item["ID"] == id), None)
-#     qry_id = record['QRY_ID']
-#     repname = record['NAME']
-#
-#     con = db.get_connection()
-#     cur = con.cursor()
-#     cur.execute( 'select qry from QUERYS where num = ? ',[qry_id])
-#     row = cur.fetchone()
-#     clean_sql=''
-#     if row:  # row — це кортеж
-#         sql_text = row[0]  # беремо перше поле
-#         clean_sql = re.sub(r'\s+', ' ', sql_text).strip()
-#
-#     cur.execute(clean_sql)
-#     columns = [desc[0] for desc in cur.description]
-#     rows = cur.fetchall()
-#     con.close()
-#
-#     return render_template('report.html', columns=columns, rows=rows,repname=repname,default_page_length_value=50)
-#
