@@ -59,14 +59,14 @@ def reports_list2(rep_id):
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
-                        <input type="date" class="form-control-sm" name="{name}" >
+                        <input type="date" class="form-control-sm" name="{name}" required >
                     </div>
                 """
             elif p["type"] == "number":
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
-                        <input type="number" class="form-control-sm" name="{name}" value=0 style="width: 112px;" placeholder="Введіть число">
+                        <input type="number" class="form-control-sm" name="{name}" value=0 style="width: 112px;" placeholder="Введіть число" required>
                     </div>
                 """
             elif p["type"] == "boolean":
