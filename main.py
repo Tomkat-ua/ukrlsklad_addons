@@ -10,6 +10,28 @@ local_ip         = config.local_ip
 app.secret_key = config.api_key  # потрібен для flash-повідомлень
 
 
+@app.template_filter('currency_format_ua')
+def format_currency_ua(value, decimal_places=2):
+    """
+    Форматує число:
+    1. Використовує крапку для тисяч, крапку для десятих (стандарт f-рядок).
+    2. Замінює роздільник тисяч (,) на пробіл ( ).
+    3. Замінює десятковий роздільник (.) на кому (,).
+    """
+    try:
+        # 1. Форматування Python: 12,608.33
+        # Використовуємо :,.{decimal_places}f
+        formatted_str = f"{value:,.{decimal_places}f}"
+
+        # 2. 🌟 Заміна роздільника тисяч (,) на пробіл
+        thousand_separated = formatted_str.replace(",", " ")
+
+        # 3. 🌟 Заміна десяткового роздільника (.) на кому
+        return thousand_separated.replace(".", ",")
+
+    except Exception:
+        return value  # Повернути вихідне значення у разі помилки
+
 ########## MAIN ####################
 @app.context_processor
 def inject_globals():
@@ -83,9 +105,9 @@ def ghist_details(row_id):
 @app.route("/reports",methods = ['GET','POST'])
 def reports_list():
     return reports.reports_list()
-@app.route("/reports/<int:report_id>",methods = ['GET','POST'])
-def report(report_id):
-    return reports.report(report_id)
+# @app.route("/reports/<int:report_id>",methods = ['GET','POST'])
+# def report(report_id):
+#     return reports.report(report_id)
 
 @app.route('/reports2/<int:rep_id>', methods=['GET','POST'])
 def reports_list2(rep_id):
@@ -95,6 +117,13 @@ def reports_list2(rep_id):
 @app.route('/dispack', methods=['GET','POST'])
 def list():
     return dispack.dispack_list()
+
+@app.route('/dispack/doc1/<int:doc_id>', methods=['GET','POST'])
+def doc1(doc_id):
+    return dispack.doc(doc_id,1)
+@app.route('/dispack/doc2/<int:doc_id>', methods=['GET','POST'])
+def doc2(doc_id):
+    return dispack.doc(doc_id,2)
 ########### TEST #############################
 # @app.route("/test/<doc_id>")
 # def proxy_arrived(doc_id):

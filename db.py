@@ -1,11 +1,8 @@
-import  fdb,platform
-import config
+import  fdb,platform,config, pandas as pd
 
 def get_connection():
     if platform.system() == 'Windows':
         return fdb.connect(
-            # dsn='192.168.10.9/3053:D:/data/database1.fdb',
-            # dsn = '192.168.10.5/3053:sklad_dev',
             host=config.db_server,
             port=config.db_port,
             database=config.db_path,
@@ -23,6 +20,18 @@ def get_connection():
             password=config.db_password,
             charset="utf-8"
         )
+
+def data_module(sql,params):
+    con = get_connection()
+    cur = con.cursor()
+    cur.execute(sql, params)
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    df = pd.DataFrame(rows, columns=columns)
+    df_display = df.fillna('')
+    data = df_display.to_dict(orient='records')
+    con.close()
+    return data
 
 def get_data(sql,params,mode=1):
     con = get_connection()

@@ -1,19 +1,7 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
-<style>
-  .compact-cell {
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  line-height: 1;
-  .table thead th {
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 2;
-  }
-}
-</style>
+
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -50,8 +38,8 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">
-      <a href="/xxx/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Списання зі складу">Акт ВР</a>
-      <a href="/xxx/{{ row.UDOC_ID }}" class="btn btn-sm btn-outline-secondary" title="Оприбуткування на склад">Введ. залишків</a>
+      <a href="/dispack/doc1/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Списання зі складу">Акт ВР</a>
+      <a href="/dispack/doc2/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Оприбуткування на склад">Введ. залишків</a>
     </td>
   </tr>
   {% endfor %}
