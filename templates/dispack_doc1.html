@@ -19,29 +19,48 @@
   </div>
 </nav>
 #}
-{######### ACTVR #######################################################################################################}
-{% if dt == 1 %}
-  <div class="row mb-3">
-    <div class="col mb-3">
-        <label for="nu" class="col-sm-3 col-form-label">Номер документу:</label>
-        <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext" id="nu" value="{{ data_h.NU }}">
-        </div>
-    </div>
-    <div class="col mb-3">
-        <label for="nd" class="col-sm-3 col-form-label">Дата документу:</label>
-        <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext" id="nd" value="{{ data_h.DATE_DOK.strftime('%d.%m.%Y') }}">
-        </div>
-    </div>
-    <div class="col mb-3">
-        <label for="serial" class="col-sm-3 col-form-label">Серійний:</label>
-        <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext" id="serial" value="{{ data_h.SERIAL }}">
-        </div>
-    </div>
-  </div>
 
+{########## COMMON HEAD #########################################################}
+<div class="card mb-1">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">{{ docname }} № {{ data_h.NU }}</h5>
+    </div>
+    <div class="card-body">
+<div class="row">
+    <div class="col-md-4 mb-0">
+        <label for="nd" class="form-label fw-bold">Дата документу:</label>
+
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="nd"
+               value="{{ data_h.DATE_DOK.strftime('%d.%m.%Y') }}">
+    </div>
+
+    <div class="col-md-4 mb-0">
+        <label for="serial" class="form-label fw-bold">Серійний:</label>
+
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="serial"
+               value="{{ data_h.SERIAL }}">
+    </div>
+
+    <div class="col-md-4 mb-0">
+        <label for="sklad" class="form-label fw-bold">Підрозділ:</label>
+
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="sklad"
+               value="{{ data_h.SKLAD_NAME }}">
+    </div>
+
+</div></div></div>
+{% if dt == 1 %}
+{#--------- ACTVR -------------------------------------------------------------}
+{#------ TABLE -----------------------------------------------------------------#}
   <table id="tDoc1" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -68,7 +87,7 @@
   {#-------- LEFT ---------------------------#}
 <div class="row mb-3">
   <div class="col mb-3">
-  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Списати">
+  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання">
   <table id="tDoc2l" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>

@@ -5,45 +5,36 @@ def dispack_list():
     print(request.method)
     sql = """ select  * from usadd_web.DISPACK_LIST """
     try:
-        # con = db.get_connection()
-        # cur = con.cursor()
-        # cur.execute(sql)
-        # rows = cur.fetchall()
-        # columns = [desc[0] for desc in cur.description]
-        # df = pd.DataFrame(rows, columns=columns)
-        # df_display = df.fillna('')
-        # data = df_display.to_dict(orient='records')
-        # con.close()
         data = db.data_module(sql,'')
         if request.method == "GET":
             return  render_template("dispack_list.html", title = 'Розкомплектація',data = data)
+        if request.method == "POST":
+            search = request.form['tov_serial']
+            sql = sql + ' where  TOVAR_SER_NUM like \''+ search +'\''
+            data = db.data_module(sql, '')
+            print(sql)
+            return render_template("dispack_list.html", title='Розкомплектація', data=data,search = search)
     except Exception as e:
         flash(f"❌ {str(e)}", "danger")
         flash(f"❗️ {sql}", "warning")
         return render_template("dispack_list.html", title='Розкомплектація')
 
 def doc(doc_id,dt):
-    # title = ''
-    # rows=''
-    # data_h = ''
-    # data_d = ''
-    # con = db.get_connection()
-    # cur = con.cursor()
+    sql_h = """ select  a.num,a.nu,a.date_dok,a.doc_descr as serial ,a.cena,a.sklad_id,sn.name as sklad_name
+                from  actvr a
+                    inner join sklad_names sn on sn.num = a.sklad_id
+                where a.num =? """
+    data_h = db.data_module(sql_h, [doc_id])
+    title = 'Розкомплектація'
     if dt == 1:
-        sql_h = """ select  a.num,a.nu,a.date_dok,a.doc_descr as serial ,a.cena
-                    from  actvr a   where a.num = ? """
-        title = 'Акти виконаних робіт (Розкомплектація)'
         sql_d = """ select ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
                     ,ad.tov_cena,ad.tov_suma
                     from actvr_ ad where ad.pid =  ? """
-
-        data_h = db.data_module(sql_h, [doc_id])
         data_d = db.data_module(sql_d, [doc_id])
-        print(data_d)
-        return render_template("dispack_doc1.html", title=title, dt=dt, data_h=data_h[0], data_d=data_d)
+        return render_template("dispack_doc1.html", title=title, dt=dt, data_h=data_h[0]
+                               , data_d=data_d,docname = 'Акт Виконаних Робіт')
 
     if dt == 2:
-        title = 'Внесення залишків (Розкомплектація)'
         sql_dr = """ select a.num,a.nu,a.date_dok,a.doc_descr,ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
                     ,ad.tov_cena,ad.tov_suma
                     from  znakl a
@@ -65,7 +56,7 @@ def doc(doc_id,dt):
         for item in data_dr:
             total_r += item['TOV_SUMA']
         return render_template("dispack_doc1.html", title=title, dt=dt, data_dr=data_dr,data_dl=data_dl
-                               ,total_l=total_l,total_r=total_r)
+                               ,total_l=total_l,total_r=total_r,data_h = data_h[0],docname = 'Введення залишків')
 
 
     # try:

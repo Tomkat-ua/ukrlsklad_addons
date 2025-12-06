@@ -28,6 +28,7 @@
       <th>Номер акту</th>
       <th>Найменування</th>
       <th>Серійний номер</th>
+      <th>Підрозділ</th>
       <th>Документи</th>
     </tr>
   </thead>
@@ -37,6 +38,7 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">
       <a href="/dispack/doc1/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Списання зі складу">Акт ВР</a>
       <a href="/dispack/doc2/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Оприбуткування на склад">Введ. залишків</a>
