@@ -20,12 +20,14 @@ def dispack_list():
         return render_template("dispack_list.html", title='Розкомплектація')
 
 def doc(doc_id,dt):
+    # COMMON HEAD
     sql_h = """ select  a.num,a.nu,a.date_dok,a.doc_descr as serial ,a.cena,a.sklad_id,sn.name as sklad_name
                 from  actvr a
                     inner join sklad_names sn on sn.num = a.sklad_id
                 where a.num =? """
     data_h = db.data_module(sql_h, [doc_id])
     title = 'Розкомплектація'
+
     if dt == 1:
         sql_d = """ select ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
                     ,ad.tov_cena,ad.tov_suma
