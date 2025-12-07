@@ -2,16 +2,16 @@ from flask import  request,render_template,flash
 import db
 
 def dispack_list():
-    sql = """ select  * from usadd_web.DISPACK_LIST """
+    sql = """ select  * from usadd_web.DISPACK_LIST (?,?,?)"""
     try:
-        data = db.data_module(sql,'')
+        data = db.data_module(sql,[0,None,None])
+        print(data)
         if request.method == "GET":
             return  render_template("dispack_list.html", title = 'Розкомплектація',data = data)
         if request.method == "POST":
-            search = request.form['tov_serial']
-            sql = sql + ' where  TOVAR_SER_NUM like \''+ search +'\''
-            data = db.data_module(sql, '')
-            return render_template("dispack_list.html", title='Розкомплектація', data=data,search = search)
+            serial = request.form['tov_serial']
+            data = db.data_module(sql, [2,None,serial])
+            return render_template("dispack_list.html", title='Розкомплектація', data=data,search = serial)
     except Exception as e:
         flash(f"❌ {str(e)}", "danger")
         flash(f"❗️ {sql}", "warning")
@@ -23,8 +23,8 @@ def doc(doc_id,dt):
     #             from  actvr a
     #                 inner join sklad_names sn on sn.num = a.sklad_id
     #             where a.num =? """
-    sql_h = """ select  * from usadd_web.DISPACK_LIST (?,null) """
-    data_h = db.data_module(sql_h, [doc_id])
+    sql_h = """ select  *    from usadd_web.DISPACK_LIST (?,?,?)"""
+    data_h = db.data_module(sql_h, [1,doc_id,None])
     title = 'Розкомплектація'
     if dt == 1:
         sql_d = """ select ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo

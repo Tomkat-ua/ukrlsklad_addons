@@ -25,6 +25,7 @@
 <table id="tList" class="table table-sm table-striped table-bordered">
   <thead class="table-dark">
     <tr>
+      <th>ID</th>
       <th>Номер акту</th>
       <th>Найменування</th>
       <th>Серійний номер</th>
@@ -35,6 +36,7 @@
 <tbody>
   {% for row in data %}
   <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>

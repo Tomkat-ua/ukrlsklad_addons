@@ -30,13 +30,13 @@
                         "
                class="btn btn-outline-secondary btn-sm"
                role="button">
-                <i class="bi  me-1"></i> >{% if dt == 1 %}Введення залишків{% endif %}{% if dt == 2 %}Акт ВР{% endif %}
+                <i class="bi  me-1"></i> >> {% if dt == 1 %}Введення залишків{% endif %}{% if dt == 2 %}Акт ВР{% endif %}
             </a>
         </h5>
     </div>
     <div class="card-body">
 <div class="row">
-    <div class="col-md-4 mb-0">
+    <div class="col-md-3 mb-0">
         <label for="nd" class="form-label fw-bold">Дата документу:</label>
 
         <input type="text"
@@ -46,9 +46,17 @@
                value="{{ data_h.DATE_DOK.strftime('%d.%m.%Y') }}">
     </div>
 
-    <div class="col-md-4 mb-0">
-        <label for="serial" class="form-label fw-bold">Серійний:</label>
+    <div class="col-md-3 mb-0">
+        <label for="tov_name" class="form-label fw-bold">Найменування:</label>
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="tov_name"
+               value="{{ data_h.TOV_NAME }}">
+    </div>
 
+    <div class="col-md-3 mb-0">
+        <label for="serial" class="form-label fw-bold">Серійний:</label>
         <input type="text"
                readonly
                class="form-control-plaintext text-dark"
@@ -56,9 +64,8 @@
                value="{{ data_h.TOVAR_SER_NUM }}">
     </div>
 
-    <div class="col-md-4 mb-0">
+    <div class="col-md-3 mb-0">
         <label for="sklad" class="form-label fw-bold">Підрозділ:</label>
-
         <input type="text"
                readonly
                class="form-control-plaintext text-dark"
@@ -70,6 +77,7 @@
 {% if dt == 1 %}
 {#--------- ACTVR -------------------------------------------------------------}
 {#------ TABLE -----------------------------------------------------------------#}
+<input type="text" readonly class="form-control-plaintext fw-bold"  value="Зняти з обліку">
   <table id="tDoc1" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -94,6 +102,7 @@
 {######### ZNAKL #######################################################################################################}
   {% if dt == 2 %}
   {#-------- LEFT ---------------------------#}
+{% if data_dl %}
 <div class="row mb-3">
   <div class="col mb-3">
   <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання">
@@ -122,7 +131,7 @@
         </tr>
   </table>
 </div>
-
+{% endif %}
 {#--------------------- RIGHT ---------------------------#}
 <div class="col mb-3">
       <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати">
