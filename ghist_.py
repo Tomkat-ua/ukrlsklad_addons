@@ -1,6 +1,5 @@
 from flask import  request,render_template,flash
 import db
-# import pandas as pd
 
 title = 'Інформація по номеру'
 
@@ -20,16 +19,6 @@ def data_for_module(param,mod):
     else:
         sql = '*'
     param = [p if p != '' else None for p in param]
-
-    # con = db.get_connection()
-    # cur = con.cursor()
-    # cur.execute(sql, param)
-    # rows = cur.fetchall()
-    # columns = [desc[0] for desc in cur.description]
-    # df = pd.DataFrame(rows, columns=columns)
-    # df_display = df.fillna('')
-    # data = df_display.to_dict(orient='records')
-    # con.close()
     data = db.data_module(sql,param)
     return data
 
@@ -63,8 +52,6 @@ def datails(search_str):
     data_movies = data_for_module([search_str],'movies')
 ##### details ########
     data_header = data_for_module([search_str],'header')
-    # print(data_header[0])
-    # con.close()
     return render_template('ghist_det.html',title=title,rows = data_movies,row=data_header[0] )
-    # print(f"details {row_id}")
+
 
