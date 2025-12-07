@@ -22,6 +22,7 @@ def get_connection():
         )
 
 def data_module(sql,params):
+    print(sql,params)
     con = get_connection()
     cur = con.cursor()
     cur.execute(sql, params)
@@ -33,17 +34,17 @@ def data_module(sql,params):
     con.close()
     return data
 
-def get_data(sql,params,mode=1):
-    con = get_connection()
-    cur = con.cursor()
-    cur.execute(sql,params)
-    result  = ''
-    try:
-        if mode == 1:
-            result = cur.fetchall()
-        if mode == 2:
-            result = cur.fetchone()
-    except Exception as e:
-        print(str(e))
-    con.close()
-    return result
+# def get_data(sql,params,mode=1):
+#     con = get_connection()
+#     cur = con.cursor()
+#     cur.execute(sql,params)
+#     result  = ''
+#     try:
+#         if mode == 1:
+#             result = cur.fetchall()
+#         if mode == 2:
+#             result = cur.fetchone()
+#     except Exception as e:
+#         print(str(e))
+#     con.close()
+#     return result

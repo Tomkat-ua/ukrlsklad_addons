@@ -1,6 +1,6 @@
 from flask import  request,render_template,flash
 import db
-import pandas as pd
+# import pandas as pd
 
 title = 'Інформація по номеру'
 
@@ -19,35 +19,30 @@ def data_for_module(param,mod):
         sql = "select * from usadd_web.ghist_det_movies (?)"
     else:
         sql = '*'
-    print('mod=',mod,'sql=',sql)
-    con = db.get_connection()
-    cur = con.cursor()
     param = [p if p != '' else None for p in param]
-    print(param)
-    cur.execute(sql, param)
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    df = pd.DataFrame(rows, columns=columns)
-    df_display = df.fillna('')
-    data = df_display.to_dict(orient='records')
-    con.close()
+
+    # con = db.get_connection()
+    # cur = con.cursor()
+    # cur.execute(sql, param)
+    # rows = cur.fetchall()
+    # columns = [desc[0] for desc in cur.description]
+    # df = pd.DataFrame(rows, columns=columns)
+    # df_display = df.fillna('')
+    # data = df_display.to_dict(orient='records')
+    # con.close()
+    data = db.data_module(sql,param)
     return data
 
 def index():
     ######### LIST #######################
     if request.method == "POST":
-        # search_str = request.form.get('tov_serial')
+
         tov_serial = request.form['tov_serial']
         tov_name   = request.form['tov_name']
-        print('tov_serial=',tov_serial)
-        print('tov_name=', tov_name)
-        # data = data_for_list(search_str)
+
         data = data_for_module([tov_serial,tov_name],'list')
         if data:
             return render_template('ghist_.html', title=title,rows = data,search_value=tov_serial.strip())
-        # else:
-        #     flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
-        #     return redirect(url_for("ghist"))
         else:
             # 🛑 Невдача: НЕ робимо redirect, а відображаємо помилку на тій же сторінці
             flash("Запис не знайдено!", "danger")

@@ -2,7 +2,6 @@ from flask import  request,render_template,flash
 import db
 
 def dispack_list():
-    print(request.method)
     sql = """ select  * from usadd_web.DISPACK_LIST """
     try:
         data = db.data_module(sql,'')
@@ -12,7 +11,6 @@ def dispack_list():
             search = request.form['tov_serial']
             sql = sql + ' where  TOVAR_SER_NUM like \''+ search +'\''
             data = db.data_module(sql, '')
-            print(sql)
             return render_template("dispack_list.html", title='Розкомплектація', data=data,search = search)
     except Exception as e:
         flash(f"❌ {str(e)}", "danger")

@@ -10,21 +10,12 @@
   </div>
 
   <div class="me-2">
-  {#    <select class="form-select form-select-sm "  name="sklad_id" style="width: 200px;" >
-        <option value="{{ sklad_id }}">-- всі склади --</option>
-        {% for id, name in sklads %}
-          <option value="{{ id }}">{{ name }}</option>
-        {% endfor %}
-      </select>#}
       <select class="form-select form-select-sm" name="sklad_id" style="width: 200px;" >
-          <option value="None" {% if sklad_id == "None" %}selected{% endif %}>
-              -- всі склади --
+          <option value="0" {% if sklad_id == "0" or sklad_id == None or sklad_id == "" %}selected{% endif %}>
+                -- всі склади --
           </option>
-          {% for id, name in sklads %}
-              <option value="{{ id }}"
-                      {% if id | string == sklad_id %}selected{% endif %}>
-                      {{ name }}
-              </option>
+          {% for sklad in sklads %}
+                <option value="{{ sklad.ID }}"{% if sklad.ID | string == sklad_id %}selected{% endif %}>{{ sklad.NAME }}</option>
           {% endfor %}
       </select>
 
@@ -38,7 +29,7 @@
    {% if total %}
   <div class="d-flex">
     <h6>Знайдено {{ total }} номерів {{ tov_name }} </h6>
-    <h6>Склад: {{ sklad_name }} </h6>
+    <h6> | Склад: {{ sklad_name }} </h6>
   </div>
    {% endif %}
   </form>
@@ -53,7 +44,7 @@
         </thead>
         <tbody>
           {% for u in result %}
-          <tr><td>{{ u[0] }}</td></tr>
+          <tr><td>{{ u.SERIAL }}</td></tr>
           {% endfor %}
         </tbody>
       </table>
