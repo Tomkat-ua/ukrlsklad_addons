@@ -22,7 +22,7 @@
 
 {########## COMMON HEAD #########################################################}
 
-<div class="card mb-1">
+<div class="card mb-0">
     <div class="card-header bg-light">
         <h5 class="mb-0">{{ docname }} № {{ data_h.NU }}
             <a href="   {% if dt == 1 %}/dispack/doc2/{{ data_h.NUM }}{% endif %}
@@ -53,7 +53,7 @@
                readonly
                class="form-control-plaintext text-dark"
                id="serial"
-               value="{{ data_h.SERIAL }}">
+               value="{{ data_h.TOVAR_SER_NUM }}">
     </div>
 
     <div class="col-md-4 mb-0">
