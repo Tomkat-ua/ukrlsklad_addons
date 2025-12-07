@@ -12,10 +12,10 @@
   <tbody>
     {% for report in reports %}
     <tr>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ report[0] }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report[1] }}</td>
+      <td style="padding-top: 1px; padding-bottom: 1px;">{{ report.NUM }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.REP_NAME }}</td>
       <td>
-        <a href="/reports2/{{ report[0] }} " class="btn btn-sm btn-outline-secondary" title="Edit">
+        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary" title="Edit">
           <i class="bi bi-pencil"></i>
         </a>
       </td>

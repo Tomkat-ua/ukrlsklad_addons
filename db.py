@@ -1,5 +1,6 @@
 import  fdb,platform,config, pandas as pd
 
+
 def get_connection():
     if platform.system() == 'Windows':
         return fdb.connect(
@@ -22,7 +23,6 @@ def get_connection():
         )
 
 def data_module(sql,params):
-    print(sql,params)
     con = get_connection()
     cur = con.cursor()
     cur.execute(sql, params)
@@ -32,6 +32,11 @@ def data_module(sql,params):
     df_display = df.fillna('')
     data = df_display.to_dict(orient='records')
     con.close()
+    if config.debug_mode == 1:
+        print('⚠️Debug mode ON⚠️')
+        print('🔼sql:', sql)
+        print('⏺️params:',params)
+        print('⏬data:',data)
     return data
 
 # def get_data(sql,params,mode=1):

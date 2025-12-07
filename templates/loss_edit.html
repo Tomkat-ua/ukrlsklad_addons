@@ -69,15 +69,6 @@
               <div class="mb-0 row align-items-center" >
                   <label class="col-auto col-form-label text-start" style="width:120px;">Підрозділ:</label>
                   <input type="text" class="form-control form-control-sm col"  readonly value="{{ data.SKLAD_NAME }}">
-                 {#   <select  class="form-select form-select-sm col"  name="SKLAD_ID">
-                      <option  value="">-- Виберіть склад --</option>
-                      {% for sklad in sklads %}
-                        <option value="{{ sklad.ID }}"
-                          {% if (sklad.ID|string) == (data.SKLAD_ID|string) %} selected {% endif %}>
-                          {{ sklad.NAME }}
-                        </option>
-                      {% endfor %}
-                    </select> #}
               </div>
             </div>
             </div>

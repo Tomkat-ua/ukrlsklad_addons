@@ -22,10 +22,8 @@ def format_currency_ua(value, decimal_places=2):
         # 1. Форматування Python: 12,608.33
         # Використовуємо :,.{decimal_places}f
         formatted_str = f"{value:,.{decimal_places}f}"
-
         # 2. 🌟 Заміна роздільника тисяч (,) на пробіл
         thousand_separated = formatted_str.replace(",", " ")
-
         # 3. 🌟 Заміна десяткового роздільника (.) на кому
         return thousand_separated.replace(".", ",")
 

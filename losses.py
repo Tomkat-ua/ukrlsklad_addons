@@ -1,21 +1,19 @@
-import db,os
+import db
 from flask import  request, redirect, flash,render_template,url_for
 import pandas as pd
 
-def data_for_module(param,sql):
-    print('sql=',sql,param)
-    con = db.get_connection()
-    cur = con.cursor()
-    cur.execute(sql, [param])
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    df = pd.DataFrame(rows, columns=columns)
-    # df['ACTION_DATE_TIME_STR'] = df['ACTION_DATE_TIME'].apply(
-    #     lambda x: x.strftime('%d.%m.%Y %H:%M') if pd.notna(x) else '-' )
-    df_display = df.fillna('')
-    data = df_display.to_dict(orient='records')
-    con.close()
-    return data
+# def data_for_module(param,sql):
+#     print('sql=',sql,param)
+#     con = db.get_connection()
+#     cur = con.cursor()
+#     cur.execute(sql, [param])
+#     rows = cur.fetchall()
+#     columns = [desc[0] for desc in cur.description]
+#     df = pd.DataFrame(rows, columns=columns)
+#     df_display = df.fillna('')
+#     data = df_display.to_dict(orient='records')
+#     con.close()
+#     return data
 
 
 # def losses_list():
@@ -81,9 +79,9 @@ def loss_list():
     if request.method == "POST":
         # search_str = request.form.get('tov_serial')
         search_str = request.form['tov_serial']
-        print('search_str',search_str)
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
-        data = data_for_module(search_str,sql)
+        # data = data_for_module(search_str,sql)
+        data = db.data_module(sql,[search_str])
         if data:
             return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
         else:
@@ -93,11 +91,8 @@ def loss_list():
     return render_template('losses2.html', losses='', title='Втрати майна' ,search=''   )
 
 def loss_edit(id):
-    print('search_str', id)
     sql = "select * from usadd.get_losses where UDOC_ID = ?"
-    data = data_for_module(id, sql)
-    # sql = " select num as id, name from sklad_names sn where sn.visible = ? and sn.firma_id =170  order by 2 "
-    # sklads = data_for_module(1, sql)
-    # sql = "select c.num as id,  c.fio as name  from client c where c.tip = ? order by 2"
-    # teams = data_for_module(300000127, sql)
-    return render_template('loss_edit.html', losses='', title='Втрати майна',data=data[0],sklads='',teams='')
+    # data = data_for_module(id, sql)
+    data = db.data_module(sql,[id])
+    # return render_template('loss_edit.html', losses='', title='Втрати майна',data=data[0],sklads='',teams='')
+    return render_template('loss_edit.html', losses='', title='Втрати майна', data=data[0], sklads='', teams='')

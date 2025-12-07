@@ -1,30 +1,34 @@
 from flask import  request,render_template,render_template_string #,flash,redirect,url_for
+
+import config
 import db,json,re #,html
 from datetime import date
 
 
 def reports_list():
-    con = db.get_connection()
-    cur = con.cursor()
-    cur.execute("SELECT NUM, REP_NAME FROM REPORTS_WEB ")
-    reports = cur.fetchall()
-    con.close()
+    sql = "SELECT NUM, REP_NAME FROM REPORTS_WEB "
+    reports = db.data_module(sql,'')
     return render_template("reports.html",title='Звіти',reports = reports)
 
 def reports_list2(rep_id):
-    today = date.today().isoformat()
+    # today = date.today().isoformat()
 
     """Відображення сторінки звіту з параметрами та результатом"""
-    con = db.get_connection()
-    cur = con.cursor()
-    cur.execute("SELECT REP_NAME, QRY, PARAMS, HTML FROM REPORTS_WEB WHERE NUM = ?", (rep_id,))
-    row = cur.fetchone()
-    con.close()
+
+    sql = "SELECT REP_NAME, QRY, PARAMS, HTML FROM REPORTS_WEB WHERE NUM = ?"
+    row = db.data_module(sql,[rep_id])
 
     if not row:
         return f"❌ Звіт #{rep_id} не знайдено", 404
 
-    rep_name, qry, params_json, html_content = row
+    rep_name = row[0]['REP_NAME']
+    qry = row[0]['QRY']
+    params_json = row[0]['PARAMS']
+    html_content = row[0]['HTML']
+
+    if config.debug_mode == 1:
+        print('repname:',rep_name)
+
     params = json.loads(params_json or "{}")
 
     # --- Генерація фільтрів ---
@@ -55,7 +59,8 @@ def reports_list2(rep_id):
                 </div>
                 """
             elif p["type"] == "date":
-                print(p["default"])
+                if config.debug_mode == 1:
+                    print('✨ param value:',p["default"])
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
@@ -83,8 +88,8 @@ def reports_list2(rep_id):
         q = qry
         for k, v in values.items():
             q = q.replace(f":{k}", f"'{v}'")
-
-        print(q)
+        if config.debug_mode == 1:
+            print('✨',q)
         cur.execute(q)
         rows = cur.fetchall()
         cols = [desc[0] for desc in cur.description]
