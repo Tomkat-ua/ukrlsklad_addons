@@ -50,7 +50,7 @@
         <label for="tov_name" class="form-label fw-bold">Найменування:</label>
         <input type="text"
                readonly
-               class="form-control-plaintext text-dark"
+               class="form-control-plaintext text-primary fw-bold"
                id="tov_name"
                value="{{ data_h.TOV_NAME }}">
     </div>
@@ -59,7 +59,7 @@
         <label for="serial" class="form-label fw-bold">Серійний:</label>
         <input type="text"
                readonly
-               class="form-control-plaintext text-dark"
+               class="text-success  form-control-plaintext fw-bold"
                id="serial"
                value="{{ data_h.TOVAR_SER_NUM }}">
     </div>
@@ -68,7 +68,7 @@
         <label for="sklad" class="form-label fw-bold">Підрозділ:</label>
         <input type="text"
                readonly
-               class="form-control-plaintext text-dark"
+               class="form-control-plaintext text-dark fw-bold"
                id="sklad"
                value="{{ data_h.SKLAD_NAME }}">
     </div>
@@ -84,7 +84,6 @@
         <th>Найменування</th>
         <th>Кількість</th>
         <th>Ціна</th>
-        <th>Вартість</th>
       </tr>
     </thead>
   <tbody>
@@ -93,7 +92,6 @@
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_SUMA | currency_format_ua }}</td>
     </tr>
   {% endfor %}
   </tbody>

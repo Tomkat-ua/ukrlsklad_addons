@@ -22,7 +22,7 @@ def get_connection():
             charset="utf-8"
         )
 
-def data_module(sql,params):
+def data_module(sql,params,des = None):
     con = get_connection()
     cur = con.cursor()
     cur.execute(sql, params)
@@ -37,6 +37,8 @@ def data_module(sql,params):
         print('🔼sql:', sql)
         print('⏺️params:',params)
         print('⏬data:',data)
+        if des:
+            print('🔤description:',des)
     return data
 
 # def get_data(sql,params,mode=1):
