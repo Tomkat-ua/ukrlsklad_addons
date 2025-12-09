@@ -24,6 +24,8 @@ def doc(doc_id,dt):
     sql_h = """ select  *    from usadd_web.DISPACK_LIST (?,?,?)"""
     data_h = db.data_module(sql_h, [1,doc_id,None],function_name+'_header')
     title = 'Розкомплектація'
+
+
     if dt == 1:
         sql_d = """ select ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
                     ,ts.tovar_ser_num ,ts.doc_type_id
@@ -44,28 +46,39 @@ def doc(doc_id,dt):
                                , data_d=data_d,docname = 'Акт Виконаних Робіт')
 
     if dt == 2:
+
+        # RIGHT SIDE
         sql_dr = """ select a.num,a.nu,a.date_dok,a.doc_descr,ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
                     ,ad.tov_cena,ad.tov_suma
                     from  znakl a
+                     inner join actvr avr on avr.num = ?
                      inner join znakl_ ad on ad.pid = a.num
-                     where a.nu = (select b.nu from actvr b where b.num = ?) """
+                     where a.dopoln1  =  cast(? as varchar (15))
+                     and ad.sklad_id_to = avr.sklad_id"""
+        data_dr = db.data_module(sql_dr,[doc_id,doc_id],function_name+'_dt=2 _dr')
 
-        data_dr = db.data_module(sql_dr,[doc_id],function_name+'_dt=2 _dr')
+        # LEFT SIDE
         sql_dl = """ select a.num,a.nu,a.date_dok,a.doc_descr,ad.tov_name,cast(ad.tov_kolvo as int) as tov_kolvo
-        ,ad.tov_cena,ad.tov_suma
-                        from  znakl a
+                    ,ad.tov_cena,ad.tov_suma
+                    from  znakl a
+                     inner join actvr avr on avr.num = ?
                      inner join znakl_ ad on ad.pid = a.num
-                    where a.nu = (select b.nu||'_С' from actvr b where b.num = ?) """
+                     where a.dopoln1  =  cast(? as varchar (15))
+                     and ad.sklad_id_to =
+                     ( select p.param_value from sklad_params p where p.id_type = 4 and p.sklad_id = avr.sklad_id) """
 
-        data_dl = db.data_module(sql_dl,[doc_id],function_name+'_dt=2 _dl')
+        data_dl = db.data_module(sql_dl,[doc_id,doc_id],function_name+'_dt=2 _dl')
         total_l = 0
+
         for item in data_dl:
             total_l += item['TOV_SUMA']
         total_r = 0
         for item in data_dr:
             total_r += item['TOV_SUMA']
         return render_template("dispack_doc1.html", title=title, dt=dt, data_dr=data_dr,data_dl=data_dl
-                               ,total_l=total_l,total_r=total_r,data_h = data_h[0],docname = 'Введення залишків')
+                               ,total_l=total_l,total_r=total_r,data_h = data_h[0]
+
+                               ,docname = 'Акт зміни якісного стану')
 
 
     # try:

@@ -70,7 +70,7 @@
                readonly
                class="form-control-plaintext text-dark fw-bold"
                id="sklad"
-               value="{{ data_h.SKLAD_NAME }}">
+               value="{{ data_h.SKLAD_NAME }} {{ data_h.SKLAD_ID }}">
     </div>
 
 </div></div></div>
@@ -103,7 +103,7 @@
 {% if data_dl %}
 <div class="row mb-3">
   <div class="col mb-3">
-  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання">
+  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання ({{ data_dl[0]['NU'] }})">
   <table id="tDoc2l" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -132,7 +132,7 @@
 {% endif %}
 {#--------------------- RIGHT ---------------------------#}
 <div class="col mb-3">
-      <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати">
+      <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати ({{ data_dr[0]['NU'] }})">
     <table id="tDoc2r" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
