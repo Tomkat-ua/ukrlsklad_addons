@@ -1,0 +1,42 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<form action="/dispack/add" method="POST">
+    <div class="card mb-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Додати розкомплектацію </h5>
+        </div>
+        <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="nu" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Номер документу</label>
+                            <input type="text" id="nu" class="form-control form-control-sm flex-grow-1" name="nu" required>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="nd" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                            <input type="date" id="nd" class="form-control form-control-sm flex-grow-1" name="nd" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="serial" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Серійний номер</label>
+                            <input type="text" id="serial" class="form-control form-control-sm flex-grow-1" name="serial" required>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="price" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Ціна БпЛА</label>
+                            <input type="number" id="price" class="form-control form-control-sm flex-grow-1" name="price" required>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex align-items-center mb-3 gap-2">
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                    <a href="/dispack" class="btn btn-primary" role="button">Скасувати</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
