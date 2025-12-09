@@ -115,13 +115,15 @@ def reports_list2(rep_id):
 @app.route('/dispack', methods=['GET','POST'])
 def list():
     return dispack.dispack_list()
-
 @app.route('/dispack/doc1/<int:doc_id>', methods=['GET','POST'])
 def doc1(doc_id):
     return dispack.doc(doc_id,1)
 @app.route('/dispack/doc2/<int:doc_id>', methods=['GET','POST'])
 def doc2(doc_id):
     return dispack.doc(doc_id,2)
+@app.route('/dispack/add', methods=['GET','POST'])
+def add():
+    return dispack.add()
 ########### TEST #############################
 # @app.route("/test/<doc_id>")
 # def proxy_arrived(doc_id):

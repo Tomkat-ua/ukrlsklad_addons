@@ -31,6 +31,7 @@ def data_module(sql,params,des = None):
     df = pd.DataFrame(rows, columns=columns)
     df_display = df.fillna('')
     data = df_display.to_dict(orient='records')
+    con.commit()
     con.close()
     if config.debug_mode == 1:
         print('⚠️Debug mode ON⚠️')
