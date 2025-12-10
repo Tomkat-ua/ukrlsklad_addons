@@ -1,5 +1,20 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+
+<style>
+/* Додайте це до вашого CSS. Це гарантує, що текст переноситься */
+.table-responsive th,
+.table-responsive td {
+    white-space: normal !important;
+}
+
+/* Якщо вам потрібен менший шрифт, додайте це теж */
+.custom-font-small {
+    font-size: 14px;
+}
+</style>
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +40,10 @@
       <th class="text-wrap" style="max-width: 80px;">№ документу</th>
       <th class="text-wrap" style="max-width: 80px;">Дата документу</th>
       <th>Постачальник</th>
+      <th>Стаття надходження</th>
       <th class="text-wrap" style="max-width: 100px;">№ док. постач.</th>
       <th class="text-wrap" style="max-width: 100px;">Дата док. постач.</th>
+      <th>ID товару</th>
       <th>Номенк. №</th>
       <th>Найменування</th>
       <th>Кількість</th>
@@ -39,9 +56,17 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
     <td class="text-wrap"  style="font-size: 13px; max-width: 200px; padding-top: 1px; padding-bottom: 1px;">{{ row.CLIENT }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.A_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_DATE_DOK }}</td>
-    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CODE }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">
+      <a href="/mnakl?tovar_id={{ row.TOVAR_ID }}"
+         title="вид. накладні по ID товару">{{ row.TOVAR_ID }} </a>
+    </td>
+    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">
+      <a href="/mnakl?tov_code={{ row.TOV_CODE }}"
+         title="вид. накладні по ном. номеру">{{ row.TOV_CODE }} </a>
+    </td>
     <td class="text-wrap"  style="font-size: 13px; max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>

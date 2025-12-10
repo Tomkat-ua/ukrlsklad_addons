@@ -33,11 +33,12 @@ def data_module(sql,params,des = None):
     data = df_display.to_dict(orient='records')
     con.commit()
     con.close()
-    if config.debug_mode == 1:
+    if config.debug_mode > 0:
         print('⚠️Debug mode ON⚠️')
         print('🔼sql:', sql)
         print('⏺️params:',params)
-        print('⏬data:',data)
+        if config.debug_mode > 1:
+            print('⏬data:', data)
         if des:
             print('🔤description:',des)
     return data
