@@ -23,5 +23,5 @@ def pnakl_list():
                     where pd.tov_name like ?
                     order by p.date_dok
                     """
-        data = db.data_module(sql,[search])
+        data = db.data_module(sql,[search],function_name)
     return  render_template("pnakl_list.html", title='Приход майна',data= data,search=search)
