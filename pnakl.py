@@ -13,11 +13,13 @@ def pnakl_list():
                 ,pd.pid, pd.tov_name
                 ,cast ( pd.tov_kolvo as int) as tov_kolvo
                 ,pd.tov_cena 
+                ,tn.kod as tov_code
                 from pnakl_ pd
                     inner join pnakl p on p.num = pd.pid
+                    inner join tovar_name tn on tn.num = pd.tovar_id
                 where pd.tov_name like ?
                 order by p.date_dok
                 """
     data = db.data_module(sql,[search])
     print(data)
-    return  render_template("pnakl_list.html", title='Приход майна',data= data)
+    return  render_template("pnakl_list.html", title='Приход майна',data= data,search=search)

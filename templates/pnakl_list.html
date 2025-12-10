@@ -18,14 +18,16 @@
 </nav>
 
 {% if data %}
+<div class="table-responsive">
 <table id="tList" class="table table-sm table-striped table-bordered">
   <thead class="table-dark">
     <tr>
-      <th>Номер документу</th>
-      <th>Дата документу</th>
+      <th class="text-wrap" style="max-width: 80px;">№ документу</th>
+      <th class="text-wrap" style="max-width: 80px;">Дата документу</th>
       <th>Постачальник</th>
-      <th class="text-wrap" style="max-width: 100px;">Номер документу постачальника</th>
-      <th class="text-wrap" style="max-width: 100px;">Дата документу постачальника</th>
+      <th class="text-wrap" style="max-width: 100px;">№ док. постач.</th>
+      <th class="text-wrap" style="max-width: 100px;">Дата док. постач.</th>
+      <th>Номенк. №</th>
       <th>Найменування</th>
       <th>Кількість</th>
       <th>Ціна</th>
@@ -36,16 +38,18 @@
   <tr>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
-    <td class="text-wrap"  style="max-width: 200px; padding-top: 1px; padding-bottom: 1px;">{{ row.CLIENT }}</td>
+    <td class="text-wrap"  style="font-size: 13px; max-width: 200px; padding-top: 1px; padding-bottom: 1px;">{{ row.CLIENT }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_DATE_DOK }}</td>
-    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CODE }}</td>
+    <td class="text-wrap"  style="font-size: 13px; max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
   </tr>
   {% endfor %}
     </tbody>
 </table>
+</div>
   {% endif %}
 
 {% endblock %}
