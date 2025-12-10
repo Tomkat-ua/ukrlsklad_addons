@@ -138,8 +138,9 @@ def mnakl_list():
 # def proxy_arrived(doc_id):
 #     return get_arrived_history(doc_id)
 
-
-
+# @app.route('/pdf')
+# def generate_pdf():
+#     return to_pdf.generate_pdf()
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':

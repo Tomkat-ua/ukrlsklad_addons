@@ -26,7 +26,7 @@ from pnakl_ pd
     inner join tovar_name tn on tn.num = pd.tovar_id
     inner join article_types a on a.num = p.article_id
 where pd.tov_name like ?
-order by p.date_dok
+order by p.date_dok desc
                     """
         data = db.data_module(sql,[search],function_name)
     return  render_template("pnakl_list.html", title='Приход майна',data= data,search=search,pname_1 = '/')
