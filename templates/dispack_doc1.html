@@ -17,9 +17,16 @@
     </div>
     <div class="card-body">
 <div class="row">
-    <div class="col-md-3 mb-0">
+    <div class="col-md-2 mb-0">
+        <label for="id" class="form-label fw-bold">DOC_ID:</label>
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="id"
+               value="{{ data_h.NUM }}">
+    </div>
+    <div class="col-md-2 mb-0">
         <label for="nd" class="form-label fw-bold">Дата документу:</label>
-
         <input type="text"
                readonly
                class="form-control-plaintext text-dark"
@@ -27,7 +34,7 @@
                value="{{ data_h.DATE_DOK.strftime('%d.%m.%Y') }}">
     </div>
 
-    <div class="col-md-3 mb-0">
+    <div class="col-md-2 mb-0">
         <label for="tov_name" class="form-label fw-bold">Найменування:</label>
         <input type="text"
                readonly
@@ -36,7 +43,7 @@
                value="{{ data_h.TOV_NAME }}">
     </div>
 
-    <div class="col-md-3 mb-0">
+    <div class="col-md-2 mb-0">
         <label for="serial" class="form-label fw-bold">Серійний:</label>
         <input type="text"
                readonly
@@ -45,7 +52,7 @@
                value="{{ data_h.TOVAR_SER_NUM }}">
     </div>
 
-    <div class="col-md-3 mb-0">
+    <div class="col-md-2 mb-0">
         <label for="sklad" class="form-label fw-bold">Підрозділ:</label>
         <input type="text"
                readonly
@@ -112,6 +119,7 @@
 </div>
 {% endif %}
 {#--------------------- RIGHT ---------------------------#}
+    {% if data_dr %}
 <div class="col mb-3">
       <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати ({{ data_dr[0]['NU'] }})">
     <table id="tDoc2r" class="table table-sm table-striped table-bordered">
@@ -140,6 +148,7 @@
         </tr>
   </table>
   </div>
+    {% endif %}
  {% endif %}
 </div>
 {% endblock %}

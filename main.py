@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports,dispack,losses_nn
+import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl
 
 app = Flask(__name__)
 
@@ -124,6 +124,11 @@ def doc2(doc_id):
 @app.route('/dispack/add', methods=['GET','POST'])
 def add():
     return dispack.add()
+########### PNAKL ############################
+@app.route('/pnakl',methods = ['GET','POST'])
+def pnakl_list():
+    return pnakl.pnakl_list()
+
 ########### TEST #############################
 # @app.route("/test/<doc_id>")
 # def proxy_arrived(doc_id):

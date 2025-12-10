@@ -1,6 +1,5 @@
 from flask import  request,render_template,flash,redirect, url_for
 import sys,db
-
 import config
 
 title = 'Розкомплектація'
@@ -28,7 +27,7 @@ def doc(doc_id,dt):
     # COMMON HEAD
     sql_h = """ select  *    from usadd_web.DISPACK_LIST (?,?,?)"""
     data_h = db.data_module(sql_h, [1,doc_id,None],function_name+'_header')
-
+    # print(data_h)
     #ACT VR
     if dt == 1:
         sql_d = 'select * from usadd_web.dispack_doc_d(?)'
