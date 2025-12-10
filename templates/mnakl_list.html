@@ -1,0 +1,67 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<style>
+/* Додайте це до вашого CSS. Це гарантує, що текст переноситься */
+.table-responsive th,
+.table-responsive td {
+    white-space: normal !important;
+}
+
+/* Якщо вам потрібен менший шрифт, додайте це теж */
+.custom-font-small {
+    font-size: 14px;
+}
+</style>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="d-flex gap-2" method="post">
+        <input class="form-control" style="width: 250px;" type="search" placeholder="Найменування"  name = "search" value = "{{ search }}">
+        <button class="btn btn-primary" type="submit" >Шукати</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+{% if data %}
+<div class="table-responsive">
+<table id="tList" class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th class="text-wrap" style="max-width: 80px;">№ документу</th>
+      <th class="text-wrap" style="max-width: 80px;">Дата документу</th>
+      <th>Підрозділ</th>
+      <th>Код номенклат.</th>
+      <th>Найменування</th>
+      <th>Кількість</th>
+      <th>Ціна</th>
+    </tr>
+  </thead>
+    <tbody>
+  {% for row in data %}
+
+  <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td class="text-wrap"  style="font-size: 13px; max-width: 200px; padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CODE }}</td>
+    <td class="text-wrap"  style="font-size: 13px; max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
+  </tr>
+  {% endfor %}
+    </tbody>
+</table>
+</div>
+  {% endif %}
+
+{% endblock %}
