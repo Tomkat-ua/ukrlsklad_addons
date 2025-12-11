@@ -39,10 +39,35 @@
       <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.KOD }}</td>
       <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;"
+  {#    <td style="padding-top: 1px; padding-bottom: 1px;"
           class="badge rounded-pill
                  {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено' else 'bg-secondary text-light' }}
-                 fs-6 px-2 py-2 shadow">{{ row.STATUS }}</td>
+                 fs-6 px-2 py-2 shadow">
+      </td>#}
+      <td style="padding-top: 1px; padding-bottom: 1px;">
+  {% set status_text = row.STATUS|trim|lower %}
+    {% if status_text == "втрачено" %}
+        <form target="_blank" method="POST" action="{{ url_for('losses_list') }}" style="display:inline;">
+            <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
+            <button type="submit"
+                    class="badge rounded-pill bg-danger text-white fs-6 px-2 py-2 shadow border-0">
+                {{ row.STATUS }} >>
+            </button>
+        </form>
+    {% elif status_text == "розкомплект" %}
+        <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
+            <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
+            <button type="submit"
+                    class="badge rounded-pill bg-secondary text-white fs-6 px-2 py-2 shadow border-0">
+                {{ row.STATUS }} >>
+            </button>
+        </form>
+    {% else %}
+        <span class="badge rounded-pill bg-success text-light fs-6 px-2 py-2 shadow">
+            {{ row.STATUS }}
+        </span>
+    {% endif %}
+</td>
       <td style="padding-top: 1px; padding-bottom: 1px;"><a href="{{ url_for('ghist_details', row_id=row.SERIAL_ID) }}"
                                                             class="btn btn-sm btn-light">Деталі</a></td>
     </tr>

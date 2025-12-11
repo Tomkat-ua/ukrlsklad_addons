@@ -74,7 +74,7 @@ def serials_search():
 
 ########### G_HIST ############################################
 @app.route("/ghist",methods =['GET','POST'])
-def ghist():
+def ghist_list():
     return ghist_.index()
 
 @app.route("/ghist_details/<row_id>",methods =['GET','POST'])
@@ -113,16 +113,16 @@ def reports_list2(rep_id):
 
 ########### DISPAKING ########################
 @app.route('/dispack', methods=['GET','POST'])
-def list():
+def dispack_list():
     return dispack.dispack_list()
 @app.route('/dispack/doc1/<int:doc_id>', methods=['GET','POST'])
-def doc1(doc_id):
+def dispack_doc1(doc_id):
     return dispack.doc(doc_id,1)
 @app.route('/dispack/doc2/<int:doc_id>', methods=['GET','POST'])
-def doc2(doc_id):
+def dispack_doc2(doc_id):
     return dispack.doc(doc_id,2)
 @app.route('/dispack/add', methods=['GET','POST'])
-def add():
+def dispack_add():
     return dispack.add()
 ########### PNAKL ############################
 @app.route('/pnakl',methods = ['GET','POST'])

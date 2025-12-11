@@ -30,6 +30,7 @@ def index():
         tov_name   = request.form['tov_name']
 
         data = data_for_module([tov_serial,tov_name],'list')
+
         if data:
             return render_template('ghist_.html', title=title,rows = data,search_value=tov_serial.strip())
         else:

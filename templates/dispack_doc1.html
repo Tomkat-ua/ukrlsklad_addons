@@ -91,7 +91,7 @@
 {% if data_dl %}
 <div class="row mb-3">
   <div class="col mb-3">
-  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання ({{ data_dl[0]['NU'] }})">
+  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання {{ data_dl[0]['NU'] }}({{ data_dl[0]['NUM'] }})">
   <table id="tDoc2l" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -104,7 +104,7 @@
       <tbody>
     {% for row in data_dl %}
         <tr>
-            <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+            <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}{% if row.SERIAL %} ({{ row.SERIAL }}) {% endif %}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_SUMA | currency_format_ua }}</td>
@@ -121,7 +121,7 @@
 {#--------------------- RIGHT ---------------------------#}
     {% if data_dr %}
 <div class="col mb-3">
-      <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати ({{ data_dr[0]['NU'] }})">
+      <input type="text" readonly class="form-control-plaintext fw-bold"  value="Оприбуткувати {{ data_dr[0]['NU'] }}({{ data_dr[0]['NUM'] }})">
     <table id="tDoc2r" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -135,7 +135,7 @@
       <tbody>
     {% for row in data_dr %}
         <tr>
-            <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+            <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }} {% if row.SERIAL %} ({{ row.SERIAL }}) {% endif %}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua}}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_SUMA | currency_format_ua}}</td>

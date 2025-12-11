@@ -37,20 +37,24 @@ def doc(doc_id,dt):
 
     #INS ZNAKL
     if dt == 2:
-        # RIGHT SIDE
-        sql_dr = 'select * from usadd_web.dispack_doc_dr(?)'
-        data_dr = db.data_module(sql_dr,[doc_id],function_name+'_dt=2 _dr')
-
         # LEFT SIDE
         sql_dl = 'select * from usadd_web.dispack_doc_dl(?)'
         data_dl = db.data_module(sql_dl,[doc_id],function_name+'_dt=2 _dl')
         total_l = 0
-
+        #znakl_l_id = data_dl[0]['NUM']
+        # print('znakl_l_id:',znakl_l_id)
         for item in data_dl:
             total_l += item['TOV_SUMA']
+
+        # RIGHT SIDE
+        sql_dr = 'select * from usadd_web.dispack_doc_dr(?)'
+        data_dr = db.data_module(sql_dr,[doc_id],function_name+'_dt=2 _dr')
         total_r = 0
         for item in data_dr:
             total_r += item['TOV_SUMA']
+
+
+
         return render_template("dispack_doc1.html", title=title, dt=dt, data_dr=data_dr,data_dl=data_dl
                                ,total_l=total_l,total_r=total_r,data_h = data_h[0]
                                ,docname = 'Акт зміни якісного стану')
