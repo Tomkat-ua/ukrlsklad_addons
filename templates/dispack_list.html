@@ -12,12 +12,17 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
-      <form class="d-flex gap-2" method="post">
-        <a href="/dispack/add" class="btn btn-primary" role="button">Додати</a>
-        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"  name = "tov_serial" value = "{{ search }}">
-        <button class="btn btn-primary" type="submit" >Шукати</button>
-        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
-      </form>
+
+<form class="d-flex gap-1 align-items-center mb-1" method="post">
+    <button type="button"
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAdd">➕ Додати
+    </button>
+    <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Серійний номер" name="tov_serial" value="{{ search }}">
+    <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="copyTable()">📋 Копіювати таблицю</button>
+</form>
     </div>
   </div>
 </nav>
@@ -52,5 +57,43 @@
   {% endfor %}
 </tbody>
 </table>
+
+<!--&#45;&#45; MODAL -->
+<div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('dispack_add') }}"> <div class="modal-header">
+                    <h5 class="modal-title" id="newEntryModalLabel">Розкомплектація</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="nu" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Номер документу</label>
+                        <input type="text" id="nu" class="form-control form-control-sm flex-grow-1" name="nu" required>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="nd" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <input type="date" id="nd" class="form-control form-control-sm flex-grow-1" name="nd" required>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="serial" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Серійний номер</label>
+                        <input type="text" id="serial" class="form-control form-control-sm flex-grow-1" name="serial" required>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="price" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Ціна БпЛА</label>
+                        <input type="number" id="price" class="form-control form-control-sm flex-grow-1" name="price" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--&#45;&#45;-->
 
 {% endblock %}

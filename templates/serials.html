@@ -1,30 +1,40 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-
+{#
 <div class="container py-4">
   <h4 class="mb-4">🔍 Пошук серійних номерів</h4>
   <form method="post" class="row g-2 mb-4">
-<div class="d-flex">
-  <div class="me-2">
-    <input type="text" name="search_tovar" class="form-control form-control-sm" placeholder="Введіть ID товару" value="{{ search_tovar }}" required>
-  </div>
-
-  <div class="me-2">
-      <select class="form-select form-select-sm" name="sklad_id" style="width: 200px;" >
+#}
+<!-- &#45;&#45;     -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+      <form class="d-flex gap-1 align-items-center mb-1" method="post">
+        <input class="form-control form-control-sm" style="width: 250px;"
+               type="search"
+               placeholder="Введіть ID товару"
+               name="search_tovar"
+               value="{{ search_tovar }}"
+               required>
+        <select class="form-select form-select-sm" name="sklad_id" style="width: 200px;" >
           <option value="0" {% if sklad_id == "0" or sklad_id == None or sklad_id == "" %}selected{% endif %}>
                 -- всі склади --
           </option>
           {% for sklad in sklads %}
                 <option value="{{ sklad.ID }}"{% if sklad.ID | string == sklad_id %}selected{% endif %}>{{ sklad.NAME }}</option>
           {% endfor %}
-      </select>
-
+        </select>
+        <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
+      </form>
+    </div>
   </div>
-    <div class="me-2">
-    <button type="submit" class="btn btn-primary btn-sm">Пошук</button>
-  </div>
-  <button class="btn btn-sm btn-primary" type="button" onclick="copyTable()">📋 Копіювати таблицю</button>
-</div>
+</nav>
+<!--      &#45;&#45;-->
 
    {% if total %}
   <div class="d-flex">

@@ -9,11 +9,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
-      <form class="d-flex gap-2" method="post">
-        <input class="form-control" style="width: 250px;" type="search" placeholder="Назва матеріалу"  minlength="5" name = "tov_name" value="{{ tov_name }}">
+      <form class="d-flex gap-1 align-items-center mb-1" method="post">
+        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Назва матеріалу"  minlength="5" name = "tov_name" value="{{ tov_name }}">
         <strong> АБО </strong>
-        <input class="form-control" style="width: 250px;" type="search" placeholder="Серійний номер"   minlength="5" name = "tov_serial" value="{{ search_value }}">
-        <button type="submit" class="btn btn-primary">Пошук</button>
+        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Серійний номер"   minlength="5" name = "tov_serial" value="{{ search_value }}">
+        <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
         <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
       </form>
     </div>

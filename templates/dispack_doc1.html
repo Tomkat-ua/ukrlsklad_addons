@@ -92,6 +92,16 @@
 <div class="row mb-3">
   <div class="col mb-3">
   <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання {{ data_dl[0]['NU'] }}({{ data_dl[0]['NUM'] }})">
+<!--&#45;&#45;-->
+    <div class="my-3">
+        <button type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#newEntryModal"> Списати
+        </button>
+    </div>
+<!--      &#45;&#45;-->
+
   <table id="tDoc2l" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -151,4 +161,47 @@
     {% endif %}
  {% endif %}
 </div>
+<!--&#45;&#45; MODAL -->
+<div class="modal fade" id="newEntryModal" tabindex="-1" aria-labelledby="newEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('dispack_disacc') }}"> <div class="modal-header">
+                    <h5 class="modal-title" id="newEntryModalLabel">Додавання нового предмета</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Назва:</label>
+                        <input type="text" class="form-control" id="inputName" name="item_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputId" class="form-label">Інвентарний ID:</label>
+                        <input type="text" class="form-control" id="inputId" name="item_id">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputStatus" class="form-label">Статус:</label>
+                        <select class="form-select" id="inputStatus" name="item_status" required>
+                            <option value="комплект">Комплект</option>
+                            <option value="на складі">На складі</option>
+                            <option value="втрачено">Втрачено</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputComment" class="form-label">Коментар:</label>
+                        <textarea class="form-control" id="inputComment" name="comment"></textarea>
+                    </div>
+                    </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="submit" class="btn btn-primary">Зберегти новий запис</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

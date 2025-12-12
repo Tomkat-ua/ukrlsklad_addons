@@ -61,25 +61,62 @@ def doc(doc_id,dt):
 
 
 def add():
+    # print(request.method)
+    # if request.method == 'POST':
+    #     try:
+    #         nu = request.form.get('nu')
+    #         nd = request.form.get('nd')
+    #         serial = request.form.get('serial')
+    #         price = request.form.get('price')
+    #         logs = db.data_module('select * from import.dispacking(?,?,?,?)',[serial,nu,nd,price])
+    #         for log in logs:
+    #             msg = log['RESULT']
+    #             if msg[1:6] == 'ERROR':
+    #                 flash(f"❌ {msg}", "danger")
+    #             else:
+    #                 flash("✅ Документ успішно створено!", "success")
+    #                 if config.debug_mode == 1:
+    #                     flash(f"{msg}", "success")
+    #         return redirect(url_for('dispack_list'))
+    #     except Exception as e:
+    #         flash("❌ Помилка!", "danger")
+    #         flash(f"⚠️ {str(e)}", "warning")
+    # else:
+    #     return render_template("dispack_add.html", title=title)
     print(request.method)
-    if request.method == 'POST':
-        try:
-            nu = request.form.get('nu')
-            nd = request.form.get('nd')
-            serial = request.form.get('serial')
-            price = request.form.get('price')
-            logs = db.data_module('select * from import.dispacking(?,?,?,?)',[serial,nu,nd,price])
-            for log in logs:
-                msg = log['RESULT']
-                if msg[1:6] == 'ERROR':
-                    flash(f"❌ {msg}", "danger")
-                else:
-                    flash("✅ Документ успішно створено!", "success")
-                    if config.debug_mode == 1:
-                        flash(f"{msg}", "success")
-            return redirect(url_for('list'))
-        except Exception as e:
-            flash("❌ Помилка!", "danger")
-            flash(f"⚠️ {str(e)}", "warning")
-    else:
-        return render_template("dispack_add.html", title=title)
+    try:
+        nu = request.form.get('nu')
+        nd = request.form.get('nd')
+        serial = request.form.get('serial')
+        price = request.form.get('price')
+        logs = db.data_module('select * from import.dispacking(?,?,?,?)',[serial,nu,nd,price])
+        print(logs)
+        return redirect(url_for('dispack_list'))
+    except Exception as e:
+        flash("❌ Помилка!", "danger")
+        flash(f"⚠️ {str(e)}", "warning")
+        return redirect(url_for('dispack_list'))
+
+
+
+def process_disacc():
+    # Отримуємо дані з форми модального вікна
+    item_name = request.form.get('item_name')
+    item_id = request.form.get('item_id')
+    item_status = request.form.get('item_status')
+    comment = request.form.get('comment')
+
+    # === Ваша логіка обробки даних ===
+    # 1. Валідація даних
+    if not item_name or not item_status:
+        # flash('Необхідно заповнити всі обов\'язкові поля.', 'danger')
+        return redirect(url_for('index'))  # Повертаємо на головну сторінку
+
+    # 2. Збереження до бази даних
+    # save_to_database(item_name, item_id, item_status, comment)
+
+    # 3. Повідомлення про успіх (за бажанням)
+    # flash(f'Предмет "{item_name}" успішно додано!', 'success')
+
+    # 4. Перенаправлення на ту саму сторінку після обробки POST (PRG pattern)
+    return redirect(url_for('index'))
