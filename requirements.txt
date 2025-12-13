@@ -5,3 +5,4 @@ gevent
 jsonify
 pandas
 requests
+weasyprint
