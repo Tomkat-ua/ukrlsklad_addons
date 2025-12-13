@@ -41,7 +41,7 @@ def doc(doc_id,dt):
         sql_dl = 'select * from usadd_web.dispack_doc_dl(?)'
         data_dl = db.data_module(sql_dl,[doc_id],function_name+'_dt=2 _dl')
         total_l = 0
-        #znakl_l_id = data_dl[0]['NUM']
+        znakl_l_id = data_dl[0]['NUM']
         # print('znakl_l_id:',znakl_l_id)
         for item in data_dl:
             total_l += item['TOV_SUMA']
@@ -97,26 +97,17 @@ def add():
         flash(f"⚠️ {str(e)}", "warning")
         return redirect(url_for('dispack_list'))
 
-
-
-def process_disacc():
-    # Отримуємо дані з форми модального вікна
-    item_name = request.form.get('item_name')
-    item_id = request.form.get('item_id')
-    item_status = request.form.get('item_status')
-    comment = request.form.get('comment')
-
-    # === Ваша логіка обробки даних ===
-    # 1. Валідація даних
-    if not item_name or not item_status:
-        # flash('Необхідно заповнити всі обов\'язкові поля.', 'danger')
-        return redirect(url_for('index'))  # Повертаємо на головну сторінку
-
-    # 2. Збереження до бази даних
-    # save_to_database(item_name, item_id, item_status, comment)
-
-    # 3. Повідомлення про успіх (за бажанням)
-    # flash(f'Предмет "{item_name}" успішно додано!', 'success')
-
-    # 4. Перенаправлення на ту саму сторінку після обробки POST (PRG pattern)
-    return redirect(url_for('index'))
+def process_disacc(id):
+    try:
+        # Отримуємо дані з форми модального вікна
+        doc_num  = request.form.get('nua')
+        doc_date = request.form.get('nda')
+        sql = ' select * from import.i_snakl (?,?,?) '
+        logs = db.data_module(sql,[doc_num,doc_date,id])
+        print(logs)
+        # 3. Повідомлення про успіх (за бажанням)
+        flash(f'Списано за документом  {id} успішно !', 'success')
+    except Exception as e:
+        flash(f' Помилка списання за документом {id} : {str(e)} ', 'danger')
+        # 4. Перенаправлення на ту саму сторінку після обробки POST (PRG pattern)
+    return redirect(url_for('dispack_list'))

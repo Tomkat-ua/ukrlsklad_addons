@@ -91,16 +91,17 @@
 {% if data_dl %}
 <div class="row mb-3">
   <div class="col mb-3">
-  <input type="text" readonly class="form-control-plaintext fw-bold"  value="Підготувати на списання {{ data_dl[0]['NU'] }}({{ data_dl[0]['NUM'] }})">
-<!--&#45;&#45;-->
-    <div class="my-3">
+      <div class="d-flex align-items-center gap-3">
+        <input type="text"
+               readonly class="form-control-plaintext fw-bold"
+               value="Підготовлено на списання {{ data_dl[0]['NU'] }}({{ data_dl[0]['NUM'] }})">
         <button type="button"
-                class="btn btn-primary"
+                class="btn btn-primary btn-sm"
                 data-bs-toggle="modal"
-                data-bs-target="#newEntryModal"> Списати
+                data-bs-target="#newEntryModal">
+            Списати
         </button>
-    </div>
-<!--      &#45;&#45;-->
+      </div>
 
   <table id="tDoc2l" class="table table-sm table-striped table-bordered">
     <thead class="table-dark">
@@ -165,38 +166,23 @@
 <div class="modal fade" id="newEntryModal" tabindex="-1" aria-labelledby="newEntryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url_for('dispack_disacc') }}"> <div class="modal-header">
-                    <h5 class="modal-title" id="newEntryModalLabel">Додавання нового предмета</h5>
+            <form method="POST" action="{{ url_for('dispack_disacc',id=data_dl[0]['NUM']) }}"> <div class="modal-header">
+                    <h5 class="modal-title" id="newEntryModalLabel">Списання з обліку</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">Назва:</label>
-                        <input type="text" class="form-control" id="inputName" name="item_name" required>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="nua" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Номер документу</label>
+                        <input type="text" id="nua" class="form-control form-control-sm flex-grow-1" name="nua" required>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="inputId" class="form-label">Інвентарний ID:</label>
-                        <input type="text" class="form-control" id="inputId" name="item_id">
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="nda" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <input type="date" id="nda" class="form-control form-control-sm flex-grow-1" name="nda" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputStatus" class="form-label">Статус:</label>
-                        <select class="form-select" id="inputStatus" name="item_status" required>
-                            <option value="комплект">Комплект</option>
-                            <option value="на складі">На складі</option>
-                            <option value="втрачено">Втрачено</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputComment" class="form-label">Коментар:</label>
-                        <textarea class="form-control" id="inputComment" name="comment"></textarea>
-                    </div>
-                    </div>
-
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                    <button type="submit" class="btn btn-primary">Зберегти новий запис</button>
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
                 </div>
             </form>
         </div>

@@ -124,9 +124,9 @@ def dispack_doc2(doc_id):
 @app.route('/dispack/add', methods=['GET','POST'])
 def dispack_add():
     return dispack.add()
-@app.route('/process_new_entry', methods=['POST'])
-def dispack_disacc():
-    return dispack.process_disacc()
+@app.route('/process_disacc/<int:id>', methods=['POST'])
+def dispack_disacc(id):
+    return dispack.process_disacc(id)
 
 ########### PNAKL ############################
 @app.route('/pnakl',methods = ['GET','POST'])
