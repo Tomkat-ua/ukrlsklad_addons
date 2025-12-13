@@ -88,6 +88,60 @@
 </table>
 
 
+<script>
+   $(document).ready(function() {
+    // Ініціалізація DataTables
+    $('#tList').DataTable({
+        // Додаткові налаштування Bootstrap 
+        // (залежить від версії DataTables, деякі версії автоматично інтегруються)
+        "responsive": true
+    });
+
+    // 1. Створюємо новий рядок <tfoot> (футер) у вашій таблиці.
+    // Це потрібно для розміщення фільтрів під заголовками.
+    $('#tList thead tr')
+        .clone(true) // Клонуємо заголовок
+        .addClass('filters')
+        .appendTo('#tList thead'); // Додаємо його як другий рядок в thead
+
+    // 2. Ініціалізуємо фільтри для кожного стовпця
+    var table = $('#tList').DataTable();
+
+    table.columns().eq(0).each(function (colIdx) {
+        // Для кожного стовпця (крім, можливо, останнього з кнопками)
+        var cell = $('.filters th').eq(
+            $(table.column(colIdx).header()).index()
+        );
+        var title = $(cell).text();
+        
+        // Вставляємо input для фільтрації
+        $(cell).html('<input type="text" placeholder="Фільтр ' + title + '" />');
+        
+        // Обробка події введення тексту
+        $('input', cell).off('keyup change').on('keyup change', function (e) {
+            e.stopPropagation();
+            
+            // Застосовуємо фільтр
+            $(this).attr('title', $(this).val());
+            var regexr = '({search})';
+            
+            var cursorPosition = this.selectionStart;
+            // Фільтруємо поточною колонкою
+            table.column(colIdx).search(
+                this.value != '' ? regexr.replace('{search}', this.value) : '',
+                this.value != '',
+                this.value == ''
+            ).draw();
+
+            $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
+        });
+    });
+}); 
+    
+</script>
+    
+
+
 {% endblock %}
 
 
