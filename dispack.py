@@ -23,7 +23,7 @@ def dispack_list():
 
 def doc(doc_id,dt):
     function_name = sys._getframe(0).f_code.co_name
-
+    znakl_l_id = 0
     # COMMON HEAD
     sql_h = """ select  *    from usadd_web.DISPACK_LIST (?,?,?)"""
     data_h = db.data_module(sql_h, [1,doc_id,None],function_name+'_header')
@@ -33,7 +33,8 @@ def doc(doc_id,dt):
         sql_d = 'select * from usadd_web.dispack_doc_d(?)'
         data_d = db.data_module(sql_d, [doc_id],function_name+' _dt=1')
         return render_template("dispack_doc1.html", title=title, dt=dt, data_h=data_h[0]
-                               , data_d=data_d,docname = 'Акт Виконаних Робіт')
+                               , data_d=data_d,znakl_l_id=znakl_l_id
+                               ,docname = 'Акт Виконаних Робіт')
 
     #INS ZNAKL
     if dt == 2:
@@ -41,8 +42,9 @@ def doc(doc_id,dt):
         sql_dl = 'select * from usadd_web.dispack_doc_dl(?)'
         data_dl = db.data_module(sql_dl,[doc_id],function_name+'_dt=2 _dl')
         total_l = 0
-        znakl_l_id = data_dl[0]['NUM']
-        # print('znakl_l_id:',znakl_l_id)
+        if data_dl:
+            znakl_l_id = data_dl[0]['NUM']
+        print('znakl_l_id:',znakl_l_id)
         for item in data_dl:
             total_l += item['TOV_SUMA']
 
@@ -56,7 +58,7 @@ def doc(doc_id,dt):
 
 
         return render_template("dispack_doc1.html", title=title, dt=dt, data_dr=data_dr,data_dl=data_dl
-                               ,total_l=total_l,total_r=total_r,data_h = data_h[0]
+                               ,total_l=total_l,total_r=total_r,data_h = data_h[0],znakl_l_id=znakl_l_id
                                ,docname = 'Акт зміни якісного стану')
 
 

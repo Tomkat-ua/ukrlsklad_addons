@@ -39,11 +39,6 @@
       <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.KOD }}</td>
       <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
-  {#    <td style="padding-top: 1px; padding-bottom: 1px;"
-          class="badge rounded-pill
-                 {{ 'bg-danger text-white' if row.STATUS|trim|lower == 'втрачено' else 'bg-secondary text-light' }}
-                 fs-6 px-2 py-2 shadow">
-      </td>#}
       <td style="padding-top: 1px; padding-bottom: 1px;">
   {% set status_text = row.STATUS_CODE %}
     {% if status_text == 8 %}

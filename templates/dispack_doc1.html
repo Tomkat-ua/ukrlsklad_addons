@@ -1,6 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-
+{% set doc_id = znakl_l_id %}
 {########## COMMON HEAD #########################################################}
 
 <div class="card mb-0">
@@ -75,6 +75,7 @@
       </tr>
     </thead>
   <tbody>
+{% if  data_d %}
   {% for row in data_d %}
     <tr>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
@@ -82,6 +83,7 @@
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
     </tr>
   {% endfor %}
+{% endif %}
   </tbody>
   </table>
   {% endif %}
@@ -166,7 +168,7 @@
 <div class="modal fade" id="newEntryModal" tabindex="-1" aria-labelledby="newEntryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url_for('dispack_disacc',id=data_dl[0]['NUM']) }}"> <div class="modal-header">
+            <form method="POST" action="{{ url_for('dispack_disacc',id=doc_id) }}"> <div class="modal-header">
                     <h5 class="modal-title" id="newEntryModalLabel">Списання з обліку</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
