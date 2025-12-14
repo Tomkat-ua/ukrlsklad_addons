@@ -6,10 +6,9 @@ title = 'Розкомплектація'
 
 def dispack_list():
     function_name = sys._getframe(0).f_code.co_name
-    sql = """ select  * from usadd_web.DISPACK_LIST (?,?,?)"""
+    sql = """ select  * from usadd_web.DISPACK_LIST (?,?,?) order by num desc"""
     try:
         data = db.data_module(sql,[0,None,None],function_name)
-        print(data)
         if request.method == "GET":
             return  render_template("dispack_list.html", title = 'Розкомплектація',data = data)
         if request.method == "POST":
@@ -93,6 +92,7 @@ def add():
         price = request.form.get('price')
         logs = db.data_module('select * from import.dispacking(?,?,?,?)',[serial,nu,nd,price])
         print(logs)
+        flash("✅ Документ успішно створено!", "success")
         return redirect(url_for('dispack_list'))
     except Exception as e:
         flash("❌ Помилка!", "danger")
