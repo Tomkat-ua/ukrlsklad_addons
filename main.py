@@ -140,9 +140,9 @@ def mnakl_list():
     return mnakl.mnakl_list()
 
 ########### TEST #############################
-# @app.route("/test/<doc_id>")
-# def proxy_arrived(doc_id):
-#     return get_arrived_history(doc_id)
+@app.route("/test")
+def test():
+    return render_template('test.html')
 
 # @app.route('/pdf')
 # def generate_pdf():

@@ -89,55 +89,65 @@
 
 
 <script>
-   $(document).ready(function() {
-    // Ініціалізація DataTables
-    $('#tList').DataTable({
-        // Додаткові налаштування Bootstrap 
-        // (залежить від версії DataTables, деякі версії автоматично інтегруються)
-        "responsive": true
+$(document).ready(function() {
+
+    // !!! Налаштуйте цей масив відповідно до вашої таблиці !!!
+    // Наприклад, якщо у вас 4 колонки (0, 1, 2, 3), і остання (3) - це кнопки
+    var columnsToExclude = [0,1,2,3,5];
+
+    // =========================================================
+    // 1. ЄДИНА ІНІЦІАЛІЗАЦІЯ DATATABLES
+    // =========================================================
+    var table = $('#tList').DataTable({
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json"
+        },
+        // Важливо: відключаємо стандартний пошук, якщо він заважає
+        "searching": true
     });
 
-    // 1. Створюємо новий рядок <tfoot> (футер) у вашій таблиці.
-    // Це потрібно для розміщення фільтрів під заголовками.
-    $('#tList thead tr')
-        .clone(true) // Клонуємо заголовок
-        .addClass('filters')
-        .appendTo('#tList thead'); // Додаємо його як другий рядок в thead
+    // =========================================================
+    // 2. КЛОНУВАННЯ ЗАГОЛОВКА ДЛЯ ФІЛЬТРІВ
+    // =========================================================
+    // Клонуємо перший рядок thead і додаємо його як другий рядок thead
+    var filterRow = $('#tList thead tr:eq(0)').clone(true).addClass('filters');
+    filterRow.appendTo('#tList thead');
 
-    // 2. Ініціалізуємо фільтри для кожного стовпця
-    var table = $('#tList').DataTable();
-
+    // =========================================================
+    // 3. ІНІЦІАЛІЗАЦІЯ ІНПУТІВ ФІЛЬТРАЦІЇ
+    // =========================================================
     table.columns().eq(0).each(function (colIdx) {
-        // Для кожного стовпця (крім, можливо, останнього з кнопками)
-        var cell = $('.filters th').eq(
-            $(table.column(colIdx).header()).index()
-        );
+
+        // Перевіряємо, чи потрібно виключити цю колонку
+        if (columnsToExclude.includes(colIdx)) {
+            // Залишаємо комірку порожньою
+            $('.filters th').eq(colIdx).html('');
+            return; // Переходимо до наступної ітерації
+        }
+
+        // Отримуємо комірку в новоствореному рядку фільтрів
+        var cell = $('.filters th').eq(colIdx);
         var title = $(cell).text();
-        
+
         // Вставляємо input для фільтрації
-        $(cell).html('<input type="text" placeholder="Фільтр ' + title + '" />');
-        
+        $(cell).html('<input type="text" class="form-control form-control-sm" placeholder="Фільтр ' + title + '" />');
+
         // Обробка події введення тексту
         $('input', cell).off('keyup change').on('keyup change', function (e) {
             e.stopPropagation();
-            
-            // Застосовуємо фільтр
-            $(this).attr('title', $(this).val());
-            var regexr = '({search})';
-            
-            var cursorPosition = this.selectionStart;
-            // Фільтруємо поточною колонкою
-            table.column(colIdx).search(
-                this.value != '' ? regexr.replace('{search}', this.value) : '',
-                this.value != '',
-                this.value == ''
-            ).draw();
 
+            var searchValue = this.value;
+            var cursorPosition = this.selectionStart;
+
+            // Застосовуємо фільтр до поточної колонки
+            table.column(colIdx).search(searchValue).draw();
+
+            // Зберігаємо позицію курсору
             $(this).focus()[0].setSelectionRange(cursorPosition, cursorPosition);
         });
     });
-}); 
-    
+});
 </script>
     
 
