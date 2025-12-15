@@ -63,7 +63,7 @@
 
 </div></div></div>
 {% if dt == 1 %}
-{#--------- ACTVR -------------------------------------------------------------}
+{####### ACTVR ########################################################################################################}
 {#------ TABLE -----------------------------------------------------------------#}
 <input type="text" readonly class="form-control-plaintext fw-bold"  value="Зняти з обліку">
   <table id="tDoc1" class="table table-sm table-striped table-bordered">
@@ -99,9 +99,18 @@
                value="Підготовлено на списання {{ data_dl[0]['NU'] }}({{ data_dl[0]['NUM'] }})">
         <button type="button"
                 class="btn btn-primary btn-sm"
+                {% if data_dl[0]['STATUS_CODE'] == 10 %}
+                    disabled
+                {% endif %}
                 data-bs-toggle="modal"
                 data-bs-target="#newEntryModal">
+          {% if data_dl[0]['STATUS_CODE'] == 10 %}
+            Списано
+          {% else %}
             Списати
+          {%endif %}
+
+
         </button>
       </div>
 
