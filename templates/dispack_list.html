@@ -92,5 +92,22 @@
     </div>
 </div>
 <!--&#45;&#45;-->
+<script>
+    $(document).ready(function() {
+
+    var table = $('#tList').DataTable({
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json"
+        },
+
+        // !!! ДОДАЄМО НАЛАШТУВАННЯ СОРТУВАННЯ ЗА ЗАМОВЧАННЯМ !!!
+        "order": [ [0, "desc"] ]
+        // Сортувати за колонкою з індексом 1 (друга колонка), за спаданням
+    });
+
+});
+
+</script>
 
 {% endblock %}
