@@ -1,0 +1,29 @@
+from flask import  request,render_template,flash
+import db
+
+menu = ['Списання']
+
+def snakl_list():
+    title = 'Списання'
+    sql = 'select * from usadd_web.snakl'
+    data = db.data_module(sql,'')
+    return render_template('snakl_list.html',title=title,data = data)
+
+
+def snakl_det(id):
+    title = 'Списання/Деталі'
+    menu.append('Деталі')
+
+    sql_h = """ select s.num,s.nu,s.date_dok
+                ,sn.name as sklad_name from snakl s
+                 inner  join sklad_names sn on sn.num = s.sklad_id
+                where s.num = ? """
+    data_h = db.data_module(sql_h, [id])
+    sql = """select sd.tovar_id,sd.tov_name,cast( sd.tov_kolvo as int ) as tov_kolvo
+            ,sd.tov_cena
+             from snakl_ sd where sd.pid = ? """
+    data = db.data_module(sql,[id])
+    total = 0
+    for row in data:
+        total=total + row['TOV_KOLVO'] * row['TOV_CENA']
+    return render_template('snakl_det.html',title=title,data_h=data_h,data = data,total=total)

@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl
+import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl
 
 app = Flask(__name__)
 
@@ -133,12 +133,18 @@ def dispack_disacc(id):
 def pnakl_list():
     return pnakl.pnakl_list()
 
-
 ########### MNAKL ############################
 @app.route('/mnakl',methods = ['GET','POST'])
 def mnakl_list():
     return mnakl.mnakl_list()
 
+########### SNAKL ############################
+@app.route('/snakl',methods = ['GET','POST'])
+def snakl_list():
+    return snakl.snakl_list()
+@app.route('/snakl/<int:id>',methods = ['GET','POST'])
+def snakl_det(id):
+    return snakl.snakl_det(id)
 ########### TEST #############################
 @app.route("/test")
 def test():

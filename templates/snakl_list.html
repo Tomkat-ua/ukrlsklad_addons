@@ -1,0 +1,54 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+{#
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+
+<form class="d-flex gap-1 align-items-center mb-1" method="post">
+    <button type="button"
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAdd">➕ Додати
+    </button>
+    <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Серійний номер" name="tov_serial" value="{{ search }}">
+    <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="copyTable()">📋 Копіювати таблицю</button>
+</form>
+    </div>
+  </div>
+</nav>
+#}
+
+<table id="tList" class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Номер акту</th>
+      <th>Дата акту</th>
+      <th>Підрозділ</th>
+      <th>Дії</th>
+    </tr>
+  </thead>
+<tbody>
+  {% for row in data %}
+  <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td class="text-primary fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+    <td>
+     <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" > Деталі
+     <i class="bi bi-pencil"></i>
+    </a>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

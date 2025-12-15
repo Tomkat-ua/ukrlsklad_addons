@@ -1,0 +1,43 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="card mb-1">
+    <div class="card-header bg-light">
+        <h5 class="mb-1">
+           {% if data_h[0].NU.startswith("ЄАС") %}
+             Єдиний акт списання
+           {% else %}
+             Документ
+           {% endif %}
+            № {{ data_h[0].NU }} від {{ data_h[0].DATE_DOK.strftime('%d.%m.%Y') }} від {{ data_h[0].SKLAD_NAME }}
+        </h5>
+    </div>
+</div>
+
+
+<table id="tList" class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>TOVAR_ID</th>
+      <th>Найменування</th>
+      <th>Кількість</th>
+      <th>Ціна</th>
+    </tr>
+  </thead>
+<tbody>
+  {% for row in data %}
+  <tr>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_ID }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
+  </tr>
+</tbody>
+  {% endfor %}
+        <tr>
+            <td colspan="4" class="text-end"><strong>Всього:</strong>
+        <strong>{{ total | currency_format_ua }}</strong></td>
+        </tr>
+
+</table>
+{% endblock %}
