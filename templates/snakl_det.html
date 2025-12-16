@@ -10,6 +10,7 @@
              Документ
            {% endif %}
             № {{ data_h[0].NU }} від {{ data_h[0].DATE_DOK.strftime('%d.%m.%Y') }} від {{ data_h[0].SKLAD_NAME }}
+            ({{ data_h[0].NUM }})
         </h5>
     </div>
 </div>
@@ -28,7 +29,7 @@
   {% for row in data %}
   <tr>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_ID }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}({{ row.SERIAL }})</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
   </tr>

@@ -19,9 +19,16 @@ def snakl_det(id):
                  inner  join sklad_names sn on sn.num = s.sklad_id
                 where s.num = ? """
     data_h = db.data_module(sql_h, [id])
-    sql = """select sd.tovar_id,sd.tov_name,cast( sd.tov_kolvo as int ) as tov_kolvo
+    sql = """select sd.tovar_id
+            ,sd.tov_name
+            ,cast( sd.tov_kolvo as int ) as tov_kolvo
             ,sd.tov_cena
-             from snakl_ sd where sd.pid = ? """
+            ,ts.tovar_ser_num as serial
+             from snakl_ sd
+                left join tovar_serials ts on ts.doc_id = sd.pid
+                    and ts.tovar_id = sd.tovar_id and ts.doc_type_id = 11
+            where sd.pid = ?
+ """
     data = db.data_module(sql,[id])
     total = 0
     for row in data:

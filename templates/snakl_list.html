@@ -33,6 +33,7 @@
       <th>Дата акту</th>
       <th>Сума акту</th>
       <th>Підрозділ</th>
+      <th>Серійний номер</th>
       <th>Дії</th>
     </tr>
   </thead>
@@ -44,7 +45,8 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_SUMM | currency_format_ua }}
         {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
-    <td class="text-primary fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+    <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
     <td>
      <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" > Деталі
      <i class="bi bi-pencil"></i></a>
