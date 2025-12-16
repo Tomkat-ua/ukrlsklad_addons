@@ -31,6 +31,7 @@
       <th>ID</th>
       <th>Номер акту</th>
       <th>Дата акту</th>
+      <th>Сума акту</th>
       <th>Підрозділ</th>
       <th>Дії</th>
     </tr>
@@ -41,11 +42,12 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_SUMM | currency_format_ua }}
+        {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
     <td class="text-primary fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
     <td>
      <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" > Деталі
-     <i class="bi bi-pencil"></i>
-    </a>
+     <i class="bi bi-pencil"></i></a>
     </td>
   </tr>
   {% endfor %}

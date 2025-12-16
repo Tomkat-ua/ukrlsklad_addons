@@ -58,7 +58,7 @@
             </button>
         </form>
     {% elif status_text == 10 %}
-        <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
+        <form target="_blank" method="POST" action="{{ url_for('snakl_list' ) }}" style="display:inline;">
             <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
             <button type="submit"
                     class="badge rounded-pill bg-warning text-dark fs-6 px-2 py-2 shadow border-0">
