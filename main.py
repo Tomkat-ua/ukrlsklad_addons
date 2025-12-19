@@ -9,6 +9,15 @@ local_ip         = config.local_ip
 
 app.secret_key = config.api_key  # потрібен для flash-повідомлень
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # Можна повернути шаблон render_template('404.html')
+    return "<h3>Ой! Такої сторінки не існує (404)</h3>", 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return "<h3>На сервері щось зламалось. Ми вже чинимо! (500)</h3>", 500
+
 
 @app.template_filter('currency_format_ua')
 def format_currency_ua(value, decimal_places=2):
