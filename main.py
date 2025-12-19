@@ -1,7 +1,7 @@
 import platform
 from flask import Flask, render_template
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl
+import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl,products
 
 app = Flask(__name__)
 
@@ -153,6 +153,20 @@ def test():
 # @app.route('/pdf')
 # def generate_pdf():
 #     return to_pdf.generate_pdf()
+
+@app.route('/products',methods = ['GET','POST'])
+def products_list():
+    return products.products_tab()
+@app.route('/product_img/<int:tovar_id>',methods = ['GET','POST'])
+def product_img(tovar_id):
+    return products.products_img(tovar_id)
+@app.route('/product_img_upload/<int:tovar_id>', methods=['POST'])
+def product_upload_image(tovar_id):
+    return products.upload_image(tovar_id)
+@app.route('/product_img_delete/<int:tovar_id>', methods=['POST'])
+def product_delete_image(tovar_id):
+    return products.delete_image(tovar_id)
+
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':
