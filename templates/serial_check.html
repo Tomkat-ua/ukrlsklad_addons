@@ -1,0 +1,88 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+<div class="container mt-1">
+    <h3>Перевірка серійних номерів</h3>
+    <form method="POST" action="/scheck">
+        <div class="mb-3">
+            <label for="serials" class="form-label">Вставте список (по одному на рядок):</label>
+            <textarea class="form-control"
+              id="serials"
+              name="serials"
+              rows="10"
+              placeholder="Серійні номери - один на рядок">{% if raw_data %}{{ raw_data }}{% endif %}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Запустити перевірку</button>
+    </form>
+
+ <table class="table table-hover" id="resultsTable">
+    <thead>
+        <tr>
+            <th>
+                Серійний номер
+                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyColumn(0)">📋</button>
+            </th>
+            <th>
+                Статус БД
+                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyColumn(1)">📋</button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in results %}
+            <tr class="{{ 'table-danger' if 'Не знайдено' in row.status else 'table-success' }}">
+                <td>{{ row.sn }}</td>
+                <td>{{ row.status }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<script>
+function copyColumn(colIndex) {
+    const table = document.getElementById('resultsTable');
+    let rows = table.querySelectorAll('tbody tr');
+
+    // Збираємо текст із вибраного стовпця
+    let textToCopy = Array.from(rows)
+        .map(row => {
+            const cell = row.cells[colIndex];
+            return cell ? cell.innerText.trim() : '';
+        })
+        .filter(text => text !== '') // ігноруємо порожні рядки
+        .join('\n');
+
+    if (!textToCopy) {
+        alert('Нічого копіювати!');
+        return;
+    }
+
+    // Резервний метод через створення тимчасового елемента
+    const textArea = document.createElement("textarea");
+    textArea.value = textToCopy;
+
+    // Робимо його невидимим
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            alert('Стовпчик скопійовано у буфер!');
+        } else {
+            console.error('Не вдалося скопіювати');
+        }
+    } catch (err) {
+        console.error('Помилка при копіюванні:', err);
+    }
+
+    document.body.removeChild(textArea);
+}
+</script>
+
+{% endblock %}

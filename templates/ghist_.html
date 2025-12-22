@@ -1,5 +1,26 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+<style>
+
+    /* Фіксуємо ширину колонки статусу */
+    .col-status {
+        width: 80px !important;
+        min-width: 80px !important;
+        text-align: center;
+    }
+
+    /* Робимо самі статуси компактнішими */
+    .status-badge {
+        font-size: 0.75rem !important; /* Менший шрифт */
+        padding: 4px 8px !important;   /* Менші відступи */
+        width: 100%;                  /* Щоб всі були однакової ширини */
+        display: block;               /* Для заповнення комірки */
+        white-space: nowrap;          /* Заборона переносу тексту */
+        overflow: hidden;
+        text-overflow: ellipsis;      /* Якщо текст задовгий — буде трикрапка */
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">{{ records }}{{ serch_result }}</a>

@@ -1,0 +1,262 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+<style>
+    /* Контейнер для прокрутки */
+    .master-scroll-container {
+        max-height: 280px; /* Приблизно 6 рядків */
+        overflow-y: auto;  /* Вертикальна прокрутка */
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Щоб заголовок таблиці залишався зверху при прокрутці (Sticky Header) */
+    .master-scroll-container thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa; /* Колір фону заголовка */
+        z-index: 1;
+        box-shadow: inset 0 -1px 0 #dee2e6; /* Лінія під заголовком */
+    }
+
+    /* Підсвітка активного рядка */
+    .table-active {
+        background-color: #e9ecef !important;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid py-3">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <h5 class="mb-0">Комплекти</h5>
+            <button class="btn btn-sm btn-light" onclick="openMasterModal('new')">Додати комплект</button>
+        </div>
+        <div class="card-body">
+            <div class="master-scroll-container">
+            <table id="masterTable" class="table table-hover border">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Назва</th>
+                        <th>TovarID</th>
+                        <th>KOD</th>
+                        <th>Найменування товару</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in master_rows %}
+                    <tr onclick="loadDetails('{{ m.NUM }}')" data-id="{{ m.NUM }}" style="cursor: pointer;">
+                        <td>{{ m.NUM }}</td>
+                        <td>{{ m.NAME }}</td>
+                        <td>{{ m.TOVAR_ID }}</td>
+                        <td>{{ m.KOD }}</td>
+                        <td>{{ m.TOVAR_NAME }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary"
+                                    onclick="event.stopPropagation(); openMasterModal('edit', '{{ m.NUM }}')">⚙️</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-secondary text-white">
+            <h5 class="mb-0">Склад комплекту <span id="selectedMasterId"></span> </h5>
+            <button class="btn btn-sm btn-light" id="btnAddDetail" disabled onclick="openDetailModal('new')">Додати позицію</button>
+        </div>
+        <div class="card-body">
+            <div id="detailsPlaceholder" class="text-center text-muted py-3">
+                Оберіть замовлення вгорі, щоб побачити деталі
+            </div>
+            <table id="detailsTable" class="table table-sm border d-none">
+                <thead>
+                    <tr>
+                    <td>TovarID</td>
+                    <td>KOD</td>
+                    <td>Найменування</td>
+                    <td>Кількість</td>
+                    <td>Ціна</td>
+                    </tr>
+                </thead>
+                <tbody id="detailsBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="masterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="masterForm" method="POST" action="/packs">
+                <input type="hidden" name="mode" id="m_mode" value="new">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редагування комплекту</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="m_id">
+                    <div class="mb-3">
+                        <label class="form-label">Назва комплекту</label>
+                        <input type="text" class="form-control" name="name" id="m_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TovarID</label>
+                        <input type="text" class="form-control" name="tovarid" id="m_tovarid" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--&#45;&#45;-->
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="detailForm" method="POST" action="/packs_details">
+                <input type="hidden" name="mode" id="d_mode" value="new">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редагування деталей комплекту</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="d_id">
+                    <div class="mb-3">
+                        <label class="form-label">TovarID</label>
+                        <input type="text" class="form-control" name="tovarid" id="d_tovarid" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Кількість</label>
+                        <input type="text" class="form-control " name="kod" id="d_kod" required >
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ціна</label>
+                        <input type="text" class="form-control " name="price" id="d_price" required >
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+let currentMasterId = null;
+
+// 1. Завантаження деталей через AJAX
+function loadDetails(masterId) {
+    currentMasterId = masterId;
+    $('#selectedMasterId').text(`(#${masterId})`);
+    $('#btnAddDetail').prop('disabled', false);
+
+    fetch(`/packs_details/${masterId}`)
+        .then(res => res.json())
+        .then(data => {
+            $('#detailsPlaceholder').addClass('d-none');
+            $('#detailsTable').removeClass('d-none');
+            let rows = '';
+            data.forEach(item => {
+                rows += `<tr>
+                    <td>${item.TOVAR_ID}</td>
+                    <td>${item.KOD}</td>
+                    <td>${item.TOVAR_NAME}</td>
+                    <td>${item.TOVAR_QUANT}</td>
+                    <td>${item.CENA}</td>
+                    <td><button onclick="editDetail(${item.NUM})">⚙️</button></td>
+                </tr>`;
+            });
+            $('#detailsBody').html(rows);
+        });
+}
+
+// 2. Модалка Master
+
+function openMasterModal(mode, id = null) {
+    console.log("Mode:", mode, "ID:", id); // Для діагностики в консолі
+
+    // Отримуємо екземпляр модалки
+    const modalElement = document.getElementById('masterModal');
+    const myModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    // Встановлюємо режим у приховане поле
+    $('#m_mode').val(mode);
+
+    if (mode === 'edit' && id) {
+        // 1. Знаходимо рядок за допомогою data-id, який ми додали вище
+        const row = $(`tr[data-id="${id}"]`);
+
+        if (row.length > 0) {
+            // 2. Витягуємо дані (index починається з 0)
+            const name = row.find('td:eq(1)').text().trim();    // Колонка "Назва"
+            const tovarId = row.find('td:eq(2)').text().trim(); // Колонка "TovarID"
+            $('.modal-title').text('Редагування комплекту');
+
+            // 3. Заповнюємо форму
+            $('#m_id').val(id);
+            $('#m_name').val(name);
+            $('#m_tovarid').val(tovarId);
+
+            $('.modal-title').text('Редагування комплекту');
+        } else {
+            console.error("Не знайдено рядок з ID:", id);
+        }
+    } else {
+        // Режим додавання
+        $('#masterForm')[0].reset();
+        $('#m_id').val('');
+        $('.modal-title').text('Додати новий комплект');
+    }
+
+    myModal.show();
+}
+
+    // 3. Модалка деталей
+
+function openDetailModal(mode, detailId = null) {
+    // currentMasterId має бути встановлений при кліку на рядок Master
+    if (!currentMasterId) {
+        alert("Спочатку оберіть комплект у верхній таблиці!");
+        return;
+    }
+
+    const modalElement = document.getElementById('detailModal');
+    const bModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    // Завжди записуємо ID майстра
+    $('#det_master_id').val(currentMasterId);
+    $('#det_mode').val(mode);
+
+    if (mode === 'edit' && detailId) {
+        // Знаходимо рядок у таблиці деталей (потрібно додати data-id до <tr> деталей)
+        const row = $(`#detailsBody tr[data-id="${detailId}"]`);
+
+        $('#det_id').val(detailId);
+        $('#det_tovarid').val(row.find('td:eq(0)').text().trim());
+        $('#det_quant').val(row.find('td:eq(3)').text().trim());
+        $('#det_price').val(row.find('td:eq(4)').text().trim());
+
+        $('.modal-title').text('Редагування позиції');
+    } else {
+        // Режим New
+        $('#detailForm')[0].reset();
+        $('#det_id').val('');
+        $('#det_master_id').val(currentMasterId); // Повторно, бо reset міг очистити
+        $('.modal-title').text('Додати товар у комплект');
+    }
+
+    bModal.show();
+}
+
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
 import platform
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl#,products
+import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl,products,packs
 
 app = Flask(__name__)
 
@@ -16,8 +16,11 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def internal_server_error(e):
-    return "<h3>На сервері щось зламалось. Ми вже чинимо! (500)</h3>", 500
-
+    return f"""<h3>На сервері щось зламалось, щось типу цього :</h3>
+                <p> {str(e)} </p>
+                <h3>Ми вже ремонтуємо !!!</h3>
+            """, 500
+    # return render_template('404.html')
 
 @app.template_filter('currency_format_ua')
 def format_currency_ua(value, decimal_places=2):
@@ -154,6 +157,23 @@ def snakl_list():
 @app.route('/snakl/<int:id>',methods = ['GET','POST'])
 def snakl_det(id):
     return snakl.snakl_det(id)
+
+########### PACKS ############################
+@app.route('/packs',methods=['GET', 'POST'])
+def packs_list():
+    print(request.method)
+    if request.method == 'GET':
+        return packs.packs_get()
+    if request.method == 'POST':
+        return packs.packs_post()
+@app.route('/packs_details/<int:master_id>')
+def packs_det(master_id):
+    return packs.get_details(master_id)
+
+########### SERIALS CHECK ####################
+@app.route('/scheck',methods=['GET','POST'])
+def scheck():
+    return serials.serials_check()
 ########### TEST #############################
 @app.route("/test")
 def test():

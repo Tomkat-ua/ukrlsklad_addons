@@ -38,4 +38,48 @@ def serials_search():
     return render_template('serials.html', sklads=sklads,result=result, title='Пошук номерів', total=None, tov_name=None)
 
 
+def serials_check():
+
+
+    # @app.route('/process', methods=['POST'])
+    raw_data = request.form.get('serials', '')
+    # Розбиваємо текст на рядки та видаляємо зайві пробіли
+    serial_list = [line.strip() for line in raw_data.split('\n') if line.strip()]
+    raw_text = request.form.get('serials', '')
+    results = []
+
+    try:
+        conn = db.get_connection()
+        cur = conn.cursor()
+
+        for sn in serial_list:
+            try:
+                # Виклик процедури (залежно від того, як вона написана у вас)
+                # Якщо процедура повертає значення (selectable):
+                cur.execute("""select ts.num,ts.tovar_ser_num ,tn.name
+                                from tovar_serials ts
+                                    inner join tovar_name tn on tn.num = ts.tovar_id
+                                where ts.doc_type_id in (9,10)
+                                and ts.tovar_ser_num = ?
+                                rows 1
+                """, (sn,))
+
+
+                row = cur.fetchone()
+                status = f"{row[0]} {row[1]} {row[2]} " \
+                    if row else "Не знайдено"
+
+                # Або якщо це Executable Procedure:
+                # status = cur.callproc('MY_PROCEDURE', (sn,))[0]
+
+                results.append({'sn': sn, 'status': status})
+            except Exception as e:
+                results.append({'sn': sn, 'status': f"Помилка: {str(e)}"})
+
+        conn.close()
+    except Exception as e:
+        return f"Помилка підключення до БД: {str(e)}"
+    print(results)
+    return render_template('serial_check.html', results=results,raw_data=raw_text)
+
 
