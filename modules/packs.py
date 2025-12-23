@@ -1,12 +1,12 @@
-import db
-from flask import  request,render_template,redirect,flash,jsonify,url_for
+from . import db
+from flask import  request,render_template,redirect, jsonify,url_for
 
 def packs_get():
     sql_m = """select  p.*,tn.name as tovar_name, tn.KOD
                 from packs p
                 left join tovar_name tn on tn.num = p.tovar_id """
 
-    data_h = db.data_module(sql_m,'')
+    data_h = db.data_module(sql_m, '')
     return render_template('packs.html',master_rows=data_h)
 
 

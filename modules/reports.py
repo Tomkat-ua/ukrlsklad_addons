@@ -1,13 +1,11 @@
 from flask import  request,render_template,render_template_string #,flash,redirect,url_for
-
-import config
-import db,json,re #,html
-from datetime import date
+from . import config,db
+import json  #,html
 
 
 def reports_list():
     sql = "SELECT NUM, REP_NAME FROM REPORTS_WEB "
-    reports = db.data_module(sql,'')
+    reports = db.data_module(sql, '')
     return render_template("reports.html",title='Звіти',reports = reports)
 
 def reports_list2(rep_id):
@@ -16,7 +14,7 @@ def reports_list2(rep_id):
     """Відображення сторінки звіту з параметрами та результатом"""
 
     sql = "SELECT REP_NAME, QRY, PARAMS, HTML FROM REPORTS_WEB WHERE NUM = ?"
-    row = db.data_module(sql,[rep_id])
+    row = db.data_module(sql, [rep_id])
 
     if not row:
         return f"❌ Звіт #{rep_id} не знайдено", 404

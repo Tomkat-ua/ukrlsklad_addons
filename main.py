@@ -1,7 +1,8 @@
 import platform
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
-import losses,export,serials,ghist_,config,reports,dispack,losses_nn,pnakl,mnakl,snakl,products,packs
+from modules import serials, export, mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, \
+    dispack
 
 app = Flask(__name__)
 
@@ -45,7 +46,7 @@ def format_currency_ua(value, decimal_places=2):
 ########## MAIN ####################
 @app.context_processor
 def inject_globals():
-    dsn =  str(config.db_server) + '/' + str(config.db_port)+ ':' + str(config.db_path)
+    dsn = str(config.db_server) + '/' + str(config.db_port) + ':' + str(config.db_path)
     return {
         'version': config.app_version,
         'appname': 'UkrSklad Addons App',
@@ -129,10 +130,10 @@ def dispack_list():
     return dispack.dispack_list()
 @app.route('/dispack/doc1/<int:doc_id>', methods=['GET','POST'])
 def dispack_doc1(doc_id):
-    return dispack.doc(doc_id,1)
+    return dispack.doc(doc_id, 1)
 @app.route('/dispack/doc2/<int:doc_id>', methods=['GET','POST'])
 def dispack_doc2(doc_id):
-    return dispack.doc(doc_id,2)
+    return dispack.doc(doc_id, 2)
 @app.route('/dispack/add', methods=['GET','POST'])
 def dispack_add():
     return dispack.add()
@@ -199,7 +200,7 @@ def product_delete_image(tovar_id):
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':
-        http_server = WSGIServer((local_ip,config.server_port), app)
+        http_server = WSGIServer((local_ip, config.server_port), app)
         print(f"Running HTTP-SERVER on port - http://" + local_ip + ':' + str(config.server_port))
     else:
         http_server = WSGIServer(('', int(config.server_port)), app)

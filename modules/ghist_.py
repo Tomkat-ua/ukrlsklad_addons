@@ -1,5 +1,5 @@
 from flask import  request,render_template,flash
-import db
+from  . import db
 
 title = 'Інформація по номеру'
 
@@ -19,7 +19,7 @@ def data_for_module(param,mod):
     else:
         sql = '*'
     param = [p if p != '' else None for p in param]
-    data = db.data_module(sql,param)
+    data = db.data_module(sql, param)
     return data
 
 def index():

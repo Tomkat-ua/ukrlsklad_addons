@@ -1,12 +1,13 @@
-from flask import  request,render_template,flash,send_file,current_app,send_from_directory,jsonify
-import db,os,io,fdb
-from dispack import title
+from flask import  request,render_template, send_file,current_app,send_from_directory,jsonify
+from . import db
+import os,io
+from modules.dispack import title
 
 title = 'Каталог продукції'
 
 def products_tab():
     sql = 'select   * from usadd_web.products_list'
-    data = db.data_module(sql,'')
+    data = db.data_module(sql, '')
 
     return render_template ('products_tab.html',products = data,title=title)
 
@@ -35,7 +36,7 @@ def products_img(tovar_id):
 
     except Exception as e:
         current_app.logger.error(f"Error fetching image: {e}")
-        return current_app.send_static_file('static/images/placeholder.png'), 500
+        return current_app.send_static_file('../static/images/placeholder.png'), 500
 
     finally:
         if con:

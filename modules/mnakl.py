@@ -1,5 +1,6 @@
 from flask import  request,render_template#,flash,redirect, url_for
-import sys,db
+import sys
+from . import db
 # import config
 
 title = 'Видача майна'
@@ -25,5 +26,5 @@ where (tn.kod = ? or ? is null  )
 and   (md.tovar_id = ? or ? is null )
 order by m.date_dok
                 """
-    data = db.data_module(sql,[tov_code,tov_code,tovar_id,tovar_id],function_name)
+    data = db.data_module(sql, [tov_code, tov_code, tovar_id, tovar_id], function_name)
     return  render_template("mnakl_list.html", title='Видача майна',data= data,search='')

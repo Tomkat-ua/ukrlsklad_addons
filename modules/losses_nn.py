@@ -1,6 +1,5 @@
-import db,os
-from flask import  request, redirect, flash,render_template,url_for
-import pandas as pd
+from . import db
+from flask import  request, flash,render_template
 
 title = 'Втрати неномерного майна'
 
@@ -24,7 +23,7 @@ def losses_list():
         print('search_str', search_str)
         sql = "select * from usadd_web.losses_list (?,2) order by UDOC_DATE desc ,action_date_time desc "
         # data = data_for_module(search_str, sql)
-        data = db.data_module(sql,[search_str])
+        data = db.data_module(sql, [search_str])
         if data:
             return render_template('losses_nn_list.html', losses=data, title=title, search=search_str)
         else:

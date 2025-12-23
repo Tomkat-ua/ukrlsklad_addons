@@ -1,4 +1,4 @@
-import db
+from . import db
 from flask import  Response
 import csv
 import io

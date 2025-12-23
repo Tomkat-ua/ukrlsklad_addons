@@ -1,5 +1,5 @@
 from flask import  request,render_template,flash,redirect,url_for
-import db
+from . import db
 
 
 def serials_search():
@@ -14,7 +14,7 @@ def serials_search():
         sklad_id = request.form.get('sklad_id', '').strip() or None
         if sklad_id == "None":
             sklad_id = None
-        result=db.data_module(sql,[tov_id,sklad_id])
+        result= db.data_module(sql, [tov_id, sklad_id])
         total = len(result)
         sql = "select tn.name from tovar_name tn where tn.num = ?"
         tov_name = db.data_module(sql, [tov_id])
@@ -79,7 +79,7 @@ def serials_check():
         conn.close()
     except Exception as e:
         return f"Помилка підключення до БД: {str(e)}"
-    print(results)
+    # print(results)
     return render_template('serial_check.html', results=results,raw_data=raw_text)
 
 

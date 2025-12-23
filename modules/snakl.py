@@ -1,12 +1,12 @@
-from flask import  request,render_template,flash
-import db
+from flask import render_template
+from . import db
 
 menu = ['Списання']
 
 def snakl_list():
     title = 'Списання'
     sql = 'select * from usadd_web.snakl'
-    data = db.data_module(sql,'')
+    data = db.data_module(sql, '')
     return render_template('snakl_list.html',title=title,data = data)
 
 
@@ -29,7 +29,7 @@ def snakl_det(id):
                     and ts.tovar_id = sd.tovar_id and ts.doc_type_id = 11
             where sd.pid = ?
  """
-    data = db.data_module(sql,[id])
+    data = db.data_module(sql, [id])
     total = 0
     for row in data:
         total=total + row['TOV_KOLVO'] * row['TOV_CENA']

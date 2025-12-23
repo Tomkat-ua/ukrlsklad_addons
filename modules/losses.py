@@ -1,4 +1,4 @@
-import db
+from . import db
 from flask import  request, redirect, flash,render_template,url_for
 
 
@@ -39,7 +39,7 @@ def loss_list():
     if request.method == "POST":
         search_str = request.form['tov_serial']
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
-        data = db.data_module(sql,[search_str])
+        data = db.data_module(sql, [search_str])
         if data:
             return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
         else:
@@ -50,5 +50,5 @@ def loss_list():
 
 def loss_edit(id):
     sql = "select * from usadd.get_losses where UDOC_ID = ?"
-    data = db.data_module(sql,[id])
+    data = db.data_module(sql, [id])
     return render_template('loss_edit.html', losses='', title='Втрати майна', data=data[0], sklads='', teams='')

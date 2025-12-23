@@ -1,5 +1,5 @@
-import  fdb,platform,config, pandas as pd
-
+import  fdb,platform,pandas as pd
+from . import config
 
 def get_connection():
     if platform.system() == 'Windows':
