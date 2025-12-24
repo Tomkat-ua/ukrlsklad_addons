@@ -69,33 +69,17 @@
       color: #6c757d; /* або через клас text-muted */
     }
 
-  .compact-cell {
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  line-height: 1;
-  .table thead th {
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 2;
-  }
-}
 
   </style>
 </head>
 
 <body>
-
   <!-- Sidebar -->
   <div class="d-flex">
     {% include "_sidebar.html" %}
     <!-- Main content -->
     <main id="content" class="flex-grow-1 p-3">
-      <div class="topbar d-flex justify-content-between align-items-center px-2 py-2" style="height:48px;">
-        <button id="toggleBtn" class="btn btn-outline-secondary mb-0">☰ Меню</button>
-        <span class="text-muted fw-bold">{{ title }} </span>
-      </div>
-        <div class="container-fluid mt-3">
+        <div class="container-fluid mt-0">
          {# {% with messages = get_flashed_messages() %}
             {% if messages %}
               {% for msg in messages %}
@@ -153,36 +137,6 @@ toggleBtn.addEventListener("click", () => {
   });
 
 
-$(document).ready(function() {
-    const tableElement = $('#tList');
-
-    // 1. ПЕРЕВІРКА: Чи існує таблиця
-    if (!tableElement.length) {
-        return;
-    }
-    // 2. ПЕРЕВІРКА: Чи вже ініціалізовано
-    if ($.fn.DataTable.isDataTable('#tList')) {
-        // Якщо таблиця вже є DataTables, не ініціалізуємо повторно
-        return;
-    }
-    const defaultPageLengthString = tableElement.data('defaultLength');
-
-    // 3. ПЕРЕТВОРЕННЯ: parseInt + надійний fallback
-    const parsedLength = parseInt(defaultPageLengthString);
-
-    // finalPageLength буде числом > 0 або 20
-    const finalPageLength = (isNaN(parsedLength) || parsedLength <= 0) ? -1 : parsedLength;
-
-    // 4. ІНІЦІАЛІЗАЦІЯ
-    tableElement.DataTable({
-        pageLength: finalPageLength,
-        // Зверніть увагу, що -1 також є дійсним значенням у lengthMenu
-        lengthMenu: [ [20, 30, 50, -1], [20, 30, 50, "Усі"] ],
-         language: {
-            url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json"
-        }
-    });
-});
 
 async function copyTable() {
     const table = document.getElementById("tList");
