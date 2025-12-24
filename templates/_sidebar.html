@@ -1,0 +1,141 @@
+<nav id="sidebar" class="bg-dark text-white sidebar">
+  <div class="fw-bold mb-3 px-3"> Menu</div>
+  <ul class="nav flex-column">
+
+    <li class="nav-item">
+        <a class="nav-link text-white" href="/"> <i class="bi bi-house"></i> [ 0 ] Головна</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link text-white d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse"
+         href="#submenuSerials"
+         role="button"
+         aria-expanded="false">
+        <span><i class="bi bi-box"></i> [ 1 ] Серійні номери </span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+                <div class="collapse" id="submenuSerials">
+                  <ul class="nav flex-column ms-3 mt-1">
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/serials"> - [ 1.1 ] Пошук</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/scheck"> - [ 1.2 ] Перевірка</a>
+                    </li>
+                  </ul>
+                </div>
+
+    <li class="nav-item">
+      <a class="nav-link text-white d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse"
+         href="#submenuLosses"
+         role="button"
+         aria-expanded="false">
+        <span><i class="bi bi-box"></i> [ 2 ] Втрати </span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+                <div class="collapse" id="submenuLosses">
+                  <ul class="nav flex-column ms-3 mt-1">
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/losses"> - [ 2.1 ] Номерне майно</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/losses-nn"> - [ 2.2 ] НЕ номерне майно</a>
+                    </li>
+                  </ul>
+                </div>
+
+    <li class="nav-item">
+        <a class="nav-link text-white" href="/ghist"> <i class="bi bi-graph-up"></i> [ 3 ] Інформація по номеру</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link text-white d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse"
+         href="#submenuDisAcc"
+         role="button"
+         aria-expanded="false">
+        <span><i class="bi bi-box"></i> [ 4 ] Списання </span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+                <div class="collapse" id="submenuDisAcc">
+                  <ul class="nav flex-column ms-3 mt-1">
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/dispack"> - [ 4.1 ] Розкомплектація</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary p-1" href="/snakl"> - [ 4.2 ] ЄАС</a>
+                    </li>
+                  </ul>
+                </div>
+
+    <li class="nav-item">
+        <a class="nav-link text-white" href="/pnakl"> <i class="bi bi-graph-up"></i> [ 5 ] Приход майна</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" href="/reports"> <i class="bi bi-graph-up"></i> [ 6 ] Звіти</a>
+    </li>
+
+
+  </ul>
+</nav>
+<style>
+    .sidebar {
+      height: 100vh;
+      background-color: #343a40;
+      padding-top: 1rem;
+      position: sticky;
+      top: 0;
+    }
+    .sidebar a {
+      color: #ddd;
+      padding: 0.75rem 1rem;
+      display: block;
+      text-decoration: none;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #495057;
+      border-left: 4px solid #0d6efd;
+      color: white;
+    }
+
+
+  /* Відступ для вкладеного меню */
+  .collapse .nav-link {
+    font-size: 0.9rem;
+    padding-left: 30px !important;
+  }
+
+/* Колір посилань у меню (світло-сірий, приємний для очей) */
+#sidebar .nav-link {
+    color: #ced4da !important; /* Яскравіший за стандартний */
+    font-size: 0.95rem;
+    padding: 10px 15px;
+    transition: all 0.2s ease;
+}
+
+/* Ефект при наведенні (Hover) */
+#sidebar .nav-link:hover {
+    color: #ffffff !important;      /* Чисто білий текст */
+    background-color: #343a40;     /* Трохи світліший фон */
+    border-radius: 4px;            /* Закруглення фону */
+    padding-left: 20px;            /* Легкий зсув вправо для ефекту */
+}
+
+/* Активний пункт меню (де ми зараз знаходимося) */
+#sidebar .nav-link.active {
+    color: #fff !important;
+    background-color: #0d6efd !important; /* Синій колір Bootstrap для акценту */
+    font-weight: bold;
+}
+
+</style>
+<script>
+const sidebar = document.getElementById("sidebar");
+const toggleBtn = document.getElementById("toggleBtn");
+
+toggleBtn.addEventListener("click", () => {
+  sidebar.classList.toggle("d-none");
+});
+</script>
