@@ -62,29 +62,6 @@ def doc(doc_id,dt):
 
 
 def add():
-    # print(request.method)
-    # if request.method == 'POST':
-    #     try:
-    #         nu = request.form.get('nu')
-    #         nd = request.form.get('nd')
-    #         serial = request.form.get('serial')
-    #         price = request.form.get('price')
-    #         logs = db.data_module('select * from import.dispacking(?,?,?,?)',[serial,nu,nd,price])
-    #         for log in logs:
-    #             msg = log['RESULT']
-    #             if msg[1:6] == 'ERROR':
-    #                 flash(f"❌ {msg}", "danger")
-    #             else:
-    #                 flash("✅ Документ успішно створено!", "success")
-    #                 if config.debug_mode == 1:
-    #                     flash(f"{msg}", "success")
-    #         return redirect(url_for('dispack_list'))
-    #     except Exception as e:
-    #         flash("❌ Помилка!", "danger")
-    #         flash(f"⚠️ {str(e)}", "warning")
-    # else:
-    #     return render_template("dispack_add.html", title=title)
-    print(request.method)
     try:
         nu = request.form.get('nu')
         nd = request.form.get('nd')
