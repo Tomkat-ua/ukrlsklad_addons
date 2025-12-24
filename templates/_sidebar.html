@@ -132,10 +132,20 @@
 
 </style>
 <script>
-const sidebar = document.getElementById("sidebar");
-const toggleBtn = document.getElementById("toggleBtn");
+$(document).ready(function() {
+    // Отримуємо поточний шлях сторінки
+    let currentPath = window.location.pathname;
 
-toggleBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("d-none");
+    $('#sidebar .nav-link').each(function() {
+        let linkPath = $(this).attr('href');
+
+        // Якщо посилання збігається з адресою
+        if (currentPath === linkPath) {
+            $(this).addClass('active text-white');
+            // Якщо це вкладене меню — розкриваємо батьківський блок
+            $(this).closest('.collapse').addClass('show');
+        }
+    });
 });
+
 </script>
