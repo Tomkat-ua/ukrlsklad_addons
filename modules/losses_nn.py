@@ -1,9 +1,9 @@
 from . import db
 from flask import  request, flash,render_template
 
+title = 'Втрати неномерного майна'
 
 def losses_list():
-    title = 'Втрати неномерного майна'
     if request.method == "POST":
         # search_str = request.form.get('tov_serial')
         search_str = request.form['tov_name']

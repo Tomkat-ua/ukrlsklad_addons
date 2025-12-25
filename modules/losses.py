@@ -1,6 +1,7 @@
 from . import db
 from flask import  request, redirect, flash,render_template,url_for
 
+title = 'Втрати номерного майна'
 
 def loss_add():
     if request.method == "POST":
@@ -36,7 +37,7 @@ def loss_add():
 
 ###################################
 def loss_list():
-    title = 'Втрати номерного майна'
+
     if request.method == "POST":
         search_str = request.form['tov_serial']
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
