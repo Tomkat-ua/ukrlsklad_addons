@@ -15,27 +15,39 @@
 </style>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-      <form class="d-flex gap-1 align-items-center mb-1" method="post">
-        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Найменування" name="search" value="{{ search }}">
-        <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
-        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
-      </form>
-    </div>
-  </div>
-</nav>
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--  <div class="container-fluid">-->
+<!--    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+<!--    <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--      <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>-->
+<!--      <form class="d-flex gap-1 align-items-center mb-1" method="post">-->
+<!--        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Найменування" name="search" value="{{ search }}">-->
+<!--        <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>-->
+<!--        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</nav>-->
+
+<div class="d-flex flex-wrap align-items-left gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-2 ">{{ title }}</h5>
+    <form class="d-flex" method="post" style="margin: 0;">
+        <div class="input-group input-group-sm table-panell" >
+            <input class="form-control input-serial" type="search" placeholder="Серійний..." name="search" value="{{ search }}">
+            <button class="btn btn-success " type="submit">Шукати</button>
+        </div>
+        <button type="button" class="btn btn-outline-dark btn-sm" onclick="copyTable()">
+            📋 Копіювати
+        </button>
+    </form>
+</div>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
 
 {% if data %}
-<!--<div class="table-responsive">-->
 <table id="tList" class="table table-sm table-compact">
   <thead class="table-dark">
     <tr>
@@ -59,9 +71,9 @@
     <td >{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
     <td class="col-limit"  >{{ row.CLIENT }}</td>
     <td class="col-limit">{{ row.A_NAME }}</td>
-    <td >{{ row.P_NU }}</td>
-    <td >{{ row.P_DATE_DOK }}</td>
-    <td >
+    <td class="col-limit">{{ row.P_NU }}</td>
+    <td class="col-limit">{{ row.P_DATE_DOK }}</td>
+    <td class="col-limit">
       <a href="/mnakl?tovar_id={{ row.TOVAR_ID }}"
          title="вид. накладні по ID товару">{{ row.TOVAR_ID }} >> </a>
     </td>
@@ -70,17 +82,15 @@
          title="вид. накладні по ном. номеру">{{ row.TOV_CODE }} >></a>
     </td>
     <td class="col-limit"  >{{ row.TOV_NAME }}</td>
-    <td >{{ row.TOV_KOLVO }}</td>
-    <td >{{ row.TOV_CENA | currency_format_ua }}</td>
+    <td class="col-limit">{{ row.TOV_KOLVO }}</td>
+    <td class="col-limit">{{ row.TOV_CENA | currency_format_ua }}</td>
   </tr>
+
   {% endfor %}
     </tbody>
 </table>
-<!--</div>-->
-  {% endif %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
 
+  {% endif %}
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
 
     <script>
