@@ -12,7 +12,7 @@ def dispack_list():
         if request.method == "GET":
             return  render_template("dispack_list.html", title = 'Розкомплектація',data = data)
         if request.method == "POST":
-            serial = request.form['tov_serial']
+            serial = request.form['search']
             data = db.data_module(sql, [2, None, serial], function_name)
             return render_template("dispack_list.html", title='Розкомплектація', data=data,search = serial)
     except Exception as e:

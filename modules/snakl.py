@@ -1,18 +1,24 @@
-from flask import render_template
+from flask import render_template,request
 from . import db
 
-menu = ['Списання']
+# menu = ['Списання']
+title = 'Єдиний акт списання'
 
 def snakl_list():
-    title = 'Єдиний акт списання'
-    sql = 'select * from usadd_web.snakl'
-    data = db.data_module(sql, '')
-    return render_template('snakl_list.html',title=title,data = data)
+    if request.method == 'GET':
+        sql = 'select * from usadd_web.snakl'
+        data = db.data_module(sql, '')
+        return render_template('snakl_list.html',title=title,data = data)
+    if request.method == 'POST':
+        search_str = request.form['search']
+        sql = 'select * from usadd_web.snakl where serial like ?'
+        data = db.data_module(sql, [search_str])
+        return render_template('snakl_list.html', title=title, data=data,search=search_str)
 
 
 def snakl_det(id):
     title = 'Списання/Деталі'
-    menu.append('Деталі')
+    # menu.append('Деталі')
 
     sql_h = """ select s.num,s.nu,s.date_dok
                 ,sn.name as sklad_name from snakl s

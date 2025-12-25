@@ -6,7 +6,7 @@ title = 'Втрати неномерного майна'
 def losses_list():
     if request.method == "POST":
         # search_str = request.form.get('tov_serial')
-        search_str = request.form['tov_name']
+        search_str = request.form['search']
         print('search_str', search_str)
         sql = "select * from usadd_web.losses_list (?,2) order by UDOC_DATE desc ,action_date_time desc "
         # data = data_for_module(search_str, sql)

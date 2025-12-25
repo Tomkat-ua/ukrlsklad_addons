@@ -39,7 +39,7 @@ def loss_add():
 def loss_list():
 
     if request.method == "POST":
-        search_str = request.form['tov_serial']
+        search_str = request.form['search']
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
         data = db.data_module(sql, [search_str])
         if data:
