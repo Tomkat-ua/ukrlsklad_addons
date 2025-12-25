@@ -1,4 +1,5 @@
 import platform
+from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials, export, mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, \
@@ -9,6 +10,10 @@ app = Flask(__name__)
 local_ip         = config.local_ip
 
 app.secret_key = config.api_key  # потрібен для flash-повідомлень
+
+# @app.context_processor
+# def inject_version():
+#     return dict(app_version=__version__)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -48,7 +53,7 @@ def format_currency_ua(value, decimal_places=2):
 def inject_globals():
     dsn = str(config.db_server) + '/' + str(config.db_port) + ':' + str(config.db_path)
     return {
-        'version': config.app_version,
+        'version': __version__,
         'appname': 'UkrSklad Addons App',
         'dsn': dsn,
         'env': config.env
