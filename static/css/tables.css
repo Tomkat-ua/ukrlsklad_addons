@@ -120,3 +120,44 @@
     width: 320px; /* Бажана ширина за замовчуванням */
     max-width: 320px; /* Обмеження, щоб воно не стало занадто величезним */
 }
+
+/* 1. Прибираємо роздільну лінію між основним рядком і назвою */
+.row-main td {
+    border-bottom: none !important;
+    padding-top: 10px !important;
+}
+
+/* 2. Стилізуємо рядок з назвою */
+.row-details td {
+    padding-bottom: 12px !important;
+    padding-top: 0 !important;
+    /* Додаємо тонку лінію знизу всього блоку */
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+/* 3. Оформлення тексту назви */
+.name-wrapper {
+    background-color: #f8f9fa; /* Світло-сірий фон для назви */
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #0d6efd; /* Синій колір для акценту */
+    font-weight: 500;
+}
+
+.name-wrapper .label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #6c757d;
+    margin-right: 8px;
+}
+
+/* 4. Ефект при наведенні на БУДЬ-ЯКИЙ з двох рядків */
+/* (Працює найкраще, якщо ви не використовуєте стандартний table-hover) */
+.row-main:hover,
+.row-main:hover + .row-details {
+    background-color: #f1f5ff !important;
+}
+.row-details:hover {
+    background-color: #f1f5ff !important;
+}
