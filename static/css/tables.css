@@ -1,0 +1,121 @@
+/* --- Компактність таблиці --- */
+.table-compact {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.table-compact th,
+.table-compact td {
+    padding: 4px 8px !important; /* Мінімальні відступи */
+    font-size: 0.85rem !important; /* Трохи менший шрифт для даних */
+    vertical-align: middle;
+}
+
+
+.table-compact tbody td {
+    /* Текст у високих комірках буде завжди по центру по вертикалі */
+    vertical-align: middle !important;
+}
+
+/* Додамо трохи візуального розділення рядків, щоб око не чіплялося */
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05) !important; /* Легке блакитне підсвічування */
+}
+
+/* --- Виправлення кнопок всередині таблиці --- */
+.table-compact .btn-xs,
+.table-compact .btn-group .btn {
+    padding: 1px 5px !important;
+    font-size: 12px !important;
+    line-height: 1.8 !important;
+}
+
+/* --- Прибираємо зазори DataTables (той самий відступ знизу) --- */
+.dataTables_wrapper {
+    padding: 0 !important;
+}
+
+/* Прибираємо margin у рядків Bootstrap всередині обгортки таблиці */
+.dataTables_wrapper .row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Тісна пагінація та інфо-блок */
+.dataTables_info {
+    padding-top: 5px !important;
+    font-size: 0.8rem !important;
+    color: #6c757d;
+}
+
+.dataTables_paginate {
+    padding-top: 5px !important;
+}
+
+.pagination {
+    margin-bottom: 0 !important;
+}
+
+/* Маленькі кнопки пагінації */
+.page-link {
+    padding: 2px 8px !important;
+    font-size: 0.8rem !important;
+}
+
+/* --- Обрізка тексту (Ellipsis) --- */
+.text-ellipsis {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Прибираємо зайвий відступ під самою областю скролу */
+.dataTables_scrollBody {
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+
+
+.col-limit {
+    max-width: 250px;       /* Встановіть потрібну ширину (наприклад, 200px або 300px) */
+    white-space: normal !important; /* Дозволяє перенос тексту */
+    word-wrap: break-word;  /* Розриває дуже довгі слова, якщо вони не влазять */
+    line-height: 1.2;       /* Робить текст у кілька рядків компактнішим */
+}
+
+/* Робимо самі статуси компактнішими */
+
+.status-badge {
+    font-size: 0.75rem !important;
+    /* Збільшуємо перше число (4px -> 6px), щоб зробити бейдж вищим */
+    padding: 4px 4px !important;
+
+    width: 100%;
+    display: block;
+
+    /* Додаємо висоту рядка, щоб текст був чітко по центру */
+    line-height: 1.2 !important;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* Центруємо текст всередині блоку */
+    text-align: center;
+    /* Додаємо трохи закруглення для кращого вигляду */
+    border-radius: 4px;
+}
+
+.input-serial {
+    min-width: 250px !important;
+    width: 250px; /* Бажана ширина за замовчуванням */
+    max-width: 250px; /* Обмеження, щоб воно не стало занадто величезним */
+}
+
+.table-panell {
+    min-width: 320px !important;
+    width: 320px; /* Бажана ширина за замовчуванням */
+    max-width: 320px; /* Обмеження, щоб воно не стало занадто величезним */
+}
