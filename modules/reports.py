@@ -4,7 +4,7 @@ import json  #,html
 
 
 def reports_list():
-    sql = "SELECT NUM, REP_NAME FROM REPORTS_WEB "
+    sql = "SELECT NUM, REP_NAME FROM REPORTS_WEB order by 1 "
     reports = db.data_module(sql, '')
     return render_template("reports.html",title='Звіти',reports = reports)
 

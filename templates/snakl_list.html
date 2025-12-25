@@ -1,31 +1,23 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-{#
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      </ul>
 
-<form class="d-flex gap-1 align-items-center mb-1" method="post">
-    <button type="button"
-            class="btn btn-primary btn-sm"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAdd">➕ Додати
-    </button>
-    <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Серійний номер" name="tov_serial" value="{{ search }}">
-    <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
-    <button type="button" class="btn btn-primary btn-sm" onclick="copyTable()">📋 Копіювати таблицю</button>
-</form>
-    </div>
-  </div>
-</nav>
-#}
+<div class="d-flex flex-wrap align-items-left gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-2 ">{{ title }}</h5>
+    <form class="d-flex" method="post" style="margin: 0;">
+        <div class="input-group input-group-sm table-panell" >
+            <input class="form-control input-serial" type="search" placeholder="Серійний..." name="tov_serial" value="{{ search }}">
+            <button class="btn btn-success " type="submit">Шукати</button>
+        </div>
+        <button type="button" class="btn btn-outline-dark btn-sm" onclick="copyTable()">
+            📋 Копіювати
+        </button>
+    </form>
+</div>
 
-<table id="tList" class="table table-sm table-striped table-bordered">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+
+<table id="tList" class="table table-sm table-compact">
   <thead class="table-dark">
     <tr>
       <th>ID</th>
@@ -48,11 +40,24 @@
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
     <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
     <td>
-     <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" > Деталі
-     <i class="bi bi-pencil"></i></a>
+     <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
     </td>
   </tr>
   {% endfor %}
 </tbody>
 </table>
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            initDefaultDataTable('#tList', {
+                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
+            });
+        });
+    </script>
 {% endblock %}

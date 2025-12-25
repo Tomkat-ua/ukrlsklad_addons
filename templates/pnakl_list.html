@@ -31,9 +31,12 @@
   </div>
 </nav>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+
 {% if data %}
-<div class="table-responsive">
-<table id="tList" class="table table-sm table-striped table-bordered">
+<!--<div class="table-responsive">-->
+<table id="tList" class="table table-sm table-compact">
   <thead class="table-dark">
     <tr>
       <th class="text-wrap" style="max-width: 80px;">№ документу</th>
@@ -52,28 +55,39 @@
     <tbody>
   {% for row in data %}
   <tr>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
-    <td class="text-wrap"  style="font-size: 13px; max-width: 200px; padding-top: 1px; padding-bottom: 1px;">{{ row.CLIENT }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.A_NAME }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_NU }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.P_DATE_DOK }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">
+    <td >{{ row.NU }}</td>
+    <td >{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td class="col-limit"  >{{ row.CLIENT }}</td>
+    <td class="col-limit">{{ row.A_NAME }}</td>
+    <td >{{ row.P_NU }}</td>
+    <td >{{ row.P_DATE_DOK }}</td>
+    <td >
       <a href="/mnakl?tovar_id={{ row.TOVAR_ID }}"
          title="вид. накладні по ID товару">{{ row.TOVAR_ID }} >> </a>
     </td>
-    <td class="text-wrap"  style="max-width: 300px; padding-top: 1px; padding-bottom: 1px;">
+    <td class="col-limit"  >
       <a href="/mnakl?tov_code={{ row.TOV_CODE }}"
          title="вид. накладні по ном. номеру">{{ row.TOV_CODE }} >></a>
     </td>
-    <td class="text-wrap"  style="font-size: 13px; max-width: 300px; padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
+    <td class="col-limit"  >{{ row.TOV_NAME }}</td>
+    <td >{{ row.TOV_KOLVO }}</td>
+    <td >{{ row.TOV_CENA | currency_format_ua }}</td>
   </tr>
   {% endfor %}
     </tbody>
 </table>
-</div>
+<!--</div>-->
   {% endif %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
 
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            initDefaultDataTable('#tList', {
+                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
+            });
+        });
+    </script>
 {% endblock %}

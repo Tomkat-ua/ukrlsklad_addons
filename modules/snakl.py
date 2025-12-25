@@ -4,7 +4,7 @@ from . import db
 menu = ['Списання']
 
 def snakl_list():
-    title = 'Списання'
+    title = 'Єдиний акт списання'
     sql = 'select * from usadd_web.snakl'
     data = db.data_module(sql, '')
     return render_template('snakl_list.html',title=title,data = data)

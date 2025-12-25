@@ -36,19 +36,20 @@ def loss_add():
 
 ###################################
 def loss_list():
+    title = 'Втрати номерного майна'
     if request.method == "POST":
         search_str = request.form['tov_serial']
         sql = "select * from usadd_web.losses_list (?) order by UDOC_DATE desc ,action_date_time desc "
         data = db.data_module(sql, [search_str])
         if data:
-            return render_template('losses2.html', losses=data, title='Втрати майна',search=search_str)
+            return render_template('losses2.html', losses=data, title = title,search=search_str)
         else:
             flash("Запис не знайдено!", "danger")  # повідомлення + категорія (danger, success...)
             # return redirect(url_for("losses_list"))
-            return render_template('losses2.html', losses='', title='Втрати майна', search=search_str)
-    return render_template('losses2.html', losses='', title='Втрати майна' ,search=''   )
+            return render_template('losses2.html', losses='', title = title, search=search_str)
+    return render_template('losses2.html', losses='', title = title ,search=''   )
 
 def loss_edit(id):
     sql = "select * from usadd.get_losses where UDOC_ID = ?"
     data = db.data_module(sql, [id])
-    return render_template('loss_edit.html', losses='', title='Втрати майна', data=data[0], sklads='', teams='')
+    return render_template('loss_edit.html', losses='', title = title, data=data[0], sklads='', teams='')

@@ -1,22 +1,9 @@
 from . import db
 from flask import  request, flash,render_template
 
-title = 'Втрати неномерного майна'
-
-# def data_for_module(param,sql):
-#     print('sql=',sql,param)
-#     con = db.get_connection()
-#     cur = con.cursor()
-#     cur.execute(sql, [param])
-#     rows = cur.fetchall()
-#     columns = [desc[0] for desc in cur.description]
-#     df = pd.DataFrame(rows, columns=columns)
-#     df_display = df.fillna('')
-#     data = df_display.to_dict(orient='records')
-#     con.close()
-#     return data
 
 def losses_list():
+    title = 'Втрати неномерного майна'
     if request.method == "POST":
         # search_str = request.form.get('tov_serial')
         search_str = request.form['tov_name']

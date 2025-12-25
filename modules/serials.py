@@ -56,7 +56,7 @@ def serials_check():
             try:
                 # Виклик процедури (залежно від того, як вона написана у вас)
                 # Якщо процедура повертає значення (selectable):
-                cur.execute("""select ts.num,ts.tovar_ser_num ,tn.name
+                cur.execute("""select ts.num,tn.kod,ts.tovar_ser_num ,tn.name
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
                                 where ts.doc_type_id in (9,10)
@@ -66,7 +66,7 @@ def serials_check():
 
 
                 row = cur.fetchone()
-                status = f"{row[0]} {row[1]} {row[2]} " \
+                status = f"{row[1]} {row[2]} {row[3]} " \
                     if row else "Не знайдено"
 
                 # Або якщо це Executable Procedure:

@@ -1,41 +1,23 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      </ul>
-
 <div class="d-flex flex-wrap align-items-left gap-2 mb-2 p-2 bg-light border rounded">
-
     <h5 class="mb-0 me-2 ">{{ title }}</h5>
-
     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdd">
         ➕ Додати
     </button>
-
     <form class="d-flex" method="post" style="margin: 0;">
-        <div class="input-group input-group-sm" style="width: 220px;">
-            <input class="form-control" type="search" placeholder="Серійний..." name="tov_serial" value="{{ search }}">
+        <div class="input-group input-group-sm table-panell" >
+            <input class="form-control input-serial " type="search" placeholder="Серійний..." name="tov_serial" value="{{ search }}">
             <button class="btn btn-success" type="submit">Шукати</button>
         </div>
     </form>
-
     <button type="button" class="btn btn-outline-dark btn-sm" onclick="copyTable()">
         📋 Копіювати
     </button>
-
 </div>
 
 
-    </div>
-  </div>
-</nav>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
@@ -55,16 +37,22 @@
   </thead>
 <tbody>
   {% for row in data %}
-  <tr>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
-    <td class="text-primary fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
-    <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">
-      <a href="/dispack/doc1/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Списання зі складу">Акт ВР</a>
-      <a href="/dispack/doc2/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary" title="Оприбуткування на склад">Введ. залишків</a>
+    <tr>
+    <td >{{ row.NUM }}</td>
+    <td >{{ row.NU }}</td>
+    <td >{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td class="text-primary fw-bold col-limit" >{{ row.TOV_NAME }}</td>
+    <td class="text-success fw-bold" >{{ row.TOVAR_SER_NUM }}</td>
+    <td >{{ row.SKLAD_NAME }}</td>
+    <td >
+      <a href="/dispack/doc1/{{ row.NUM }}"
+         class="btn btn-sm btn-outline-secondary btn-xs"
+         title="Списання зі складу">Акт ВР
+          <i class="bi bi-pencil"></i></a>
+      <a href="/dispack/doc2/{{ row.NUM }}"
+         class="btn btn-sm btn-outline-secondary btn-xs"
+         title="Оприбуткування на склад">Введ. залишків
+          <i class="bi bi-pencil"></i></a>
     </td>
   </tr>
   {% endfor %}
@@ -108,6 +96,7 @@
     </div>
 </div>
 <!--&#45;&#45;-->
+
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">

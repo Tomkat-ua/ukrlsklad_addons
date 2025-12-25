@@ -1,48 +1,27 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-<style>
 
-<!--    /* Фіксуємо ширину колонки статусу */-->
-<!--    .col-status {-->
-<!--        width: 80px !important;-->
-<!--        min-width: 80px !important;-->
-<!--        text-align: center;-->
-<!--    }-->
 
-    /* Робимо самі статуси компактнішими */
-    .status-badge {
-        font-size: 0.75rem !important; /* Менший шрифт */
-        padding: 4px 8px !important;   /* Менші відступи */
-        width: 100%;                  /* Щоб всі були однакової ширини */
-        display: block;               /* Для заповнення комірки */
-        white-space: nowrap;          /* Заборона переносу тексту */
-        overflow: hidden;
-        text-overflow: ellipsis;      /* Якщо текст задовгий — буде трикрапка */
-    }
-</style>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">{{ records }}{{ serch_result }}</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+<div class="d-flex flex-wrap align-items-left gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-2 ">{{ title }}</h5>
+    <form class="d-flex" method="post" style="margin: 0;">
+        <div class="input-group input-group-sm " style="width: 580px;">
+            <input class="form-control input-serial"  type="search" placeholder="Найменування..." name="tov_name"   value="{{ tov_name }}">
+            <input class="form-control input-serial"  type="search" placeholder="Серійний..."     name="tov_serial" value="{{ search_value }}">
+            <button class="btn btn-success" type="submit">Шукати</button>
+        </div>
+    </form>
+    <button type="button" class="btn btn-outline-dark btn-sm" onclick="copyTable()">
+        📋 Копіювати
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      </ul>
-      <form class="d-flex gap-1 align-items-center mb-1" method="post">
-        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Назва матеріалу"  minlength="5" name = "tov_name" value="{{ tov_name }}">
-        <strong> АБО </strong>
-        <input class="form-control form-control-sm" style="width: 250px;" type="search" placeholder="Серійний номер"   minlength="5" name = "tov_serial" value="{{ search_value }}">
-        <button class="btn btn-primary btn-sm bi-search" type="submit" > Шукати</button>
-        <button type="button" class="btn btn-sm btn-primary" onclick="copyTable()">📋 Копіювати таблицю</button>
-      </form>
-    </div>
-  </div>
-</nav>
+</div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
 
 
-<table id="tList" class="table table-sm table-striped table-bordered">
+<!--<table id="tList" class="table table-sm table-striped table-bordered table-compact">-->
+<table id="tList" class="table table-sm table-compact">
     <thead class="table-dark">
     <tr>
       <th>TOVAR_ID</th>
@@ -56,18 +35,18 @@
   <tbody>
     {% for row in rows %}
     <tr>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_ID }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_SER_NUM }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.KOD }}</td>
-      <td class="fw-bold text-primary" style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;">
+      <td >{{ row.TOVAR_ID }}</td>
+      <td class="fw-bold text-success" >{{ row.TOVAR_SER_NUM }}</td>
+      <td >{{ row.KOD }}</td>
+      <td class="fw-bold text-primary col-limit" >{{ row.TOV_NAME }}</td>
+      <td >
 <!--&#45;&#45; 'Втрачено'-->
   {% set status_text = row.STATUS_CODE %}
     {% if status_text == 8 %}
         <form target="_blank" method="POST" action="{{ url_for('losses_list') }}" style="display:inline;">
             <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
             <button type="submit"
-                    class="badge rounded-pill bg-danger text-white fs-6 px-2 py-2 shadow border-0" title=">> до Втрати">
+                    class="badge rounded-pill bg-danger text-white fs-6 px-2 py-2 shadow border-0 status-badge" title=">> до Втрати">
                 {{ row.STATUS }} >>
             </button>
         </form>
@@ -76,7 +55,7 @@
         <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
             <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
             <button type="submit"
-                    class="badge rounded-pill bg-secondary text-white fs-6 px-2 py-2 shadow border-0" title=">> до Розкомплектування">
+                    class="badge rounded-pill bg-secondary text-white fs-6 px-2 py-2 shadow border-0 status-badge" title=">> до Розкомплектування">
                 {{ row.STATUS }} >>
             </button>
         </form>
@@ -85,7 +64,7 @@
         <form target="_blank" method="POST" action="{{ url_for('snakl_list' ) }}" style="display:inline;">
             <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
             <button type="submit"
-                    class="badge rounded-pill bg-warning text-dark fs-6 px-2 py-2 shadow border-0" title=">> до Списання">
+                    class="badge rounded-pill bg-warning text-dark fs-6 px-2 py-2 shadow border-0 status-badge" title=">> до Списання">
                 {{ row.STATUS }} >>
             </button>
         </form>
@@ -94,26 +73,36 @@
         <form target="_blank" method="POST" action="{{ url_for('snakl_list') }}" style="display:inline;">
             <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
             <button type="submit"
-                    class="badge rounded-pill btn-info text-dark fs-6 px-2 py-2 shadow border-0" title=">> до Втрати">
+                    class="badge rounded-pill btn-info text-dark fs-6 px-2 py-2 shadow border-0 status-badge" title=">> до Втрати">
                 {{ row.STATUS }} >>
             </button>
         </form>
 <!--&#45;&#45;'На обліку'-->
     {% else %}
-        <span class="badge rounded-pill bg-success text-light fs-6 px-2 py-2 shadow">
+        <span class="badge rounded-pill bg-success text-light fs-6 px-2 py-2 shadow status-badge">
             {{ row.STATUS }}
         </span>
     {% endif %}
-</td>
-      <td style="padding-top: 1px; padding-bottom: 1px;"><a href="{{ url_for('ghist_details', row_id=row.SERIAL_ID) }}"
-                                                            class="btn btn-sm btn-light">Деталі</a></td>
+      </td>
+      <td >
+          <a href="{{ url_for('ghist_details', row_id=row.SERIAL_ID) }}"
+             class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
 
-    
+ <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            initDefaultDataTable('#tList', {
+                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
+            });
+        });
+    </script>
 
 
 {% endblock %}

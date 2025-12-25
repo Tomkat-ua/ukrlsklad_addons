@@ -32,15 +32,21 @@ def index():
         data = data_for_module([tov_serial,tov_name],'list')
 
         if data:
-            return render_template('ghist_.html', title=title,rows = data,search_value=tov_serial.strip())
+            return render_template('ghist_.html', title=title,
+                                   rows = data,
+                                   search_value=tov_serial.strip(),
+                                   tov_name=tov_name,
+                                   )
         else:
             # 🛑 Невдача: НЕ робимо redirect, а відображаємо помилку на тій же сторінці
             flash("Запис не знайдено!", "danger")
 
             # 🌟 Повторно відображаємо шаблон, але передаємо введене значення!
+            print('tov_name',tov_name)
             return render_template('ghist_.html',
                                    title=title,
                                    search_value=tov_serial,  # ⬅️ ЗНАЧЕННЯ ЗБЕРЕЖЕНО
+                                   tov_name = tov_name,
                                    rows=[])  # Переконайтесь, що rows порожній
     return render_template('ghist_.html',title=title)
 

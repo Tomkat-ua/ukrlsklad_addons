@@ -1,7 +1,9 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
 
-<table id="tList" class="table table-sm table-striped table-bordered">
+<table id="tList" class="table table-sm table-compact">
     <thead class="table-dark">
     <tr>
       <th>ID</th>
@@ -15,12 +17,25 @@
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ report.NUM }}</td>
       <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.REP_NAME }}</td>
       <td>
-        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary" title="Edit">
-          <i class="bi bi-pencil"></i>
+        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary btn-xs"> Звіт <i class="bi bi-pencil"></i>
         </a>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            initDefaultDataTable('#tList', {
+                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
+            });
+        });
+    </script>
+
 {% endblock %}
