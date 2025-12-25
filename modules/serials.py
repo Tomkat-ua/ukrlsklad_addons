@@ -40,7 +40,6 @@ def serials_search():
 
 def serials_check():
 
-
     # @app.route('/process', methods=['POST'])
     raw_data = request.form.get('serials', '')
     # Розбиваємо текст на рядки та видаляємо зайві пробіли
@@ -51,7 +50,8 @@ def serials_check():
     try:
         conn = db.get_connection()
         cur = conn.cursor()
-
+        total = 0
+        total_err = 0
         for sn in serial_list:
             try:
                 # Виклик процедури (залежно від того, як вона написана у вас)
@@ -73,13 +73,17 @@ def serials_check():
                 # status = cur.callproc('MY_PROCEDURE', (sn,))[0]
 
                 results.append({'sn': sn, 'status': status})
+                total = total + 1
+                if status == 'Не знайдено':
+                    total_err = total_err + 1
             except Exception as e:
                 results.append({'sn': sn, 'status': f"Помилка: {str(e)}"})
 
         conn.close()
+        print('total',total,'total_err',total_err)
     except Exception as e:
         return f"Помилка підключення до БД: {str(e)}"
     # print(results)
-    return render_template('serial_check.html', results=results,raw_data=raw_text)
+    return render_template('serial_check.html', results=results,raw_data=raw_text,total=total,total_err=total_err)
 
 
