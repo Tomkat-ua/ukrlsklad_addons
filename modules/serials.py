@@ -59,7 +59,7 @@ def serials_check():
                 cur.execute("""select ts.num,tn.kod,ts.tovar_ser_num ,tn.name
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
-                                where ts.doc_type_id in (9,10)
+                                where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
                                 and ts.tovar_ser_num = ?
                                 rows 1
                 """, (sn,))
