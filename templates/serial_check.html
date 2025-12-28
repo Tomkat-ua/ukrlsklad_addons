@@ -20,8 +20,10 @@
     </div>
 
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
- <table class="table table-hover" id="resultsTable">
+<table class="table table-sm table-compact" id="resultsTable">
     <thead>
         <tr>
             <th>
@@ -44,6 +46,16 @@
     </tbody>
 </table>
 </div>
+
+
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            initDefaultDataTable('#tList', {
+                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
+            });
+        });
+    </script>
 
 <script>
 function copyColumn(colIndex) {

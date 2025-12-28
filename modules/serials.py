@@ -56,21 +56,22 @@ def serials_check():
             try:
                 # Виклик процедури (залежно від того, як вона написана у вас)
                 # Якщо процедура повертає значення (selectable):
-                cur.execute("""select ts.num,tn.kod,ts.tovar_ser_num ,tn.name
+                cur.execute("""select tn.num  --0
+                                     ,tn.kod  --1
+                                     ,ts.tovar_ser_num  --2
+                                     ,tn.name  --3
+                                    -- ,f.sklad_name --4
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
+                                  --  left join utils.FIND_TOVAR_BY_SERIAL(?) f  on f.TOVAR_SER_NUM = ts.tovar_ser_num
                                 where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
                                 and ts.tovar_ser_num = ?
                                 rows 1
-                """, (sn,))
-
+                """, [sn])
 
                 row = cur.fetchone()
-                status = f"{row[1]} {row[2]} {row[3]} " \
+                status = f"{row[0]}|{row[1]}|{row[3]} " \
                     if row else "Не знайдено"
-
-                # Або якщо це Executable Procedure:
-                # status = cur.callproc('MY_PROCEDURE', (sn,))[0]
 
                 results.append({'sn': sn, 'status': status})
                 total = total + 1
