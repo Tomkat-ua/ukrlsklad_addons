@@ -73,12 +73,13 @@
 
         <div class="col-md-8">
             <div class="card p-3 shadow-sm">
+                <label for="group1" class="form-label fw-bold">Знайдено відповідність:</label>
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered table-compact">
+                    <table id="group1" class="table table-sm table-hover table-bordered table-compact">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>KOD</th>
+                                <th>TOVAR ID</th>
+                                <th>TOVAR KOD</th>
                                 <th>NAME</th>
                                 <th class="text-center">COUNT</th>
                             </tr>
@@ -87,7 +88,7 @@
                             {% for row in data_g %}
                             <tr>
                                 <td><code>{{ row.TOVAR_ID }}</code></td>
-                                <td>{{ row.KOD }}</td>
+                                <td><kbd>{{ row.KOD }}</kbd></td>
                                 <td>{{ row.NAME }}</td>
                                 <td class="text-center fw-bold">{{ row.COUNT_ }}</td>
                             </tr>
