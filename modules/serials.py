@@ -79,12 +79,22 @@ def serials_check():
                     total_err = total_err + 1
             except Exception as e:
                 results.append({'sn': sn, 'status': f"Помилка: {str(e)}"})
-
         conn.close()
-        print('total',total,'total_err',total_err)
     except Exception as e:
         return f"Помилка підключення до БД: {str(e)}"
-    # print(results)
-    return render_template('serial_check.html', results=results,raw_data=raw_text,total=total,total_err=total_err)
+    formatted_serials = ", ".join([f"'{s}'" for s in serial_list])
+
+    sql_g = f""" select  ts.tovar_id,tn.kod ,tn.name,count(*) as count_
+                    from tovar_serials ts
+                     inner join tovar_name tn on tn.num = ts.tovar_id
+                    where (ts.doc_type_id = 8 or ts.doc_type_id = 9 )
+                    and ts.tovar_ser_num in ({formatted_serials})
+                    group by 1 ,2 ,3"""
+    if not serial_list:
+        data_g = []  # або повернути порожній DataFrame
+    else:
+        data_g = db.data_module(sql_g,'')
+    return render_template('serial_check.html', results=results,raw_data=raw_text,
+                           total=total,total_err=total_err,data_g=data_g)
 
 

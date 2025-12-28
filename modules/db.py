@@ -47,8 +47,6 @@ def data_module(sql,params,des = None):
         print(f'ERROR - {str(e)}')
         print(sql)
         print(params)
-        cur.close()
-        con.close()
         return "Internal Server Error", 500
 
 # def get_data(sql,params,mode=1):

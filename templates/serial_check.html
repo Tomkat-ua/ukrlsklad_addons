@@ -1,12 +1,26 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+<head>
+    <style>
+        /* Зміна кольору підсвічування рядка */
+    .table-hover tbody tr:hover {
+        background-color: #fff9db !important; /* Ніжно-блакитний */
+        transition: background-color 0.2s ease; /* Плавний перехід */
+    }
+<!--    table.table-striped tbody tr:nth-of-type(odd):hover td {-->
+<!--        background-color: #fff9db !important;-->
+<!--    }-->
+    </style>
+</head>
+<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+{#
 <div class="container mt-1">
     <h3>Перевірка серійних номерів</h3>
     <form method="POST" action="/scheck">
         <div class="mb-3">
             <label for="serials" class="form-label">Вставте список (по одному на рядок):</label>
             <textarea class="form-control"
-              id="serials"
+              id="serials0"
               name="serials"
               rows="10"
               placeholder="Серійні номери - один на рядок">{% if raw_data %}{{ raw_data }}{% endif %}</textarea>
@@ -14,12 +28,83 @@
         <button type="submit" class="btn btn-primary">Запустити перевірку</button>
     </form>
     <br>
+    <table class="table table-sm table-hover table-bordered table-compact">
+        <thead>
+        <tr>
+            <th>TOVAR_ID</th>
+            <th>TOVAR KOD</th>
+            <th>NAME</th>
+            <th>COUNT</th>
+        </tr>
+        </thead>
+        {% for row in data_g %}
+        <tr>
+            <td>{{ row.TOVAR_ID }}</td>
+            <td>{{ row.KOD }}</td>
+            <td>{{ row.NAME }}</td>
+            <td>{{ row.COUNT_ }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <div>
-            <p class="text-primary fw-bold">Всього записів: {{ total }}</p>
-            <p class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</p>
+            <h6 class="text-primary fw-bold">Всього записів: {{ total }}</h6>
+            <h6 class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</h6>
+    </div> #}
+<!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--&#45;&#45;-->
+<div class="container-fluid mt-2"> <h3>Перевірка серійних номерів</h3>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form method="POST" action="/scheck" class="card p-3 shadow-sm">
+                <div class="mb-3">
+                    <label for="serials" class="form-label fw-bold">Вставте список:</label>
+                    <textarea class="form-control"
+                      id="serials"
+                      name="serials"
+                      rows="15"
+                      style="font-family: monospace; font-size: 0.85rem;"
+                      placeholder="Один номер на рядок">{% if raw_data %}{{ raw_data }}{% endif %}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Запустити перевірку</button>
+            </form>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card p-3 shadow-sm">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover table-bordered table-compact">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>KOD</th>
+                                <th>NAME</th>
+                                <th class="text-center">COUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data_g %}
+                            <tr>
+                                <td><code>{{ row.TOVAR_ID }}</code></td>
+                                <td>{{ row.KOD }}</td>
+                                <td>{{ row.NAME }}</td>
+                                <td class="text-center fw-bold">{{ row.COUNT_ }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="mt-3">
+                        <h6 class="text-primary fw-bold">Всього записів: {{ total }}</h6>
+                        <h6 class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-
+<!--    &#45;&#45;-->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
