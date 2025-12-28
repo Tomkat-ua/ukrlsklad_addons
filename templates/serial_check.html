@@ -78,6 +78,7 @@
                     <table id="group1" class="table table-sm table-hover table-bordered table-compact">
                         <thead class="table-light">
                             <tr>
+                                <th>#</th>
                                 <th>TOVAR ID</th>
                                 <th>TOVAR KOD</th>
                                 <th>NAME</th>
@@ -87,6 +88,7 @@
                         <tbody>
                             {% for row in data_g %}
                             <tr>
+                                <td class="text-muted">{{ loop.index }}</td>
                                 <td><code>{{ row.TOVAR_ID }}</code></td>
                                 <td><kbd>{{ row.KOD }}</kbd></td>
                                 <td>{{ row.NAME }}</td>
