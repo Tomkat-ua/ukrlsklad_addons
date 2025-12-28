@@ -60,17 +60,16 @@ def serials_check():
                                      ,tn.kod  --1
                                      ,ts.tovar_ser_num  --2
                                      ,tn.name  --3
-                                    -- ,f.sklad_name --4
+                                     , (select status_txt from usadd_web.serial_status( ts.tovar_ser_num)  ) as status --4
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
-                                  --  left join utils.FIND_TOVAR_BY_SERIAL(?) f  on f.TOVAR_SER_NUM = ts.tovar_ser_num
                                 where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
                                 and ts.tovar_ser_num = ?
                                 rows 1
                 """, [sn])
 
                 row = cur.fetchone()
-                status = f"{row[0]}|{row[1]}|{row[3]} " \
+                status = f"{row[0]}|{row[1]}|{row[3]}|{row[4]} " \
                     if row else "Не знайдено"
 
                 results.append({'sn': sn, 'status': status})
@@ -89,7 +88,7 @@ def serials_check():
                      inner join tovar_name tn on tn.num = ts.tovar_id
                     where (ts.doc_type_id = 8 or ts.doc_type_id = 9 )
                     and ts.tovar_ser_num in ({formatted_serials})
-                    group by 1 ,2 ,3"""
+                    group by 1 ,2 ,3  order by 3"""
     if not serial_list:
         data_g = []  # або повернути порожній DataFrame
     else:
