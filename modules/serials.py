@@ -61,6 +61,7 @@ def serials_check():
                                      ,ts.tovar_ser_num  --2
                                      ,tn.name  --3
                                      , (select status_txt from usadd_web.serial_status( ts.tovar_ser_num)  ) as status --4
+                                    -- , (select SKLAD_NAME from utils.FIND_TOVAR_BY_SERIAL(ts.tovar_ser_num)) as sklad_name --5
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
                                 where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
