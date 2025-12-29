@@ -126,7 +126,9 @@
     </thead>
     <tbody>
         {% for row in results %}
-            <tr class="{{ 'table-danger' if 'Не знайдено' in row.status else 'table-success' }}">
+            <tr class="{{ 'table-danger' if 'Не знайдено' in row.status
+            else 'table-success' if 'На обліку' in row.status
+            else 'table-warning' if 'Списано (акт пуску)' in row.status}}">
                 <td>{{ row.sn }}</td>
                 <td>{{ row.status }}</td>
             </tr>
