@@ -120,7 +120,8 @@ def add_to_actv():
             processed_count += 1
         except Exception as e:
             # Повертаємо ПОВНИЙ текст помилки як рядок у JSON
-            error_full_text = str(e)
+            # error_full_text = str(e)
+            error_full_text = str(e.args[0]) if hasattr(e, 'args') and e.args else str(e)
             return jsonify({
                 "status": "error",
                 "message": error_full_text

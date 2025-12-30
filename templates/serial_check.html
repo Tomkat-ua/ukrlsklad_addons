@@ -133,8 +133,13 @@ function runAll() {
     const btn = document.getElementById('btnRunAction');
     const statusDiv = document.getElementById('modalStatus');
 
+    if (!docId) {
+        alert("Введіть ID документа!");
+        return;
+    }
+
     btn.disabled = true;
-    btn.innerText = "Обробка...";
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Обробка...';
 
     fetch('/add-to-actvr', {
         method: 'POST',
@@ -146,23 +151,47 @@ function runAll() {
         const data = isJson ? await response.json() : null;
 
         if (!response.ok) {
-            // Якщо це JSON — беремо message, якщо ні — беремо весь текст відповіді (HTML помилки)
+            // Витягуємо повідомлення: якщо це наш JSON - беремо message, інакше - чистий текст
             const errorText = data ? data.message : await response.text();
             throw new Error(errorText);
         }
         return data;
     })
     .then(data => {
-        statusDiv.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+        statusDiv.innerHTML = `<div class="alert alert-success mt-2">${data.message}</div>`;
+
+        // Змінюємо вигляд кнопки
+        btn.className = "btn btn-success w-100";
+        btn.innerText = "Готово! Закрити вікно";
+
+        // Додаємо атрибут, який дозволить кнопці закрити модалку при кліку
+        btn.setAttribute("data-bs-dismiss", "modal");
+
+        // Оновлюємо статус: кнопка тепер активна для закриття
+        btn.disabled = false;
     })
     .catch(err => {
         console.error(err);
-        // Виводимо повну помилку в модалку
-        statusDiv.innerHTML = `<div class="alert alert-danger" style="font-size: 0.8rem; white-space: pre-wrap;">${err.message}</div>`;
+        // Виводимо помилку красиво
+        statusDiv.innerHTML = `
+            <div class="alert alert-danger mt-2" style="font-size: 0.85rem; white-space: pre-wrap; font-family: monospace;">
+                <strong>Помилка БД:</strong>\n${err.message}
+            </div>`;
+
+        // Повертаємо кнопці робочий стан
         btn.disabled = false;
+        btn.className = "btn btn-danger";
         btn.innerText = "Спробувати знову";
+    })
+    .finally(() => {
+        // Якщо потрібно щось зробити завжди в кінці
     });
 }
+
+// Автофокус на поле при відкритті модалки
+document.getElementById('confirmModal').addEventListener('shown.bs.modal', function () {
+    document.getElementById('doc_id').focus();
+});
 </script>
 <script>
 function copyColumn(colIndex) {
