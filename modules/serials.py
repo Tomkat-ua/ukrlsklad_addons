@@ -121,7 +121,7 @@ def run_db_process():
         con.commit()
         con.close()
         processed_count += 1
-    flash(f"Успішно передано {processed_count} записів",'info')
+    # flash(f"Успішно передано {processed_count} записів",'info')
     # return redirect(url_for('serial_scheck'))
     return {"status": "ok", "message": f"Оброблено {processed_count} записів"}
     # return f"Успішно оброблено {processed_count} записів у БД!"
