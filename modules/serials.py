@@ -1,4 +1,4 @@
-from flask import  request,render_template,flash,redirect,url_for
+from flask import  request,render_template,flash,redirect,url_for,session
 from . import db
 
 
@@ -94,7 +94,35 @@ def serials_check():
         data_g = []  # або повернути порожній DataFrame
     else:
         data_g = db.data_module(sql_g,'')
+        session['last_data'] = data_g
     return render_template('serial_check.html', results=results,raw_data=raw_text,
                            total=total,total_err=total_err,data_g=data_g)
 
+
+def run_db_process():
+    # Дістаємо дані з сесії
+    data_to_process = session.get('last_data', [])
+
+    if not data_to_process:
+        return "Помилка: Немає даних для обробки. Спочатку запустіть перевірку."
+
+    processed_count = 0
+    for row in data_to_process:
+        # Припустимо, ваша процедура приймає TOVAR_ID
+        tovar_id = row.get('TOVAR_ID')
+        doc_id   = 300000639
+        req_data = request.get_json()
+        doc_id = req_data.get('doc_id')
+        count_   = row.get('COUNT_')
+        # Виклик процедури в БД
+        con = db.get_connection()
+        cur = con.cursor()
+        cur.callproc('import.i_actvr_det',[doc_id,tovar_id,count_])
+        con.commit()
+        con.close()
+        processed_count += 1
+    flash(f"Успішно передано {processed_count} записів",'info')
+    # return redirect(url_for('serial_scheck'))
+    return {"status": "ok", "message": f"Оброблено {processed_count} записів"}
+    # return f"Успішно оброблено {processed_count} записів у БД!"
 

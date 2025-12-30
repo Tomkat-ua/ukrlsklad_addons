@@ -89,6 +89,9 @@ def export_csv():
 @app.route("/serials",methods=['GET', 'POST'])
 def serials_search():
     return serials.serials_search()
+@app.route('/run_db_process', methods=['POST'])
+def run_1():
+    return serials.run_db_process()
 
 ########### G_HIST ############################################
 @app.route("/ghist",methods =['GET','POST'])
@@ -178,7 +181,7 @@ def packs_det(master_id):
 
 ########### SERIALS CHECK ####################
 @app.route('/scheck',methods=['GET','POST'])
-def scheck():
+def serial_scheck():
     return serials.serials_check()
 ########### TEST #############################
 @app.route("/test")

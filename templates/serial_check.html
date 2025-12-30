@@ -7,54 +7,10 @@
         background-color: #fff9db !important; /* Ніжно-блакитний */
         transition: background-color 0.2s ease; /* Плавний перехід */
     }
-<!--    table.table-striped tbody tr:nth-of-type(odd):hover td {-->
-<!--        background-color: #fff9db !important;-->
-<!--    }-->
     </style>
 </head>
-<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-{#
-<div class="container mt-1">
-    <h3>Перевірка серійних номерів</h3>
-    <form method="POST" action="/scheck">
-        <div class="mb-3">
-            <label for="serials" class="form-label">Вставте список (по одному на рядок):</label>
-            <textarea class="form-control"
-              id="serials0"
-              name="serials"
-              rows="10"
-              placeholder="Серійні номери - один на рядок">{% if raw_data %}{{ raw_data }}{% endif %}</textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Запустити перевірку</button>
-    </form>
-    <br>
-    <table class="table table-sm table-hover table-bordered table-compact">
-        <thead>
-        <tr>
-            <th>TOVAR_ID</th>
-            <th>TOVAR KOD</th>
-            <th>NAME</th>
-            <th>COUNT</th>
-        </tr>
-        </thead>
-        {% for row in data_g %}
-        <tr>
-            <td>{{ row.TOVAR_ID }}</td>
-            <td>{{ row.KOD }}</td>
-            <td>{{ row.NAME }}</td>
-            <td>{{ row.COUNT_ }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <div>
-            <h6 class="text-primary fw-bold">Всього записів: {{ total }}</h6>
-            <h6 class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</h6>
-    </div> #}
-<!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
 <!--&#45;&#45;-->
 <div class="container-fluid mt-2"> <h3>Перевірка серійних номерів</h3>
-
     <div class="row">
         <div class="col-md-4">
             <form method="POST" action="/scheck" class="card p-3 shadow-sm">
@@ -97,6 +53,12 @@
                             {% endfor %}
                         </tbody>
                     </table>
+<!--                    <form method="POST" action="/run_db_process">-->
+<!--                        <button type="button" class="btn btn-danger w-100" onclick="runAll()">Виконати процедуру</button>-->
+<!--                    </form>-->
+                    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                        Передати в Акт Виконаних Робіт
+                    </button>
                     <div class="mt-3">
                         <h6 class="text-primary fw-bold">Всього записів: {{ total }}</h6>
                         <h6 class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</h6>
@@ -126,15 +88,37 @@
     </thead>
     <tbody>
         {% for row in results %}
-            <tr class="{{ 'table-danger' if 'Не знайдено' in row.status
-            else 'table-success' if 'На обліку' in row.status
-            else 'table-warning' if 'Списано (акт пуску)' in row.status}}">
+            <tr class="{{ 'table-danger'  if 'Не знайдено'         in row.status
+                     else 'table-success' if 'На обліку'           in row.status
+                     else 'table-warning' if 'Списано (акт пуску)' in row.status }}">
                 <td>{{ row.sn }}</td>
                 <td>{{ row.status }}</td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Підтвердження обробки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ви впевнені, що хочете обробити всі записи?</p>
+                <div class="mb-3">
+                    <label for="doc_id" class="form-label fw-bold">Введіть ID документа:</label>
+                    <input type="number" class="form-control" id="doc_id" required placeholder="Наприклад: 12345">
+                </div>
+                <div id="modalStatus" class="mt-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" id="btnRunAction" class="btn btn-danger" onclick="runAll()">Виконати процедуру</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -146,6 +130,52 @@
             });
         });
     </script>
+
+<script>
+function runAll() {
+    const docId = document.getElementById('doc_id').value;
+    const btn = document.getElementById('btnRunAction');
+    const statusDiv = document.getElementById('modalStatus');
+
+    if (!docId) {
+        alert("Будь ласка, введіть ID документа!");
+        return;
+    }
+
+    // Блокуємо кнопку та показуємо процес
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Обробка...';
+    statusDiv.innerHTML = '<small class="text-primary">Запит відправлено в БД, зачекайте...</small>';
+
+    // Відправка даних через AJAX
+    fetch('/run_db_process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ doc_id: docId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            statusDiv.innerHTML = `<small class="text-success fw-bold">${data.message}</small>`;
+            btn.className = "btn btn-success";
+            btn.innerText = "Готово ✅";
+
+            // Закрити модалку через 2 секунди автоматично (опціонально)
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                modal.hide();
+            }, 2000);
+        } else {
+            throw new Error(data.message);
+        }
+    })
+    .catch(err => {
+        statusDiv.innerHTML = `<small class="text-danger">Помилка: ${err.message}</small>`;
+        btn.disabled = false;
+        btn.innerText = "Спробувати знову";
+    });
+}
+</script>
 
 <script>
 function copyColumn(colIndex) {
