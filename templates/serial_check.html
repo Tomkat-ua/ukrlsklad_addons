@@ -59,6 +59,8 @@
                     <div class="mt-3">
                         <h6 class="text-primary fw-bold">Всього записів: {{ total }}</h6>
                         <h6 class="fw-bold {{ 'text-danger' if total_err|int > 0 }}">Помилкових записів: {{ total_err }}</h6>
+                        <h6 class="fw-bold {{ 'text-warning' if total_sap|int > 0 }}">Списано (акт пуску): {{ total_sap }}</h6>
+                        <h6 class="fw-bold {{ 'text-success' if total_acc|int > 0 }}">На обліку: {{ total_acc }}</h6>
                     </div>
                 </div>
             </div>
@@ -111,8 +113,10 @@
                 <div id="modalStatus" class="mt-2"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                <button type="button" id="btnRunAction" class="btn btn-danger" onclick="runAll()">Виконати процедуру</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" id="btnRunAction" class="btn btn-danger" onclick="runAll()">
+                    Виконати процедуру
+                </button>
             </div>
         </div>
     </div>
@@ -129,17 +133,19 @@
     </script>
 <script>
 function runAll() {
-    const docId = document.getElementById('doc_id').value;
-    const btn = document.getElementById('btnRunAction');
-    const statusDiv = document.getElementById('modalStatus');
-
+    const docId = document.getElementById('doc_id').value.trim();
     if (!docId) {
         alert("Введіть ID документа!");
         return;
     }
 
+    const btn = document.getElementById('btnRunAction');
+    const statusDiv = document.getElementById('modalStatus');
+
+    // Блокуємо тільки кнопку дії, щоб не було повторних кліків
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Обробка...';
+    statusDiv.innerHTML = ''; // Очищуємо попередній статус
 
     fetch('/add-to-actvr', {
         method: 'POST',
@@ -147,52 +153,34 @@ function runAll() {
         body: JSON.stringify({ doc_id: docId })
     })
     .then(async response => {
-        const isJson = response.headers.get('content-type')?.includes('application/json');
-        const data = isJson ? await response.json() : null;
-
-        if (!response.ok) {
-            // Витягуємо повідомлення: якщо це наш JSON - беремо message, інакше - чистий текст
-            const errorText = data ? data.message : await response.text();
-            throw new Error(errorText);
-        }
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Помилка сервера');
         return data;
     })
     .then(data => {
+        // Успіх
         statusDiv.innerHTML = `<div class="alert alert-success mt-2">${data.message}</div>`;
-
-        // Змінюємо вигляд кнопки
-        btn.className = "btn btn-success w-100";
-        btn.innerText = "Готово! Закрити вікно";
-
-        // Додаємо атрибут, який дозволить кнопці закрити модалку при кліку
-        btn.setAttribute("data-bs-dismiss", "modal");
-
-        // Оновлюємо статус: кнопка тепер активна для закриття
-        btn.disabled = false;
+        btn.innerText = "Виконано успішно";
+        // Залишаємо кнопку disabled, щоб не клацали вдруге після успіху
     })
     .catch(err => {
-        console.error(err);
-        // Виводимо помилку красиво
-        statusDiv.innerHTML = `
-            <div class="alert alert-danger mt-2" style="font-size: 0.85rem; white-space: pre-wrap; font-family: monospace;">
-                <strong>Помилка БД:</strong>\n${err.message}
-            </div>`;
-
-        // Повертаємо кнопці робочий стан
-        btn.disabled = false;
-        btn.className = "btn btn-danger";
+        // Помилка
+        statusDiv.innerHTML = `<div class="alert alert-danger mt-2" style="white-space: pre-wrap;">${err.message}</div>`;
+        btn.disabled = false; // Повертаємо можливість спробувати знову
         btn.innerText = "Спробувати знову";
-    })
-    .finally(() => {
-        // Якщо потрібно щось зробити завжди в кінці
     });
 }
 
-// Автофокус на поле при відкритті модалки
-document.getElementById('confirmModal').addEventListener('shown.bs.modal', function () {
-    document.getElementById('doc_id').focus();
+// Очищення при закритті, щоб наступного разу все було "з нуля"
+document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
+    const btn = document.getElementById('btnRunAction');
+    btn.disabled = false;
+    btn.innerText = "Виконати процедуру";
+    document.getElementById('modalStatus').innerHTML = '';
+    document.getElementById('doc_id').value = '';
 });
 </script>
+
 <script>
 function copyColumn(colIndex) {
     const table = document.getElementById('resultsTable');
