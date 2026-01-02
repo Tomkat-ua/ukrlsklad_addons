@@ -63,7 +63,7 @@ def serials_check():
                                      ,ts.tovar_ser_num  --2
                                      ,tn.name  --3
                                      , (select status_txt from usadd_web.serial_status( ts.tovar_ser_num)  ) as status --4
-                                    -- , (select SKLAD_NAME from utils.FIND_TOVAR_BY_SERIAL(ts.tovar_ser_num)) as sklad_name --5
+                                     , usadd_web.SERIAL_IS_PLACE(ts.TOVAR_SER_NUM) AS SKLAD_NAME --5
                                 from tovar_serials ts
                                     inner join tovar_name tn on tn.num = ts.tovar_id
                                 where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
@@ -73,7 +73,7 @@ def serials_check():
 
                 row = cur.fetchone()
                 if row:
-                    status = f"{row[0]}|{row[1]}|{row[3]}|{row[4]} "
+                    status = f"{row[0]} | {row[1]} | {row[3]} | {row[4]} | {row[5]} "
                     # if row else "Не знайдено" total_err = total_err + 1
                     state_raw = row[4]
                     state = state_raw.strip()
@@ -99,28 +99,40 @@ def serials_check():
                 select * from (
                  select ts.tovar_id   ,tn.kod   ,tn.name
                  ,usadd_web.serial_status_code(ts.tovar_ser_num) as status_code
+                 ,usadd_web.serial_is_place(ts.tovar_ser_num)  as sklad_name
                  ,count(*) as count_
                 from tovar_serials ts
                  inner join tovar_name tn on tn.num = ts.tovar_id
                 where (ts.doc_type_id = 8 or ts.doc_type_id = 9 )
                 and ts.tovar_ser_num in  ({formatted_serials} )
-                group by 1 ,2 ,3,4) where status_code = 0
+                group by 1 ,2 ,3,4,5) where status_code = 0
                 order by 3
 """
+    is_multi_sklad=''
+    main_sklad=''
     if not serial_list:
         data_g = []  # або повернути порожній DataFrame
     else:
         data_g = db.data_module(sql_g,'')
         session['data_g'] = data_g
         session['formatted_serials'] = formatted_serials
-    print('total_sap',total_sap)
+
+        # Збираємо всі унікальні назви складів
+        unique_sklads = set(row['SKLAD_NAME'] for row in data_g if row.get('SKLAD_NAME'))
+        # Передаємо цей список або прапорець у шаблон
+        is_multi_sklad = len(unique_sklads) > 1
+        main_sklad = list(unique_sklads)[0] if unique_sklads else None
+    print('is_multi_sklad',is_multi_sklad)
+    print('main_sklad',main_sklad)
     return render_template('serial_check.html', results=results,
                            raw_data=raw_text,
                            total=total,
                            total_err=total_err,
                            data_g=data_g,
                            total_sap=total_sap,
-                           total_acc=total_acc)
+                           total_acc=total_acc,
+                           is_multi_sklad=is_multi_sklad,
+                           main_sklad=main_sklad)
 
 
 def add_to_actv():
@@ -130,7 +142,6 @@ def add_to_actv():
 
     req_data = request.get_json()
     doc_id = req_data.get('doc_id')
-    print(doc_id)
     if not data_to_process:
         return "Помилка: Немає даних для обробки. Спочатку запустіть перевірку."
     processed_count = 0
