@@ -66,6 +66,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
                     <button type="button" class="btn {{ 'btn-danger' if is_multi_sklad else 'btn-success' }} w-100 mt-2" data-bs-toggle="modal" data-bs-target="#confirmModal">
                         Передати в Акт Виконаних Робіт
                     </button>
@@ -75,7 +76,7 @@
                         <h6 class="fw-bold mb-0 {{ 'text-warning' if total_sap|int > 0 }}">Списано: {{ total_sap }}</h6>
                         <h6 class="fw-bold mb-0 {{ 'text-success' if total_acc|int > 0 }}">На обліку: {{ total_acc }}</h6>
                     </div>
-                </div>
+
             </div>
         </div>
     </div>

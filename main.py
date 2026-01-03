@@ -11,10 +11,6 @@ local_ip         = config.local_ip
 
 app.secret_key = config.api_key  # потрібен для flash-повідомлень
 
-# @app.context_processor
-# def inject_version():
-#     return dict(app_version=__version__)
-
 @app.errorhandler(404)
 def page_not_found(e):
     # Можна повернути шаблон render_template('404.html')
