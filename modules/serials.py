@@ -4,7 +4,6 @@ from . import db
 
 def serials_search():
     result = []
-    # search_term = ''
     sql = """select sn.num as id, sn.name from sklad_names sn
                 where  sn.visible =1 and sn.num >=? order by 2"""
     sklads = db.data_module(sql, [300000001])
@@ -47,48 +46,6 @@ def serials_check():
     raw_text = request.form.get('serials', '')
     results = []
     formatted_serials = ",".join([str(s).strip() for s in serial_list])
-    # try:
-        # conn = db.get_connection()
-        # cur = conn.cursor()
-        # total = 0
-        # total_err = 0
-        # total_sap = 0
-        # total_acc = 0
-        # for sn in serial_list:
-        #     try:
-        #         cur.execute("""select tn.num  --0
-        #                              ,tn.kod  --1
-        #                              ,ts.tovar_ser_num  --2
-        #                              ,tn.name  --3
-        #                              , (select status_txt from usadd_web.serial_status( ts.tovar_ser_num)  ) as status --4
-        #                              , usadd_web.SERIAL_IS_PLACE(ts.TOVAR_SER_NUM) AS SKLAD_NAME --5
-        #                         from tovar_serials ts
-        #                             inner join tovar_name tn on tn.num = ts.tovar_id
-        #                         where (ts.doc_type_id = 9  or ts.doc_type_id = 8)
-        #                         and ts.tovar_ser_num = ?
-        #                         rows 1
-        #         """, [sn])
-        #
-        #         row = cur.fetchone()
-        #         if row:
-        #             status = f"{row[0]} | {row[1]} | {row[3]} | {row[4]} | {row[5]} "
-        #             # if row else "Не знайдено" total_err = total_err + 1
-        #             state_raw = row[4]
-        #             state = state_raw.strip()
-        #             if state == 'На обліку':
-        #                 total_acc = total_acc + 1
-        #             if state == 'Списано (акт пуску)':
-        #                 total_sap = total_sap + 1
-        #         else:
-        #             status = "Не знайдено"
-        #             total_err = total_err + 1
-        #
-        #         results.append({'sn': sn, 'status': status})
-        #         total = total + 1
-        #
-        #     except Exception as e:
-        #         results.append({'sn': sn, 'status': f"Помилка: {str(e)}"})
-        # conn.close()
     sql_list = 'select * from usadd_web.GET_SERIALS_LIST(?)'
     data_serials = db.data_module(sql_list,[formatted_serials])
     results = []
@@ -100,7 +57,8 @@ def serials_check():
     for row in data_serials:
         sn = row['TOVAR_SER_NUM']
         if row['NAME']:  # Якщо ім'я товару є, значить знайшли в базі
-            status_text = f"{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} | {row['SKLAD_NAME']}"
+            dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
+            status_text = f"{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} | {row['SKLAD_NAME']} {dup_label}"
 
             state = row['STATUS'].strip() if row['STATUS'] else ""
             if state == 'На обліку':
@@ -111,27 +69,10 @@ def serials_check():
             status_text = "Не знайдено"
             total_err += 1
 
-        results.append({'sn': sn, 'status': status_text})
+        results.append({'sn': sn, 'status': status_text,'c_ex':row['C_EX'] })
 
-    # except Exception as e:
-    #     print(e)
-    #     return f"Помилка підключення до БД: {str(e)}"
-    # formatted_serials = ", ".join([f"'{s}'" for s in serial_list])
-    # formatted_serials = ",".join([str(s).strip() for s in serial_list])
 
-#     sql_g = f"""
-#                 select * from (
-#                  select ts.tovar_id   ,tn.kod   ,tn.name
-#                  ,usadd_web.serial_status_code(ts.tovar_ser_num) as status_code
-#                  ,usadd_web.serial_is_place(ts.tovar_ser_num)  as sklad_name
-#                  ,count(*) as count_
-#                 from tovar_serials ts
-#                  inner join tovar_name tn on tn.num = ts.tovar_id
-#                 where (ts.doc_type_id = 8 or ts.doc_type_id = 9 )
-#                 and ts.tovar_ser_num in  ({formatted_serials} )
-#                 group by 1 ,2 ,3,4,5) where status_code = 0
-#                 order by 3
-# """
+#### GROUP LIST #############3
     sql_g = ' select * from usadd_web.GET_SERIALS_SUMMARY ( ? )'
     is_multi_sklad=''
     main_sklad=''
@@ -189,30 +130,6 @@ def add_to_actv():
     return {"status": "ok", "message": f"Оброблено {processed_count} записів"}
 
 def serials_to_actv(serials,doc_id):
-#     sql = f""" execute block
-# as
-#     declare variable tovar_id tnum ;
-#     declare variable serial   tsm_kod;
-#     declare variable doc_id   tnum ;
-#     declare variable sklad_id tnum;
-# begin
-#  select a.sklad_id from actvr a where a.num = {doc_id} into sklad_id;
-#   if ( sklad_id is null) then
-#   begin
-#    exception ex_common_error using ('[ERROR-00100: SKLAD_ID is NULL]');
-#    exit;
-#   end
-#  for
-#     select
-#      ts.tovar_id,ts.tovar_ser_num
-#     from tovar_serials ts
-#     where (ts.doc_type_id = 8 or ts.doc_type_id = 9 )
-#     and usadd_web.serial_status_code(ts.tovar_ser_num)  = 0
-#     and ts.tovar_ser_num in({serials})
-#      into tovar_id, serial
-#     do
-#         execute procedure import.i_serial(:tovar_id,:serial,{doc_id},:sklad_id,-1);
-# end """
     try:
         con = db.get_connection()
         cur = con.cursor()

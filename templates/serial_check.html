@@ -9,7 +9,7 @@
     }
     </style>
 </head>
-<!--&#45;&#45;-->
+<!--&#45;&#45; GROUP LIST -&#45;&#45;-->
 <div class="container-fluid mt-2"> <h3>Перевірка серійних номерів</h3>
     <div class="row">
         <div class="col-md-4">
@@ -82,7 +82,9 @@
     </div>
 </div>
 
-<!--    &#45;&#45;-->
+
+<!-- -&#45;&#45;  MAIN LIST -->
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
@@ -101,9 +103,11 @@
     </thead>
     <tbody>
         {% for row in results %}
-            <tr class="{{ 'table-danger'  if 'Не знайдено'         in row.status
+            <tr class="{{ 'table-secondary' if row.c_ex > 1
+                     else 'table-danger'  if 'Не знайдено'         in row.status
                      else 'table-success' if 'На обліку'           in row.status
-                     else 'table-warning' if 'Списано (акт пуску)' in row.status }}">
+                     else 'table-warning' if 'Списано (акт пуску)' in row.status
+                     }}">
                 <td>{{ row.sn }}</td>
                 <td>{{ row.status }}</td>
             </tr>
