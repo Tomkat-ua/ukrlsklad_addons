@@ -173,6 +173,7 @@
     {% endif %}
  {% endif %}
 </div>
+
 <!--&#45;&#45; MODAL -->
 <div class="modal fade" id="newEntryModal" tabindex="-1" aria-labelledby="newEntryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -189,6 +190,12 @@
                     <div class="d-flex align-items-center mb-3">
                         <label for="nda" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
                         <input type="date" id="nda" class="form-control form-control-sm flex-grow-1" name="nda" required>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="use_k" name="use_k" value="1" >
+                            <label class="form-check-label fw-bold" for="use_k">Використовуючи коефіцієнт</label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

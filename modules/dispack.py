@@ -89,8 +89,10 @@ def process_disacc(id):
         # Отримуємо дані з форми модального вікна
         doc_num  = request.form.get('nua')
         doc_date = request.form.get('nda')
-        sql = ' select * from import.i_snakl (?,?,?) '
-        logs = db.data_module(sql, [doc_num, doc_date, id])
+        use_k = request.form.get('use_k') == '1'
+        print('use_k',use_k)
+
+        logs = db.data_module(' select * from import.i_snakl (?,?,?,?) ', [doc_num, doc_date, id,use_k])
         print(logs)
         # 3. Повідомлення про успіх (за бажанням)
         flash(f'Списано за документом  {id} успішно !', 'success')
