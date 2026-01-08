@@ -1,18 +1,12 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-{#
-<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
-    <h5 class="mb-0 me-3">{{ title }}</h5>
-    <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
-        <div class="input-group input-group-sm table-panell">
-            <input class="form-control input-serial" type="search" placeholder="Серійний..." name="tov_serial" value="{{ search }}">
-            <button class="btn btn-success" type="submit">Шукати</button>
-        </div>
-        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">
-            📋 Копіювати
-        </button>
-    </form>
-</div>#}
+
+{% set mark_colors = {
+    1: 'table-success',
+    6: 'table-warning',
+    3: 'table-danger',
+    4: 'table-info'
+} %}
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
@@ -45,7 +39,8 @@
   </thead>
 <tbody>
   {% for row in data %}
-  <tr class="{{ 'table-danger' if row.DOC_MARK_TYPE == 6 else 'table-success' if row.DOC_MARK_TYPE == 1 else '' }}">
+  <tr class = "{{ mark_colors.get(row.DOC_MARK_TYPE, '') }}">
+<!--          class="{{ 'table-danger' if row.DOC_MARK_TYPE == 6 else 'table-success' if row.DOC_MARK_TYPE == 1 else '' }}">-->
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
