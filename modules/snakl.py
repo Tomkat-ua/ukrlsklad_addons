@@ -8,6 +8,7 @@ def snakl_list():
     if request.method == 'GET':
         sql = 'select * from usadd_web.snakl'
         data = db.data_module(sql, '')
+        # print(data[0]['DOC_MARK_TYPE'])
         return render_template('snakl_list.html',title=title,data = data)
     if request.method == 'POST':
         search_str = request.form['search']

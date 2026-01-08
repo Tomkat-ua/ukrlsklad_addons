@@ -39,12 +39,13 @@
       <th>Сума акту</th>
       <th>Підрозділ</th>
       <th>Серійний номер</th>
+      <th>Мітка</th>
       <th>Дії</th>
     </tr>
   </thead>
 <tbody>
   {% for row in data %}
-  <tr>
+  <tr class="{{ 'table-danger' if row.DOC_MARK_TYPE == 6 else 'table-success' if row.DOC_MARK_TYPE == 1 else '' }}">
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
@@ -52,6 +53,7 @@
         {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
     <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
+    <td>{{ row.DOC_MARK_TYPE }}</td>
     <td>
      <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
     </td>
