@@ -42,6 +42,7 @@
       <th>Серійний Номер</th>
       <th >Код номенк.</th>
       <th>Найменування</th>
+      <th>Підрозділ</th>
       <th>Статус</th>
       <th>Дії</th>
     </tr>
@@ -53,6 +54,7 @@
       <td class="fw-bold text-success" >{{ row.TOVAR_SER_NUM }}</td>
       <td >{{ row.KOD }}</td>
       <td class="fw-bold text-primary col-limit" >{{ row.TOV_NAME }}</td>
+      <td>{{ row.PLACE }}</td>
       <td >
 <!--&#45;&#45; 'Втрачено'-->
   {% set status_text = row.STATUS_CODE %}
