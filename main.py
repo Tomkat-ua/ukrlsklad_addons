@@ -3,7 +3,10 @@ from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials, export, mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, \
-    dispack
+    dispack#,stat
+
+import requests
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -43,6 +46,19 @@ def format_currency_ua(value, decimal_places=2):
 
     except Exception:
         return value  # Повернути вихідне значення у разі помилки
+
+
+@app.context_processor
+def inject_global_vars():
+    # Цей словник тепер буде доступний у ВСІХ шаблонах автоматично
+    return dict(
+        mark_colors={
+            1: 'table-success',
+            6: 'table-warning',
+            3: 'table-danger',
+            4: 'table-info'
+        }
+    )
 
 ########## MAIN ####################
 @app.context_processor
@@ -181,9 +197,17 @@ def serial_scheck():
 def run_1():
     return serials.add_to_actv()
 ########### TEST #############################
-@app.route("/test")
-def test():
-    return render_template('test.html')
+@app.route('/dashboard/<report_type>')
+def dashboard_u(report_type):
+    return stat.universal_dashboard(report_type)
+@app.route('/dashboard')
+def dashboard():
+    return stat.dashboard()
+@app.route('/get_remote_stats')
+def get_remote_stats():
+    endpoint = request.args.get('endpoint', 'default_data')
+    return stat.get_remote_stats(endpoint)
+
 
 # @app.route('/pdf')
 # def generate_pdf():
