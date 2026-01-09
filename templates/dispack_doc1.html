@@ -5,7 +5,10 @@
 
 <div class="card mb-0">
     <div class="card-header bg-light">
-        <h5 class="mb-0">{{ docname }} № {{ data_h.NU }}
+        <h5 class="mb-0">
+            <a href="/dispack" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left-short"></i> Назад</a>
+            {{ docname }} № {{ data_h.NU }}
             <a href="   {% if dt == 1 %}/dispack/doc2/{{ data_h.NUM }}{% endif %}
                         {% if dt == 2 %}/dispack/doc1/{{ data_h.NUM }}{% endif %}
                         "

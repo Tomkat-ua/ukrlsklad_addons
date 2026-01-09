@@ -16,10 +16,14 @@
     {% for report in reports %}
     <tr>
       <td style="padding-top: 1px; padding-bottom: 1px;">{{ report.NUM }}</td>
-      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">{{ report.REP_NAME }}</td>
+      <td class="fw-bold text-success" style="padding-top: 1px; padding-bottom: 1px;">
+          <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary btn-xs"> Звіт <i class="bi bi-pencil"></i>
+            </a>
+          {{ report.REP_NAME }}
+      </td>
       <td>
-        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary btn-xs"> Звіт <i class="bi bi-pencil"></i>
-        </a>
+<!--        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary btn-xs"> Звіт <i class="bi bi-pencil"></i>-->
+<!--        </a>-->
       </td>
     </tr>
     {% endfor %}
