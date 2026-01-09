@@ -34,6 +34,7 @@
       <th>Сума акту</th>
       <th>Підрозділ</th>
       <th>Серійний номер</th>
+      <th>Посилання</th>
       <th>Мітка</th>
       <th>Дії</th>
     </tr>
@@ -49,6 +50,13 @@
         {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
     <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
+    <td>{% if row.ACTVR_ID %}
+        <strong>Акт ВР:</strong> <a href="/dispack/doc1/{{ row.ACTVR_ID | int }}"> {{ row.ACTVR_NU }}</a> <br>
+        {% endif %}
+        {% if row.UNIDOCUM_ID %}
+        <strong>Втрата:</strong> <a href="/loss_edit/{{ row.UNIDOCUM_ID | int }}">{{ row.UNIDOCUM_NU }}</a> <br>
+        {% endif %}
+    </td>
     <td>{{ row.DOC_MARK_TYPE }}</td>
     <td>
      <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
