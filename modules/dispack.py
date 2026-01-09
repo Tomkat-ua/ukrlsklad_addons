@@ -6,7 +6,7 @@ title = 'Розкомплектація'
 
 def dispack_list():
     function_name = sys._getframe(0).f_code.co_name
-    sql = """ select  * from usadd_web.DISPACK_LIST (?,?,?) order by num desc"""
+    sql = ' select  * from usadd_web.DISPACK_LIST (?,?,?) order by num desc '
     try:
         data = db.data_module(sql, [0, None, None], function_name)
         if request.method == "GET":

@@ -1,13 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
-{% set mark_colors = {
-    1: 'table-success',
-    6: 'table-warning',
-    3: 'table-danger',
-    4: 'table-info'
-} %}
-
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
     <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">

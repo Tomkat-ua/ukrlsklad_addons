@@ -48,18 +48,20 @@
       <th>Найменування</th>
       <th>Серійний номер</th>
       <th>Підрозділ</th>
+      <th>Мітка</th>
       <th>Документи</th>
     </tr>
   </thead>
 <tbody>
   {% for row in data %}
-    <tr>
+    <tr class = "{{ mark_colors.get(row.DOC_MARK_TYPE, '') }}">
     <td >{{ row.NUM }}</td>
     <td >{{ row.NU }}</td>
     <td >{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
     <td class="text-primary fw-bold col-limit" >{{ row.TOV_NAME }}</td>
     <td class="text-success fw-bold" >{{ row.TOVAR_SER_NUM }}</td>
-    <td >{{ row.SKLAD_NAME }}</td>
+    <td>{{ row.SKLAD_NAME }}</td>
+    <td>{{ row.DOC_MARK_TYPE }}</td>
     <td >
       <a href="/dispack/doc1/{{ row.NUM }}"
          class="btn btn-sm btn-outline-secondary btn-xs"
@@ -70,7 +72,7 @@
          title="Оприбуткування на склад">Введ. залишків
           <i class="bi bi-pencil"></i></a>
     </td>
-  </tr>
+  </>
   {% endfor %}
 </tbody>
 </table>
