@@ -29,7 +29,8 @@
     <tr>
       <th>ID</th>
       <th>Номер акту</th>
-      <th>Дата акту</th>
+      <th>Дата проводки</th>
+      <th>Дата документу</th>
       <th>Сума акту</th>
       <th>Підрозділ</th>
       <th>Серійний номер</th>
@@ -40,10 +41,10 @@
 <tbody>
   {% for row in data %}
   <tr class = "{{ mark_colors.get(row.DOC_MARK_TYPE, '') }}">
-<!--          class="{{ 'table-danger' if row.DOC_MARK_TYPE == 6 else 'table-success' if row.DOC_MARK_TYPE == 1 else '' }}">-->
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td> {{ row.USER_DOC_DATE }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_SUMM | currency_format_ua }}
         {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>

@@ -165,3 +165,7 @@
 .row-details:hover {
     background-color: #f1f5ff !important;
 }
+
+.row-urgent { background-color: #ffcccc !important; } /* Світло-червоний */
+.row-moving { background-color: #e6f3ff !important; } /* Блакитний */
+.row-static { color: #999; } /* Сірий текст для неходових товарів */
