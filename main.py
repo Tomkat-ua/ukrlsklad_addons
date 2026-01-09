@@ -5,8 +5,8 @@ from gevent.pywsgi import WSGIServer
 from modules import serials, export, mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, \
     dispack#,stat
 
-import requests
-from flask import jsonify
+# import requests
+# from flask import jsonify
 
 app = Flask(__name__)
 
