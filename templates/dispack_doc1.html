@@ -26,6 +26,7 @@
                readonly
                class="form-control-plaintext text-dark"
                id="id"
+
                value="{{ data_h.NUM }}">
     </div>
     <div class="col-md-2 mb-0">
@@ -177,21 +178,27 @@
  {% endif %}
 </div>
 
-<!--&#45;&#45; MODAL -->
+<!--&#45;&#45; ADD to SNAKL(EAS) -- MODAL -->
 <div class="modal fade" id="newEntryModal" tabindex="-1" aria-labelledby="newEntryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url_for('dispack_disacc',id=doc_id) }}"> <div class="modal-header">
+            <form method="POST" action="{{ url_for('dispack_disacc',id=doc_id) }}">
+                <div class="modal-header">
                     <h5 class="modal-title" id="newEntryModalLabel">Списання з обліку</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" name="data_h_NUM" id="hidden_actvr_id">
                     <div class="d-flex align-items-center mb-3">
                         <label for="nua" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Номер документу</label>
                         <input type="text" id="nua" class="form-control form-control-sm flex-grow-1" name="nua" required>
                     </div>
                     <div class="d-flex align-items-center mb-3">
-                        <label for="nda" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <label for="unda" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <input type="date" id="unda" class="form-control form-control-sm flex-grow-1" name="unda" required>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="nda" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата проводки</label>
                         <input type="date" id="nda" class="form-control form-control-sm flex-grow-1" name="nda" required>
                     </div>
                     <div class="d-flex align-items-center mb-3">
@@ -210,5 +217,24 @@
     </div>
 </div>
 
+<script>
+    // Чекаємо завантаження сторінки
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.getElementById('newEntryModal');
+
+        modal.addEventListener('show.bs.modal', function () {
+            // 1. Знаходимо інпут на основній сторінці за його ID
+            var sourceInput = document.getElementById('id');
+            // 2. Знаходимо приховане поле в модалці
+            var targetInput = document.getElementById('hidden_actvr_id');
+
+            // 3. Копіюємо значення
+            if (sourceInput && targetInput) {
+                targetInput.value = sourceInput.value;
+                console.log("Значення передано в модалку: " + targetInput.value); // для перевірки в консолі
+            }
+        });
+    });
+</script>
 
 {% endblock %}

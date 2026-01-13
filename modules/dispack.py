@@ -89,13 +89,18 @@ def process_disacc(id):
         # Отримуємо дані з форми модального вікна
         doc_num  = request.form.get('nua')
         doc_date = request.form.get('nda')
+        user_doc_date = request.form.get('unda')
+        actvr_id = request.form.get('data_h_NUM')
+        unidocum_id = 0
         use_k = request.form.get('use_k') == '1'
-        print('use_k',use_k)
+        print('actvr_id',actvr_id)
 
-        logs = db.data_module(' select * from import.i_snakl (?,?,?,?) ', [doc_num, doc_date, id,use_k])
-        print(logs)
+        logs = db.data_module(' select * from import.i_snakl (?,?,?,?,?,?,?) ',
+                              [doc_num, doc_date, id,user_doc_date,actvr_id,unidocum_id,use_k])
+
         # 3. Повідомлення про успіх (за бажанням)
         flash(f'Списано за документом  {id} успішно !', 'success')
+        # flash(log for log in logs )
     except Exception as e:
         flash(f' Помилка списання за документом {id} : {str(e)} ', 'danger')
         # 4. Перенаправлення на ту саму сторінку після обробки POST (PRG pattern)
