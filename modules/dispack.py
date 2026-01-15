@@ -92,9 +92,6 @@ def process_disacc(id):
         user_doc_date = request.form.get('unda')
         actvr_id = request.form.get('data_h_NUM')
         use_k = request.form.get('use_k') == '1'
-        print('actvr_id',actvr_id)
-        print('user_doc_date',user_doc_date)
-
         logs = db.data_module(' select * from import.i_snakl (?,?,?,?,?,?) ',
                               [doc_num, doc_date, id,user_doc_date,actvr_id,use_k])
 
