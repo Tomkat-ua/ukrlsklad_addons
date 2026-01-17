@@ -63,16 +63,16 @@
     <td>{{ row.SKLAD_NAME }}</td>
     <td>{{ row.DOC_MARK_TYPE }}</td>
     <td >
-      <a href="/dispack/doc1/{{ row.NUM }}"
-         class="btn btn-sm btn-outline-secondary btn-xs"
-         title="Списання зі складу">Акт ВР
-          <i class="bi bi-pencil"></i></a>
-      <a href="/dispack/doc2/{{ row.NUM }}"
-         class="btn btn-sm btn-outline-secondary btn-xs"
-         title="Оприбуткування на склад">Введ. залишків
-          <i class="bi bi-pencil"></i></a>
+        <strong>АВР та ВЗ : </strong> <a href="/dispack/doc1/{{ row.NUM | int }}"> {{ row.NU }}</a>
+<!--      <a href="/dispack/doc1/{{ row.NUM }}"-->
+<!--         class="btn btn-sm btn-outline-secondary btn-xs"-->
+<!--         title="Списання зі складу">Акт ВР-->
+<!--          <i class="bi bi-pencil"></i></a>-->
+<!--      <a href="/dispack/doc2/{{ row.NUM }}"-->
+<!--         class="btn btn-sm btn-outline-secondary btn-xs"-->
+<!--         title="Оприбуткування на склад">Введ. залишків-->
+<!--          <i class="bi bi-pencil"></i></a>-->
     </td>
-  </>
   {% endfor %}
 </tbody>
 </table>
