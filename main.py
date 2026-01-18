@@ -2,11 +2,8 @@ import platform
 from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
-from modules import serials, export, mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, \
-    dispack#,stat
-
-# import requests
-# from flask import jsonify
+from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
+#from modules import pivot,export,stat
 
 app = Flask(__name__)
 
@@ -40,7 +37,8 @@ def format_currency_ua(value, decimal_places=2):
         # Використовуємо :,.{decimal_places}f
         formatted_str = f"{value:,.{decimal_places}f}"
         # 2. 🌟 Заміна роздільника тисяч (,) на пробіл
-        thousand_separated = formatted_str.replace(",", " ")
+        # thousand_separated = formatted_str.replace(",", " ")
+        thousand_separated = formatted_str.replace(",", "")
         # 3. 🌟 Заміна десяткового роздільника (.) на кому
         return thousand_separated.replace(".", ",")
 
@@ -197,6 +195,24 @@ def serial_scheck():
 def run_1():
     return serials.add_to_actv()
 ########### TEST #############################
+@app.route('/pivot')
+def pivot_page():
+    return pivot.pivot_page()
+# def pivot_data():
+#     # Отримуємо вибрані фільтри з URL (GET-запит)
+#     active_filters = {
+#         'SP': request.args.get('SP'),
+#         'SC': request.args.get('SC'),
+#         'SU': request.args.get('SU'),
+#         'SF': request.args.get('SF'),
+#         'SE': request.args.get('SE'),
+#         'PR': request.args.get('PR'),
+#         'TC': request.args.get('TC')
+#     }
+#
+#     res = pivot.get_pivot_data('get_storage', filters=active_filters)
+#     return render_template('pivot1.html', pivot=res, active_filters=active_filters)
+
 @app.route('/dashboard/<report_type>')
 def dashboard_u(report_type):
     return stat.universal_dashboard(report_type)
