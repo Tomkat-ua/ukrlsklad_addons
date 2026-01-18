@@ -158,7 +158,7 @@
       </tr>
     </thead>
 
-      <tbody>
+        <tbody>
     {% for row in data_dr %}
         <tr>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }} {% if row.SERIAL %} ({{ row.SERIAL }}) {% endif %}</td>
@@ -166,8 +166,8 @@
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua}}</td>
             <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_SUMA | currency_format_ua}}</td>
         </tr>
-      </tbody>
     {% endfor %}
+        </tbody>
         <tr>
             <td colspan="1" class="text-end"><strong>Всього:</strong>
             <strong>{{ total_r | currency_format_ua }}</strong></td>
