@@ -1,6 +1,7 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
+
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
     <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
@@ -17,7 +18,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<table id="tList" class="table table-sm table-compact">
+<table id="tList" class="table table-sm table-compact table-hover ">
   <thead class="table-dark">
     <tr>
       <th>ID</th>
@@ -61,12 +62,13 @@
 
 
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            initDefaultDataTable('#tList', {
-                "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
-            });
+<script>
+    $(document).ready(function() {
+        initDefaultDataTable('#tList', {
+            "pageLength": 25 // Можна змінити параметри тільки для цієї сторінки
         });
-    </script>
+    });
+</script>
+
+
 {% endblock %}

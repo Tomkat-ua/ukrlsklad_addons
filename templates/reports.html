@@ -1,10 +1,9 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<!--<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">-->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<table id="tList" class="table table-sm table-compact">
+<table id="tList" class="table table-sm table-compact table-hover">
     <thead class="table-dark">
     <tr>
       <th>ID</th>
@@ -21,17 +20,12 @@
             </a>
           {{ report.REP_NAME }}
       </td>
-      <td>
-<!--        <a href="/reports2/{{ report.NUM }} " class="btn btn-sm btn-outline-secondary btn-xs"> Звіт <i class="bi bi-pencil"></i>-->
-<!--        </a>-->
-      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<!--<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">-->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
