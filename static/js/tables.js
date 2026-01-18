@@ -17,7 +17,6 @@ function calculateTableHeight() {
 ///========================================================================================================
 function initDefaultDataTable(selector, customOptions = {}) {
     if ($(selector).length === 0) return;
-
     const defaultOptions = {
         "dom": 'lrtip',
         "pageLength": 25,
@@ -37,7 +36,7 @@ function initDefaultDataTable(selector, customOptions = {}) {
         "lengthMenu": "Показати _MENU_ записів",
         "loadingRecords": "Завантаження...",
         "processing": "Обробка...",
-        "search": "Пошук:",
+        "search": "",
         "zeroRecords": "Нічого не знайдено",
         "paginate": {
                         "first": "Перша",
@@ -86,3 +85,24 @@ function copyTable(selector = '#tList') {
     }
     window.getSelection().removeAllRanges();
 }
+
+$(document).ready(function() {
+    $('#tList').DataTable({
+        "paging": true,
+        "lengthMenu": [ [10, 25, 30, 50, -1], [10, 25,30, 50, "Всі"] ],
+        "pageLength": 25,
+        "autoWidth": false,
+        "language": {
+            "search": "",
+            "searchPlaceholder": "Пошук тексту",
+            "lengthMenu": "Показати _MENU_",
+            "info": "Записи з _START_ по _END_ (всього _TOTAL_)",
+            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/uk.json"
+        }
+    });
+});
+
+//$(document).ready(function() {
+//    // Викликаємо вашу функцію для конкретної таблиці
+//    initDefaultDataTable('#tList');
+//});
