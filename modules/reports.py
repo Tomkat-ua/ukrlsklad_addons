@@ -19,7 +19,7 @@ def reports_list2(rep_id):
     if not row:
         return f"❌ Звіт #{rep_id} не знайдено", 404
 
-    rep_name = f"{row[0]['NUM']}: {row[0]['REP_NAME']}"
+    rep_name = row[0]['REP_NAME']
     qry = row[0]['QRY']
     params_json = row[0]['PARAMS']
     html_content = row[0]['HTML']
@@ -107,7 +107,7 @@ def reports_list2(rep_id):
     html_template = f"""
     {{% extends "base_tmp.html" %}}
     {{% block content %}}
-    <h5>{rep_name}</h5>
+    <h5>{rep_id}:{rep_name}</h5>
     <form method="POST">
         {form_html}
         <button type="submit" class="btn btn-sm btn-primary" onclick="loadReport()">Згенерувати</button>
