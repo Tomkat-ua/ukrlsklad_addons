@@ -92,7 +92,7 @@ def reports_list2(rep_id):
         rows = cur.fetchall()
         cols = [desc[0] for desc in cur.description]
 
-        result_html = ("<table id='tList' class='table table-striped table-bordered align-middle' >"
+        result_html = ("<table id='tList' class='table table-sm table-striped table-bordered align-middle' >"
                        "<thead class='table-dark' ><tr>"
                        + "".join(f"<th>{c}</th>" for c in cols)
                        + "</tr></thead><tbody style='line-height: 1; padding: 0.25rem;'>")
