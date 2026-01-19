@@ -16,13 +16,40 @@ def page_not_found(e):
     # Можна повернути шаблон render_template('404.html')
     return "<h3>Ой! Такої сторінки не існує (404)</h3>", 404
 
+
 @app.errorhandler(500)
 def internal_server_error(e):
-    return f"""<h3>На сервері щось зламалось, щось типу цього :</h3>
-                <p> {str(e)} </p>
-                <h3>Ми вже ремонтуємо !!!</h3>
-            """, 500
-    # return render_template('404.html')
+    # 1. Спробуємо отримати оригінальну помилку Python
+    # Якщо це сталось через код, там буде об'єкт Exception
+    original_err = getattr(e, "original_exception", None)
+
+    if original_err:
+        error_text = f"{type(original_err).__name__}: {original_err}"
+    else:
+        # Якщо Flask просто видав 500 без Exception (наприклад, через abort(500))
+        error_text = str(e)
+
+    # 2. Формуємо відповідь
+    return f"""
+    <div style="background-color: #fff5f5; color: #c53030; padding: 20px; border: 2px solid #feb2b2; border-radius: 8px; font-family: sans-serif;">
+        <h2 style="margin-top: 0;">❌ На сервері щось зламалось</h2>
+        <p style="font-size: 1.1em;"><strong>Текст помилки:</strong></p>
+        <div style="background: white; padding: 10px; border: 1px solid #fed7d7; font-family: monospace; font-size: 14px; margin-bottom: 20px;">
+            {error_text}
+        </div>
+        <p><strong>URL:</strong> {request.url}</p>
+        <hr style="border: 0; border-top: 1px solid #feb2b2;">
+        <p><em>Ми вже ремонтуємо !!! (Або просто подивіться рядок коду вище ☝️)</em></p>
+    </div>
+    """, 500
+
+# @app.errorhandler(500)
+# def internal_server_error(e):
+#     return f"""<h3>На сервері щось зламалось, щось типу цього :</h3>
+#                 <p> {str(e)} </p>
+#                 <h3>Ми вже ремонтуємо !!!</h3>
+#             """, 500
+
 
 @app.template_filter('currency_format_ua')
 def format_currency_ua(value, decimal_places=2):

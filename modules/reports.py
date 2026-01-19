@@ -13,13 +13,13 @@ def reports_list2(rep_id):
 
     """Відображення сторінки звіту з параметрами та результатом"""
 
-    sql = "SELECT REP_NAME, QRY, PARAMS, HTML FROM REPORTS_WEB WHERE NUM = ?"
+    sql = "SELECT NUM,REP_NAME, QRY, PARAMS, HTML FROM REPORTS_WEB WHERE NUM = ?"
     row = db.data_module(sql, [rep_id])
 
     if not row:
         return f"❌ Звіт #{rep_id} не знайдено", 404
 
-    rep_name = row[0]['REP_NAME']
+    rep_name = f"{row[0]['NUM']}: {row[0]['REP_NAME']}"
     qry = row[0]['QRY']
     params_json = row[0]['PARAMS']
     html_content = row[0]['HTML']
@@ -96,7 +96,6 @@ def reports_list2(rep_id):
                        "<thead class='table-dark' ><tr>"
                        + "".join(f"<th>{c}</th>" for c in cols)
                        + "</tr></thead><tbody style='line-height: 1; padding: 0.25rem;'>")
-
 
         for r in rows:
             result_html += "<tr>" + "".join(f"<td>{v}</td>" for v in r) + "</tr>"
