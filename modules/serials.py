@@ -58,7 +58,8 @@ def serials_check():
         sn = row['TOVAR_SER_NUM']
         if row['NAME']:  # Якщо ім'я товару є, значить знайшли в базі
             dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
-            status_text = f"{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} | {row['SKLAD_NAME']} {dup_label}"
+            status_text = f"""{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} 
+            | {row['SKLAD_NAME']} {dup_label} | {row['PRICE']}"""
 
             state = row['STATUS'].strip() if row['STATUS'] else ""
             if state == 'На обліку':

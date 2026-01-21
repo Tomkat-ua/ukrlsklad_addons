@@ -44,10 +44,7 @@ def reports_list2(rep_id):
             val = request.form.get(name, "")
             values[name] = val
             if p["type"] == "select":
-
-                # print(p["add_to_filename"] + val)
                 data = db.data_module(p["add_to_filename"],[val])
-                # print(data[0]['NAME'])
                 if data:
                     add_to_repname = "_" + data[0]['NAME']
                 cur.execute(p["sql"])
