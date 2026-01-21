@@ -20,6 +20,8 @@ def reports_list2(rep_id):
         return f"❌ Звіт #{rep_id} не знайдено", 404
 
     rep_name = row[0]['REP_NAME']
+    add_to_repname = ""
+
     qry = row[0]['QRY']
     params_json = row[0]['PARAMS']
     html_content = row[0]['HTML']
@@ -42,6 +44,12 @@ def reports_list2(rep_id):
             val = request.form.get(name, "")
             values[name] = val
             if p["type"] == "select":
+
+                # print(p["add_to_filename"] + val)
+                data = db.data_module(p["add_to_filename"],[val])
+                # print(data[0]['NAME'])
+                if data:
+                    add_to_repname = "_" + data[0]['NAME']
                 cur.execute(p["sql"])
                 options = "".join(
                     f'<option value="{r[0]}" {"selected" if str(r[0]) == val else ""}>{r[1]}</option>'
@@ -93,6 +101,7 @@ def reports_list2(rep_id):
         cols = [desc[0] for desc in cur.description]
 
         result_html = ("<table id='tList' class='table table-sm table-striped table-bordered align-middle' >"
+        # result_html = ("<table id='tList' class='table table-main align-middle' >"
                        "<thead class='table-dark' ><tr>"
                        + "".join(f"<th>{c}</th>" for c in cols)
                        + "</tr></thead><tbody style='line-height: 1; padding: 0.25rem;'>")
@@ -104,10 +113,11 @@ def reports_list2(rep_id):
     con.close()
 
     # --- Збірка сторінки ---
+    rep_name = rep_name + add_to_repname
     html_template = f"""
     {{% extends "base_tmp.html" %}}
     {{% block content %}}
-    <h5>{rep_id}:{rep_name}</h5>
+    <h5>{rep_id}:{rep_name}</h5> 
     <form method="POST">
         {form_html}
         <button type="submit" class="btn btn-sm btn-primary" onclick="loadReport()">Згенерувати</button>

@@ -1,4 +1,7 @@
 // static/js/tables.js
+
+//$(selector).addClass('table-main');
+
 function calculateTableHeight() {
     // 1. Отримуємо висоту всього вікна браузера
     let windowHeight = window.innerHeight;

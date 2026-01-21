@@ -1,7 +1,20 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
+<style>
+ .btn-xs {
+    padding: 1px 5px !important; /* Мінімальні відступи зліва і справа */
+    font-size: 0.75rem !important; /* Трохи менший шрифт */
+    line-height: 1.2 !important;
+    border-radius: 3px !important;
+}
 
+/* Окремо для іконки, щоб вона не розштовхувала кнопку */
+.btn-xs i {
+    font-size: 0.7rem !important;
+    margin-left: 2px;
+}
+</style>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
@@ -19,7 +32,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<table id="tList" class="table table-sm table-compact table-hover">
+<!--<table id="tList" class="table table-sm table-compact table-hover">-->
+<table id="tList" class="table table-main">
   <thead class="table-dark">
     <tr>
       <th>UDOC_ID</th>

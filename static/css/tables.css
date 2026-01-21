@@ -1,171 +1,106 @@
-
-/* body { background: red !important; } */
-
-/* --- Компактність таблиці --- */
-
-.table-compact {
-    width: 100% !important;
+/* Ваші унікальні налаштування поверх Bootstrap */
+.table.table-main {
     margin-bottom: 0 !important;
 }
 
-.table-compact th,
-.table-compact td {
-    padding: 4px 8px !important; /* Мінімальні відступи */
-    font-size: 0.85rem !important; /* Трохи менший шрифт для даних */
-    vertical-align: middle;
-}
-
-
-.table-compact tbody td {
-    /* Текст у високих комірках буде завжди по центру по вертикалі */
+/* Компактність, яка перебиває стандартні відступи Bootstrap */
+.table-main td,
+.table-main th {
+    padding: 4px 8px !important;
+    font-size: 0.85rem;
     vertical-align: middle !important;
 }
 
-/* Додамо трохи візуального розділення рядків, щоб око не чіплялося */
-.table-hover tbody tr:hover {
-    background-color: rgba(13, 110, 253, 0.05) !important; /* Легке блакитне підсвічування */
-}
-
-/* --- Виправлення кнопок всередині таблиці --- */
-.table-compact .btn-xs,
-.table-compact .btn-group .btn {
-    padding: 1px 5px !important;
-    font-size: 12px !important;
-    line-height: 1.8 !important;
-}
-
-/* --- Прибираємо зазори DataTables (той самий відступ знизу) --- */
-.dataTables_wrapper {
-    padding: 0 !important;
-}
-
-/* Прибираємо margin у рядків Bootstrap всередині обгортки таблиці */
-.dataTables_wrapper .row {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-}
-
-/* Тісна пагінація та інфо-блок */
-.dataTables_info {
-    padding-top: 5px !important;
-    font-size: 0.8rem !important;
-    color: #6c757d;
-}
-
-.dataTables_paginate {
-    padding-top: 5px !important;
-}
-
-.pagination {
-    margin-bottom: 0 !important;
-}
-
-/* Маленькі кнопки пагінації */
-.page-link {
-    padding: 2px 8px !important;
-    font-size: 0.8rem !important;
-}
-
-/* --- Обрізка тексту (Ellipsis) --- */
-.text-ellipsis {
-    max-width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* Прибираємо зайвий відступ під самою областю скролу */
-.dataTables_scrollBody {
-    border-bottom: 1px solid #dee2e6 !important;
-}
-
-
-
-.col-limit {
-    max-width: 250px;       /* Встановіть потрібну ширину (наприклад, 200px або 300px) */
-    max-width: 150px;
-    white-space: normal !important; /* Дозволяє перенос тексту */
-    word-wrap: break-word;  /* Розриває дуже довгі слова, якщо вони не влазять */
-    line-height: 1.2;       /* Робить текст у кілька рядків компактнішим */
-}
-
-/* Робимо самі статуси компактнішими */
-
-.status-badge {
-    font-size: 0.75rem !important;
-    /* Збільшуємо перше число (4px -> 6px), щоб зробити бейдж вищим */
-    padding: 4px 4px !important;
-
-    width: 100%;
-    display: block;
-
-    /* Додаємо висоту рядка, щоб текст був чітко по центру */
-    line-height: 1.2 !important;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    /* Центруємо текст всередині блоку */
-    text-align: center;
-    /* Додаємо трохи закруглення для кращого вигляду */
-    border-radius: 4px;
-}
-
-.input-serial {
-    min-width: 250px !important;
-    width: 250px; /* Бажана ширина за замовчуванням */
-    max-width: 250px; /* Обмеження, щоб воно не стало занадто величезним */
-}
-
-.table-panell {
-    min-width: 600px !important;
-    width: 600px; /* Бажана ширина за замовчуванням */
-    max-width: 600px; /* Обмеження, щоб воно не стало занадто величезним */
-}
-
-/* 1. Прибираємо роздільну лінію між основним рядком і назвою */
-.row-main td {
+/* Налаштування для ваших специфічних рядків (Назва товару під даними) */
+.table-main .row-main td {
     border-bottom: none !important;
-    padding-top: 10px !important;
 }
 
-/* 2. Стилізуємо рядок з назвою */
-.row-details td {
-    padding-bottom: 12px !important;
+.table-main .row-details td {
     padding-top: 0 !important;
-    /* Додаємо тонку лінію знизу всього блоку */
-    border-bottom: 2px solid #dee2e6 !important;
+    padding-bottom: 10px !important;
 }
 
-/* 3. Оформлення тексту назви */
-.name-wrapper {
-    background-color: #f8f9fa; /* Світло-сірий фон для назви */
-    padding: 6px 12px;
+/* Ефект підсвічування всієї групи рядків (основний + деталі) */
+.table-main .row-main:hover,
+.table-main .row-main:hover + .row-details,
+.table-main .row-details:hover {
+    background-color: rgba(13, 110, 253, 0.04) !important;
+}
+
+/* Зменшуємо контейнер пагінації та інфо-тексту */
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    font-size: 0.75rem !important; /* Дрібний шрифт */
+    padding-top: 5px !important;
+}
+
+/* Робимо самі кнопки маленькими */
+.dataTables_wrapper .pagination .page-link {
+    padding: 2px 8px !important; /* Тонкі відступи */
+    color: #0d6efd;
     border-radius: 4px;
-    font-size: 0.95rem;
-    color: #0d6efd; /* Синій колір для акценту */
-    font-weight: 500;
+    margin: 0 2px;
 }
 
-.name-wrapper .label {
-    font-size: 0.7rem;
-    font-weight: bold;
+/* Активна кнопка (синя) */
+.dataTables_wrapper .pagination .page-item.active .page-link {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* Зменшуємо висоту випадаючого списку (Length Menu) */
+.dataTables_length select {
+    padding: 2px 25px 2px 8px !important;
+    font-size: 0.75rem !important;
+    height: auto !important;
+}
+
+/* Робимо нижню панель (інфо + пагінація) компактною */
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    font-size: 0.75rem !important;
+    padding-top: 8px !important;
     color: #6c757d;
-    margin-right: 8px;
 }
 
-/* 4. Ефект при наведенні на БУДЬ-ЯКИЙ з двох рядків */
-/* (Працює найкраще, якщо ви не використовуєте стандартний table-hover) */
+/* Зменшуємо кнопки пагінації */
+.dataTables_wrapper .pagination .page-link {
+    padding: 2px 6px !important; /* Дуже вузькі кнопки */
+    font-size: 0.75rem !important;
+    line-height: 1.2;
+    border-radius: 4px;
+    margin: 0 1px;
+}
+
+/* Активна сторінка */
+.dataTables_wrapper .pagination .page-item.active .page-link {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+/* Стилізація DataTables (панель пошуку та пагінація) */
+.dataTables_wrapper .row {
+    margin: 0 !important; /* Прибираємо горизонтальний скрол через від'ємні margin */
+    align-items: center;
+    padding: 5px 0;
+}
+
+/* Статуси (Бейджі) */
+.status-badge {
+    font-size: 0.7rem !important;
+    padding: 2px 4px !important;
+    display: block;
+    text-align: center;
+    border-radius: 4px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Інтерактивність (Ховер на групу рядків) */
 .row-main:hover,
-.row-main:hover + .row-details {
-    background-color: #f1f5ff !important;
-}
+.row-main:hover + .row-details,
 .row-details:hover {
-    background-color: #f1f5ff !important;
+    background-color: rgba(13, 110, 253, 0.04) !important;
 }
-
-.row-urgent { background-color: #ffcccc !important; } /* Світло-червоний */
-.row-moving { background-color: #e6f3ff !important; } /* Блакитний */
-.row-static { color: #999; } /* Сірий текст для неходових товарів */
