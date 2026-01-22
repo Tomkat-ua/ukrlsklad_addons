@@ -68,7 +68,6 @@ def serials_check():
         else:
             status_text = "Не знайдено"
             total_err += 1
-        print(row)
         results.append({'sn': sn, 'status': status_text,'c_ex':row['C_EX'] })
 
 
