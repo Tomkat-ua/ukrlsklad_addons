@@ -114,8 +114,9 @@ def add_to_actv():
     for row in data_to_process:
         tovar_id = row.get('TOVAR_ID')
         count_   = row.get('COUNT_')
+        price    = row.get('PRICE')
         try:
-            cur.callproc('import.i_actvr_det',[doc_id,tovar_id,count_])
+            cur.callproc('import.i_actvr_det',[doc_id,tovar_id,count_,price])
             processed_count += 1
         except Exception as e:
             error_full_text = str(e.args[0]) if hasattr(e, 'args') and e.args else str(e)
