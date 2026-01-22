@@ -44,9 +44,10 @@ def reports_list2(rep_id):
             val = request.form.get(name, "")
             values[name] = val
             if p["type"] == "select":
-                data = db.data_module(p["add_to_filename"],[val])
-                if data:
-                    add_to_repname = "_" + data[0]['NAME']
+                if p["add_to_filename"]:
+                    data = db.data_module(p["add_to_filename"],[val])
+                    if data:
+                        add_to_repname = "_" + data[0]['NAME']
                 cur.execute(p["sql"])
                 options = "".join(
                     f'<option value="{r[0]}" {"selected" if str(r[0]) == val else ""}>{r[1]}</option>'

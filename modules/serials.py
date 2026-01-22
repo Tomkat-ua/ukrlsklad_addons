@@ -60,7 +60,6 @@ def serials_check():
             dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
             status_text = f"""{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} 
             | {row['SKLAD_NAME']} {dup_label} | {row['PRICE']}"""
-
             state = row['STATUS'].strip() if row['STATUS'] else ""
             if state == 'На обліку':
                 total_acc += 1
@@ -69,7 +68,7 @@ def serials_check():
         else:
             status_text = "Не знайдено"
             total_err += 1
-
+        print(row)
         results.append({'sn': sn, 'status': status_text,'c_ex':row['C_EX'] })
 
 
@@ -89,6 +88,7 @@ def serials_check():
         # Передаємо цей список або прапорець у шаблон
         is_multi_sklad = len(unique_sklads) > 1
         main_sklad = list(unique_sklads)[0] if unique_sklads else None
+
     return render_template('serial_check.html', results=results,
                            raw_data=raw_text,
                            total=total,
@@ -97,7 +97,8 @@ def serials_check():
                            total_sap=total_sap,
                            total_acc=total_acc,
                            is_multi_sklad=is_multi_sklad,
-                           main_sklad=main_sklad)
+                           main_sklad=main_sklad,
+                           column_data=data_serials)
 
 def add_to_actv():
     # Дістаємо дані з сесії
