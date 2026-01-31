@@ -1,0 +1,44 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+    <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
+
+        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">
+            📋 Копіювати
+        </button>
+    </form>
+</div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
+
+<table id="tList" class="table table-main">
+      <thead class="table-dark">
+        <tr>
+            <td>NUM</td>
+            <td>NU</td>
+            <td>DATE_DOK</td>
+            <td>USER_DOC_DATE</td>
+            <td>CENA</td>
+            <td>SKLAD_NAME</td>
+            <td>DOC_MARK_TYPE</td>
+        </tr>
+      </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            <td>{{ row.NUM }}</td>
+            <td>{{ row.NU }}</td>
+            <td>{{ row.DATE_DOK }}</td>
+            <td>{{ row.USER_DOC_DATE }}</td>
+            <td>{{ row.CENA | currency_format_ua }}</td>
+            <td>{{ row.SKLAD_NAME }}</td>
+            <td>{{ row.DOC_MARK_TYPE }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+ <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+{% endblock %}
