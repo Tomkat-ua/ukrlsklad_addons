@@ -11,8 +11,18 @@
       <div class="col-md-5">
         <strong>TOVAR ID:</strong> {{ row.TOVAR_ID }} </br>
         <strong>Serial N:</strong>
-        <span class="badge rounded-pill bg-success              fs-6 px-2 py-2 shadow">{{ row.TOVAR_SER_NUM }}</span>
+        <span class="badge rounded-pill fs-6 px-3 py-2 shadow status-badge"
+              style="background-color: {{ row.STATUS_COLOR }}; color: #000; border: 1px solid rgba(0,0,0,0.1);">
+            {{ row.TOVAR_SER_NUM }}</span>
         <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow">{{ row.KT }}</span>
+
+
+        <span class="badge rounded-pill fs-6 px-3 py-2 shadow status-badge"
+              style="background-color: {{ row.STATUS_COLOR }}; color: #000; border: 1px solid rgba(0,0,0,0.1);">
+            {{ row.STATUS }}
+        </span>
+
+          {#
   {% set status_text = row.STATUS_CODE %}
     {% if status_text == 8 %}
         <form target="_blank" method="POST" action="{{ url_for('losses_list') }}" style="display:inline;">
@@ -51,6 +61,7 @@
             {{ row.STATUS }}({{ row.STATUS_CODE }})
         </span>
     {% endif %}
+          #}
         </span></br>
         <strong>Найменування:</strong>
           <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span>

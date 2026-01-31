@@ -30,7 +30,7 @@ def index():
         tov_name   = request.form['tov_name']
 
         data = data_for_module([tov_serial,tov_name],'list')
-
+        print(data)
         if data:
             return render_template('ghist_.html', title=title,
                                    rows = data,
@@ -42,7 +42,7 @@ def index():
             flash("Запис не знайдено!", "danger")
 
             # 🌟 Повторно відображаємо шаблон, але передаємо введене значення!
-            print('tov_name',tov_name)
+
             return render_template('ghist_.html',
                                    title=title,
                                    search_value=tov_serial,  # ⬅️ ЗНАЧЕННЯ ЗБЕРЕЖЕНО

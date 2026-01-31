@@ -40,7 +40,7 @@
     <tr>
       <th>TOVAR_ID</th>
       <th>Серійний Номер</th>
-      <th >Код номенк.</th>
+      <th>Код номенк.</th>
       <th>Найменування</th>
       <th>Підрозділ</th>
       <th>Статус</th>
@@ -56,6 +56,11 @@
       <td class="fw-bold text-primary col-limit" >{{ row.TOV_NAME }}</td>
       <td>{{ row.PLACE }}</td>
       <td >
+        <span class="badge rounded-pill fs-6 px-3 py-2 shadow status-badge"
+              style="background-color: {{ row.STATUS_COLOR }}; color: #000; border: 1px solid rgba(0,0,0,0.1);">
+            {{ row.STATUS }}
+        </span>
+          {#
 <!--&#45;&#45; 'Втрачено'-->
   {% set status_text = row.STATUS_CODE %}
     {% if status_text == 8 %}
@@ -66,6 +71,7 @@
                 {{ row.STATUS }} >>
             </button>
         </form>
+
 <!--&#45;&#45; 'Розкомплект'          -->
     {% elif status_text == 9 %}
         <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
@@ -108,6 +114,7 @@
             {{ row.STATUS }}
         </span>
     {% endif %}
+#}
       </td>
       <td >
           <a href="{{ url_for('ghist_details', row_id=row.SERIAL_ID) }}"

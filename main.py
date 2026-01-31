@@ -3,7 +3,8 @@ from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
-#from modules import pivot,export,stat
+from modules import aruns
+# from modules import pivot,export,stat
 
 app = Flask(__name__)
 
@@ -42,13 +43,6 @@ def internal_server_error(e):
         <p><em>Ми вже ремонтуємо !!! (Або просто подивіться рядок коду вище ☝️)</em></p>
     </div>
     """, 500
-
-# @app.errorhandler(500)
-# def internal_server_error(e):
-#     return f"""<h3>На сервері щось зламалось, щось типу цього :</h3>
-#                 <p> {str(e)} </p>
-#                 <h3>Ми вже ремонтуємо !!!</h3>
-#             """, 500
 
 
 @app.template_filter('currency_format_ua')
@@ -183,6 +177,10 @@ def dispack_add():
 def dispack_disacc(id):
     return dispack.process_disacc(id)
 
+########### ARUNS ############################
+@app.route('/aruns')
+def aruns_l():
+    return aruns.aruns_list()
 ########### PNAKL ############################
 @app.route('/pnakl',methods = ['GET','POST'])
 def pnakl_list():
@@ -225,20 +223,6 @@ def run_1():
 @app.route('/pivot')
 def pivot_page():
     return pivot.pivot_page()
-# def pivot_data():
-#     # Отримуємо вибрані фільтри з URL (GET-запит)
-#     active_filters = {
-#         'SP': request.args.get('SP'),
-#         'SC': request.args.get('SC'),
-#         'SU': request.args.get('SU'),
-#         'SF': request.args.get('SF'),
-#         'SE': request.args.get('SE'),
-#         'PR': request.args.get('PR'),
-#         'TC': request.args.get('TC')
-#     }
-#
-#     res = pivot.get_pivot_data('get_storage', filters=active_filters)
-#     return render_template('pivot1.html', pivot=res, active_filters=active_filters)
 
 @app.route('/dashboard/<report_type>')
 def dashboard_u(report_type):
