@@ -112,11 +112,7 @@
     </thead>
     <tbody>
         {% for row in column_data %}
-          <tr class="{{ 'table-secondary' if row.C_EX > 1
-                     else 'table-danger'  if 'Не знайдено'         in row.STATUS
-                     else 'table-success' if 'На обліку'           in row.STATUS
-                     else 'table-warning' if 'Списано (акт пуску)' in row.STATUS
-                     }}">
+        <tr style="--bs-table-bg: {{ row.STATUS_COLOR }}; color: #000;">
             <td>{{ row.TOVAR_SER_NUM }}</td>
             <td>{{ row.NUM }}</td>
             <td>{{ row.KOD }}</td>
@@ -124,7 +120,7 @@
             <td>{{ row.NAME }}</td>
             <td>{{ row.STATUS }}</td>
             <td>{{ row.SKLAD_NAME }}</td>
-          </tr> {#
+        </tr> {#
 <!--            <tr class="{{ 'table-secondary' if row.c_ex > 1-->
 <!--                     else 'table-danger'  if 'Не знайдено'         in row.status-->
 <!--                     else 'table-success' if 'На обліку'           in row.status-->

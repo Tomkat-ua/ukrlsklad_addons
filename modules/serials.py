@@ -55,6 +55,7 @@ def serials_check():
     total = len(data_serials)
 
     for row in data_serials:
+        print(row['STATUS_COLOR'])
         sn = row['TOVAR_SER_NUM']
         if row['NAME']:  # Якщо ім'я товару є, значить знайшли в базі
             dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
