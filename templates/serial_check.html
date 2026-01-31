@@ -1,15 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
-{#
-<head>
-    <style>
-        /* Зміна кольору підсвічування рядка */
-    .table-hover tbody tr:hover {
-        background-color: #fff9db !important; /* Ніжно-блакитний */
-        transition: background-color 0.2s ease; /* Плавний перехід */
-    }
-    </style>
-</head>#}
+
 <!--&#45;&#45; GROUP LIST -&#45;&#45;-->
 <div class="container-fluid mt-2"> <h3>Перевірка серійних номерів</h3>
     <div class="row">
@@ -91,12 +82,11 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<!--<table class="table table-main" id="resultsTable">-->
+
 <table class="table table-main" id="tList">
     <thead>
         <tr>
             <th>Серійний номер
-<!--                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyColumn(0)">📋</button>-->
             </th>
             <th>TOVAR_ID</th>
             <th>TOVAR_KOD</th>
@@ -104,10 +94,6 @@
             <th>NAME</th>
             <th>STATUS</th>
             <th>SKLAD_NAME</th>
-<!--            <th>-->
-<!--                TOVAR_ID | TOVAR_KOD | TOVAR_NAME | STATUS | SKLAD_NAME | PRICE-->
-<!--                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyColumn(1)">📋</button>-->
-<!--            </th>-->
         </tr>
     </thead>
     <tbody>
@@ -121,14 +107,6 @@
             <td>{{ row.STATUS }}</td>
             <td>{{ row.SKLAD_NAME }}</td>
         </tr> {#
-<!--            <tr class="{{ 'table-secondary' if row.c_ex > 1-->
-<!--                     else 'table-danger'  if 'Не знайдено'         in row.status-->
-<!--                     else 'table-success' if 'На обліку'           in row.status-->
-<!--                     else 'table-warning' if 'Списано (акт пуску)' in row.status-->
-<!--                     }}">-->
-<!--                <td>{{ row.sn }}</td>-->
-<!--                <td>{{ row.status }}</td>-->
-<!--            </tr>-->#}
         {% endfor %}
     </tbody>
 </table>
@@ -210,52 +188,5 @@ document.getElementById('confirmModal').addEventListener('hidden.bs.modal', func
     document.getElementById('doc_id').value = '';
 });
 </script>
-
-{#<!--<script>-->
-<!--function copyColumn(colIndex) {-->
-<!--    const table = document.getElementById('resultsTable');-->
-<!--    let rows = table.querySelectorAll('tbody tr');-->
-
-<!--    // Збираємо текст із вибраного стовпця-->
-<!--    let textToCopy = Array.from(rows)-->
-<!--        .map(row => {-->
-<!--            const cell = row.cells[colIndex];-->
-<!--            return cell ? cell.innerText.trim() : '';-->
-<!--        })-->
-<!--        .filter(text => text !== '') // ігноруємо порожні рядки-->
-<!--        .join('\n');-->
-
-<!--    if (!textToCopy) {-->
-<!--        alert('Нічого копіювати!');-->
-<!--        return;-->
-<!--    }-->
-
-<!--    // Резервний метод через створення тимчасового елемента-->
-<!--    const textArea = document.createElement("textarea");-->
-<!--    textArea.value = textToCopy;-->
-
-<!--    // Робимо його невидимим-->
-<!--    textArea.style.position = "fixed";-->
-<!--    textArea.style.left = "-9999px";-->
-<!--    textArea.style.top = "0";-->
-<!--    document.body.appendChild(textArea);-->
-
-<!--    textArea.focus();-->
-<!--    textArea.select();-->
-
-<!--    try {-->
-<!--        const successful = document.execCommand('copy');-->
-<!--        if (successful) {-->
-<!--            alert('Стовпчик скопійовано у буфер!');-->
-<!--        } else {-->
-<!--            console.error('Не вдалося скопіювати');-->
-<!--        }-->
-<!--    } catch (err) {-->
-<!--        console.error('Помилка при копіюванні:', err);-->
-<!--    }-->
-
-<!--    document.body.removeChild(textArea);-->
-<!--}-->
-<!--</script>-->#}
 
 {% endblock %}
