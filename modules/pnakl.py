@@ -8,25 +8,24 @@ def pnakl_list():
     function_name = sys._getframe(0).f_code.co_name
     data =''
     if request.method == 'GET':
-        search = ''
+        search = '%'
     else:
         search = request.form.get('search')
-        sql = """select p.nu,p.date_dok,p.client ,p.p_nu
-,utils.datetostr( p.p_date_dok)  as p_date_dok
-,pd.pid
-,pd.tovar_id
-,pd.tov_name
-,cast (pd.tov_kolvo as int) as   tov_kolvo
-,pd.tov_cena
-,tn.kod as tov_code
-,p.article_id
-,a.a_name
-from pnakl_ pd
-    inner join pnakl p on p.num = pd.pid
-    inner join tovar_name tn on tn.num = pd.tovar_id
-    inner join article_types a on a.num = p.article_id
-where pd.tov_name like ?
-order by p.date_dok desc
-                    """
-        data = db.data_module(sql, [search], function_name)
+    sql = """select p.nu,p.date_dok,p.client ,p.p_nu
+            ,utils.datetostr( p.p_date_dok)  as p_date_dok
+            ,pd.pid
+            ,pd.tovar_id
+            ,pd.tov_name
+            ,cast (pd.tov_kolvo as int) as   tov_kolvo
+            ,pd.tov_cena
+            ,tn.kod as tov_code
+            ,p.article_id
+            ,a.a_name
+            from pnakl_ pd
+                inner join pnakl p on p.num = pd.pid
+                inner join tovar_name tn on tn.num = pd.tovar_id
+                inner join article_types a on a.num = p.article_id
+            where pd.tov_name like ?
+            order by p.date_dok desc  """
+    data = db.data_module(sql, [search], function_name)
     return  render_template("pnakl_list.html", title='Приход майна',data= data,search=search,pname_1 = '/')
