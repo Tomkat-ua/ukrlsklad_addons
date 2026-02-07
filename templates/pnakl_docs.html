@@ -1,0 +1,59 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+</div>
+
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleTree(true)">
+                <i class="bi bi-plus-square"></i> Розгорнути все
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleTree(false)">
+                <i class="bi bi-dash-square"></i> Згорнути все
+            </button>
+        </div>
+        <span class="text-muted small ms-2">Оберіть шаблон для генерації</span>
+</div>
+
+    {% macro render_node(nodes) %}
+        <ul>
+            {% for node in nodes %}
+                <li>
+                    {% if node.children %}
+                        <details>
+                            <summary>📁 {{ node.NAME }} </summary>
+                            {{ render_node(node.children) }}
+                        </details>
+                    {% else %}
+                        <div class="leaf">
+                          <a href="/docs/{{ node.ID }}/{{ doc_id }}">📄  {{ node.NAME }} (ID: {{ node.ID }})</a>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endmacro %}
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <div class="tree-container">
+        {{ render_node(data) }}
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+<script>
+function toggleTree(shouldOpen) {
+    // Знаходимо всі елементи details на сторінці
+    const allDetails = document.querySelectorAll('details');
+    allDetails.forEach(el => {
+        el.open = shouldOpen;
+    });
+}
+</script>
+{% endblock %}
