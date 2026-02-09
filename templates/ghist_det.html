@@ -16,53 +16,11 @@
             {{ row.TOVAR_SER_NUM }}</span>
         <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow">{{ row.KT }}</span>
 
-
         <span class="badge rounded-pill fs-6 px-3 py-2 shadow status-badge"
               style="background-color: {{ row.STATUS_COLOR }}; color: #000; border: 1px solid rgba(0,0,0,0.1);">
             {{ row.STATUS }}
         </span>
 
-          {#
-  {% set status_text = row.STATUS_CODE %}
-    {% if status_text == 8 %}
-        <form target="_blank" method="POST" action="{{ url_for('losses_list') }}" style="display:inline;">
-            <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
-            <button type="submit"
-                    class="badge rounded-pill bg-danger text-white fs-6 px-2 py-2 shadow border-0">
-                {{ row.STATUS }}({{ row.STATUS_CODE }}) >>
-            </button>
-        </form>
-    {% elif status_text == 9 %}
-    <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
-        <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
-        <button type="submit"
-                class="badge rounded-pill bg-secondary text-white fs-6 px-2 py-2 shadow border-0">
-            {{ row.STATUS }}({{ row.STATUS_CODE }}) >>
-        </button>
-    </form>
-    {% elif status_text == 10 %}
-        <form target="_blank" method="POST" action="{{ url_for('snakl_list') }}" style="display:inline;">
-            <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
-            <button type="submit"
-                    class="badge rounded-pill bg-warning text-dark fs-6 px-2 py-2 shadow border-0">
-                {{ row.STATUS }}({{ row.STATUS_CODE }}) >>
-            </button>
-        </form>
-    {% elif status_text == 5 %}
-        <form target="_blank" method="POST" action="{{ url_for('dispack_list') }}" style="display:inline;">
-            <input type="hidden" name="tov_serial" value="{{ row.TOVAR_SER_NUM }}">
-            <button type="submit"
-                    class="badge rounded-pill btn-info text-dark fs-6 px-2 py-2 shadow border-0">
-                {{ row.STATUS }}({{ row.STATUS_CODE }}) >>
-            </button>
-        </form>
-    {% else %}
-        <span class="badge rounded-pill bg-success text-light fs-6 px-2 py-2 shadow">
-            {{ row.STATUS }}({{ row.STATUS_CODE }})
-        </span>
-    {% endif %}
-          #}
-        </span></br>
         <strong>Найменування:</strong>
           <span class="fw-bold fw-bold text-primary"> {{ row.TOV_NAME }}</span>
           <span class="badge rounded-pill bg-secondary text-light fs-6 px-2 py-2 shadow">{{ row.TOVAR_KOD }}</span></br>

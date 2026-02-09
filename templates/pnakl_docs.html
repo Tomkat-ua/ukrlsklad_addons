@@ -3,10 +3,16 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
-    <h5 class="mb-0 me-3">{{ title }}</h5>
-</div>
+<div class="d-flex flex-column gap-2 mb-2 p-3 bg-light border rounded">
+    <h5 class="mb-0">{{ title }}</h5>
 
+        <h6 class="mb-0 text-muted">Папка : {{ data_header.NU.split('/')[0] }}</h6>
+        <h6 class="mb-0 text-muted">Постачальник : {{ data_header.CLIENT }}</h6>
+        <h6 class="mb-0 text-muted">Номер документу постачальника : {{ data_header.P_NU }}</h6>
+        <h6 class="mb-0 text-muted">Дата документу постачальника : {{ data_header.P_DATE_DOK }}</h6>
+        <h6 class="mb-0 text-muted">Тип документу постачальника : {{ data_header.DOPOLN3 }}</h6>
+
+</div>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
         <div class="btn-group">
@@ -31,7 +37,9 @@
                         </details>
                     {% else %}
                         <div class="leaf">
-                          <a href="/docs/{{ node.ID }}/{{ doc_id }}">📄  {{ node.NAME }} (ID: {{ node.ID }})</a>
+                          <a href="/docs/{{ node.BLOB_ID | int }}/{{ doc_id }}/{{ node.TOVAR_ID | int }}">
+                              📄  {{ node.NAME }}
+                              </a>
                         </div>
                     {% endif %}
                 </li>
@@ -40,9 +48,11 @@
     {% endmacro %}
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <div class="tree-container">
-        {{ render_node(data) }}
+        {{ render_node(doc_tree) }}
     </div>
 </div>
+
+
 
 
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>

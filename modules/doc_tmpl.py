@@ -44,7 +44,7 @@ def get_template_tags(blob_template):
     return tags
 
 #### основна процедура звіту #########################################
-def print_full_report(dot_id,doc_id):
+def print_full_report(dot_id,doc_id,tovar_id):
     blob_data = get_blob(dot_id)
     blob_template = blob_data[0]['TMPL_BLOB']
     blob_name = blob_data[0]['NAME']
@@ -66,8 +66,9 @@ def print_full_report(dot_id,doc_id):
         else:
             num_cols = 4  # Стандартно
         print("формуємо додаток з номерами")
-        doc = print_appendix(blob_template,doc_id,300000035,num_cols)
-        return save_to_browser(doc,doc_id,blob_name)
+        doc = print_appendix(blob_template,doc_id,tovar_id,num_cols)
+        doc_name = f"{blob_name}_{doc_id}"
+        return save_to_browser(doc,doc_name)
 
 
     for item in data_list:
@@ -86,12 +87,16 @@ def print_full_report(dot_id,doc_id):
         "year1": now.year,
         "place": header_info.get("ADR_UR"),
         "firm_name": header_info.get("FIRM_NAME"),
+        "date_doc":header_info.get("DATE_DOK"),
         "date_b": header_info.get("DATE_DOK"),
         "date_e": header_info.get("DATE_DOK"),
         "client": header_info.get("CLIENT"),
         "cl_dd": header_info.get("CL_DATE_DOK"),
         "cl_nu": header_info.get("CL_NU"),
         "doc_type": header_info.get("DOC_TYPE"),
+        "bf": header_info.get("BOSS_FIO"),
+        "br": header_info.get("BOSS_RANK"),
+        "bp": header_info.get("BOSS_POS"),
 
         # ДИНАМІЧНИЙ СПИСОК (той самий 'items', що в циклі {% for %})
         "items": data_list,
@@ -104,9 +109,10 @@ def print_full_report(dot_id,doc_id):
         "GT": format_currency(TS)
     }
 
-    # 4. Магія рендерингу
     doc.render(context)
-    return save_to_browser(doc,doc_id,blob_name)
+    doc_name = f"{blob_name}_{doc_id}"
+    return save_to_browser(doc, doc_name)
+
 
 def chunker_vertical(data_list, cols, field_name):
     total = len(data_list)
@@ -137,7 +143,7 @@ def chunker_vertical(data_list, cols, field_name):
 
 
 # Припустимо, змінна 'doc' — це об'єкт DocxTemplate, який ми вже заповнили (render)
-def save_to_browser(doc, doc_id,doc_name):
+def save_to_browser(doc, doc_name):
     # 1. Створюємо буфер у пам'яті
     buffer = io.BytesIO()
 
@@ -148,7 +154,7 @@ def save_to_browser(doc, doc_id,doc_name):
     buffer.seek(0)
 
     # 4. Відправляємо клієнту
-    custom_filename = f"{doc_name}_{doc_id}.docx"
+    custom_filename = f"{doc_name}.docx"
 
     return send_file(
         buffer,

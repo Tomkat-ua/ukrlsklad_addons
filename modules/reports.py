@@ -64,7 +64,10 @@ def reports_list2(rep_id):
                 """
             elif p["type"] == "date":
                 if config.debug_mode == 1:
-                    print('✨ param value:',p["default"])
+                    # print('✨ param value:',p["default"])
+                    if p["add_to_filename"]:
+                        print(p["add_to_filename"])
+                        add_to_repname = p["add_to_filename"]
                 form_html += f"""
                     <div class="mb-3">
                         <label>{p['label']}</label>
