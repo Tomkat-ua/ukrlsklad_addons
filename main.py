@@ -3,8 +3,8 @@ from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
-from modules import aruns
-# from modules import pivot,export,stat
+from modules import aruns,doc_tmpl
+#from modules import pivot,export,stat
 
 app = Flask(__name__)
 
@@ -112,9 +112,9 @@ def losses_list_nn():
     return losses_nn.losses_list()
 
 ############ EXPORT ########################################
-@app.route("/export")
-def export_csv():
-    return export.export_csv()
+# @app.route("/export")
+# def export_csv():
+#     return export.export_csv()
 
 ########### SERIAL#############################################
 @app.route("/serials",methods=['GET', 'POST'])
@@ -186,6 +186,15 @@ def aruns_l():
 def pnakl_list():
     return pnakl.pnakl_list()
 
+#друк документи по приходу - list
+@app.route('/pnakl/docs/<int:doc_id>')
+def print_pnakl_docs(doc_id):
+    return pnakl.pnakl_docs(doc_id)
+
+#друк документи по приходу - single
+@app.route('/docs/<int:dot_id>/<int:doc_id>/<int:tovar_id>')
+def print_docs(dot_id,doc_id,tovar_id):
+    return doc_tmpl.print_full_report(dot_id,doc_id,tovar_id)
 ########### MNAKL ############################
 @app.route('/mnakl',methods = ['GET','POST'])
 def mnakl_list():
@@ -219,21 +228,44 @@ def serial_scheck():
 @app.route('/add-to-actvr', methods=['POST'])
 def run_1():
     return serials.add_to_actv()
+#############################################################################################
 ########### TEST #############################
-@app.route('/pivot')
-def pivot_page():
-    return pivot.pivot_page()
+# from modules import doc_tmpl
+# @app.route('/pnakl/docs/<int:doc_id>')
+# def print_from_tmpl(doc_id):
+#     return doc_tmpl.doc(doc_id)
 
-@app.route('/dashboard/<report_type>')
-def dashboard_u(report_type):
-    return stat.universal_dashboard(report_type)
-@app.route('/dashboard')
-def dashboard():
-    return stat.dashboard()
-@app.route('/get_remote_stats')
-def get_remote_stats():
-    endpoint = request.args.get('endpoint', 'default_data')
-    return stat.get_remote_stats(endpoint)
+# @app.route('/test/print/<int:dot_id>/<int:doc_id>')
+# def test_print(doc_id,dot_id):
+#     blob_data = doc_tmpl.get_blob(dot_id)
+#     blob_template = blob_data[0]['TMPL_BLOB']
+#     return doc_tmpl.print_appendix(blob_template,doc_id,300000035,4)
+
+
+
+###
+# @app.route('/docs/serials/<int:doc_id>/<int:tovar_id>')
+# def print_serials(doc_id,tovar_id):
+#     return doc_tmpl.get_serials(doc_id,tovar_id)
+
+
+    # return doc_tmpl.print_appendix(doc_id,tovar_id)
+####
+
+# @app.route('/dashboard/<report_type>')
+# def dashboard_u(report_type):
+#     return stat.universal_dashboard(report_type)
+# @app.route('/dashboard')
+# def dashboard():
+#     return stat.dashboard()
+#
+# @app.route('/get_remote_stats')
+# def get_remote_stats():
+#     return stat.load_data_2()
+#
+# @app.route('/stata')
+# def get_stata():
+#     return stat.get_stat()
 
 
 # @app.route('/pdf')
