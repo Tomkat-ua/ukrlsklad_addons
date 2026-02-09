@@ -66,7 +66,7 @@ def build_tree(rows):
 def pnakl_docs(doc_id):
     # sql = ("""select t.id,t.PARENT_ID,t.name , t.tmpl_type
     #           from doc_print_tmpl t where t.doc_type = 8  """)
-    sql = """select * from print_docs.dot_list_by_doc(?) where id =3 order by 2"""
+    sql = """select * from print_docs.dot_list_by_doc(?) where blob_id in ( 3,4) order by 2"""
     doc_list = db.data_module(sql,[doc_id])
     data_header = get_data_header(doc_id)
     data_details = get_data_details(doc_id)

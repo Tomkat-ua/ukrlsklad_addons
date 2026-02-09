@@ -194,7 +194,8 @@ def print_pnakl_docs(doc_id):
 #друк документи по приходу - single
 @app.route('/docs/<int:dot_id>/<int:doc_id>/<int:tovar_id>')
 def print_docs(dot_id,doc_id,tovar_id):
-    return doc_tmpl.print_full_report(dot_id,doc_id,tovar_id)
+    name = request.args.get('name')
+    return doc_tmpl.print_full_report(dot_id,doc_id,tovar_id,name)
 ########### MNAKL ############################
 @app.route('/mnakl',methods = ['GET','POST'])
 def mnakl_list():

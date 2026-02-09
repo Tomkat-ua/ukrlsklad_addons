@@ -37,7 +37,7 @@
                         </details>
                     {% else %}
                         <div class="leaf">
-                          <a href="/docs/{{ node.BLOB_ID | int }}/{{ doc_id }}/{{ node.TOVAR_ID | int }}">
+                          <a href="/docs/{{ node.BLOB_ID | int }}/{{ doc_id }}/{{ node.TOVAR_ID | int }}?name={{ node.NAME }}">
                               📄  {{ node.NAME }}
                               </a>
                         </div>

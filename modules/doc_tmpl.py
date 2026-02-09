@@ -29,7 +29,10 @@ def get_datails(doc_id):
     return data
 
 def get_serials(doc_id,tovar_id):
-    sql = "select ts.tovar_ser_num  as serial from tovar_serials ts where ts.doc_id  = ? and  ts.tovar_id = ? "
+    sql = """select ts.tovar_ser_num  as serial, tn.name as tov_name
+            from tovar_serials ts
+            inner join tovar_name tn on tn.num = ts.tovar_id
+    where ts.doc_id  = ? and  ts.tovar_id = ? """
     data = db.data_module(sql, [doc_id,tovar_id])
     return data
 
@@ -44,16 +47,16 @@ def get_template_tags(blob_template):
     return tags
 
 #### основна процедура звіту #########################################
-def print_full_report(dot_id,doc_id,tovar_id):
-    blob_data = get_blob(dot_id)
+def print_full_report(dot_id,doc_id,tovar_id,doc_name):
+    blob_data     = get_blob(dot_id)
     blob_template = blob_data[0]['TMPL_BLOB']
-    blob_name = blob_data[0]['NAME']
+    blob_name     = blob_data[0]['NAME']
     template_tags = get_template_tags(blob_template)
-    data_header = get_header(doc_id)
-    data_list =  get_datails(doc_id)
-    header_info = data_header[0]
+    data_header   = get_header(doc_id)
+    data_list     = get_datails(doc_id)
+    header_info   = data_header[0]
     #------------------------------------------------------------------
-    print(blob_name)
+
     # Визначаємо, чи не  додаток з серійниками це раптом ? ------------
     if "MODE_APPEND" in template_tags:
         print("Це додаток !!! ")
@@ -66,8 +69,11 @@ def print_full_report(dot_id,doc_id,tovar_id):
         else:
             num_cols = 4  # Стандартно
         print("формуємо додаток з номерами")
-        doc = print_appendix(blob_template,doc_id,tovar_id,num_cols)
-        doc_name = f"{blob_name}_{doc_id}"
+        doc = print_appendix(blob_template,doc_id,tovar_id,num_cols,
+                             header_info.get("BOSS_FIO"),
+                             header_info.get("BOSS_POS"),
+                             header_info.get("BOSS_RANK"))
+        doc_name = doc_name + f"_{header_info.get("NU")}"
         return save_to_browser(doc,doc_name)
 
 
@@ -110,9 +116,8 @@ def print_full_report(dot_id,doc_id,tovar_id):
     }
 
     doc.render(context)
-    doc_name = f"{blob_name}_{doc_id}"
+    doc_name = f"{blob_name}_{header_info.get("NU")}"
     return save_to_browser(doc, doc_name)
-
 
 def chunker_vertical(data_list, cols, field_name):
     total = len(data_list)
@@ -137,10 +142,7 @@ def chunker_vertical(data_list, cols, field_name):
             # Вибираємо елемент, який має бути в цьому рядку r і колонці c
             new_row.append(indexed_list[r + c * rows])
         final_matrix.append(new_row)
-
     return final_matrix
-
-
 
 # Припустимо, змінна 'doc' — це об'єкт DocxTemplate, який ми вже заповнили (render)
 def save_to_browser(doc, doc_name):
@@ -164,10 +166,13 @@ def save_to_browser(doc, doc_name):
     )
 
 
-def print_appendix(blob_template ,doc_id , tovar_id ,num_cols ):
+def print_appendix(blob_template ,doc_id , tovar_id ,num_cols,boss_fio,boss_pos,boss_rank):
     serials = get_serials(doc_id,tovar_id)
     doc = DocxTemplate(io.BytesIO(blob_template))
-    context= { 'sn_rows': chunker_vertical(serials, num_cols,'SERIAL') }
+    tov_name = serials[0]['TOV_NAME']
+    context= {
+        'nu': '','date':'','name':tov_name,'boss_fio':boss_fio,'boss_pos':boss_pos,'boss_rank':boss_rank,
+        'sn_rows': chunker_vertical(serials, num_cols,'SERIAL') }
     doc.render(context)
     return doc
 
