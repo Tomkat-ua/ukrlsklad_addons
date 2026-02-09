@@ -73,7 +73,7 @@ def print_full_report(dot_id,doc_id,tovar_id,doc_name):
                              header_info.get("BOSS_FIO"),
                              header_info.get("BOSS_POS"),
                              header_info.get("BOSS_RANK"))
-        doc_name = doc_name + f"_{header_info.get("NU")}"
+        doc_name = doc_name + f"_{header_info.get('NU')}"
         return save_to_browser(doc,doc_name)
 
 
