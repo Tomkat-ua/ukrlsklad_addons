@@ -116,7 +116,7 @@ def print_full_report(dot_id,doc_id,tovar_id,doc_name):
     }
 
     doc.render(context)
-    doc_name = f"{blob_name}_{header_info.get("NU")}"
+    doc_name = f"{blob_name}_{header_info.get('NU')}"
     return save_to_browser(doc, doc_name)
 
 def chunker_vertical(data_list, cols, field_name):
