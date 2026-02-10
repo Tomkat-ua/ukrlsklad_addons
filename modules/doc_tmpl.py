@@ -84,7 +84,7 @@ def print_full_report(dot_id,doc_id,tovar_id,doc_name):
 
     TS = sum(float(item.get("TOV_SUMA")  or 0) for item in data_list)
     TC = sum(int(item.get("TOV_KOLVO")   or 0) for item in data_list)
-    print(header_info)
+
     #  Завантажуємо шаблон
     doc = DocxTemplate(io.BytesIO(blob_template))
     #  Формуємо повний контекст
