@@ -43,7 +43,7 @@
                readonly
                class="form-control-plaintext text-dark"
                id="und"
-               value="{{ data_h.USER_DOC_DATE.strftime('%d.%m.%Y') }}">
+               value="{{ data_h.USER_DOC_DATE.strftime('%d.%m.%Y') if data_h.USER_DOC_DATE and data_h.USER_DOC_DATE.year > 1 else 'б/д'}}">
     </div>
 
     <div class="col-md-2 mb-0">

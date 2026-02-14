@@ -58,11 +58,10 @@ def format_currency_ua(value, decimal_places=2):
         # Використовуємо :,.{decimal_places}f
         formatted_str = f"{value:,.{decimal_places}f}"
         # 2. 🌟 Заміна роздільника тисяч (,) на пробіл
-        # thousand_separated = formatted_str.replace(",", " ")
-        thousand_separated = formatted_str.replace(",", "")
+        thousand_separated = formatted_str.replace(",", " ")
+        #thousand_separated = formatted_str.replace(",", "")
         # 3. 🌟 Заміна десяткового роздільника (.) на кому
         return thousand_separated.replace(".", ",")
-
     except Exception:
         return value  # Повернути вихідне значення у разі помилки
 
@@ -231,47 +230,13 @@ def run_1():
     return serials.add_to_actv()
 #############################################################################################
 ########### TEST #############################
-# from modules import doc_tmpl
-# @app.route('/pnakl/docs/<int:doc_id>')
-# def print_from_tmpl(doc_id):
-#     return doc_tmpl.doc(doc_id)
-
-# @app.route('/test/print/<int:dot_id>/<int:doc_id>')
-# def test_print(doc_id,dot_id):
-#     blob_data = doc_tmpl.get_blob(dot_id)
-#     blob_template = blob_data[0]['TMPL_BLOB']
-#     return doc_tmpl.print_appendix(blob_template,doc_id,300000035,4)
+from itertools import groupby
 
 
+@app.route('/incoming',methods = ['GET','POST'])
+def incoming():
+    return pnakl.incoming_page()
 
-###
-# @app.route('/docs/serials/<int:doc_id>/<int:tovar_id>')
-# def print_serials(doc_id,tovar_id):
-#     return doc_tmpl.get_serials(doc_id,tovar_id)
-
-
-    # return doc_tmpl.print_appendix(doc_id,tovar_id)
-####
-
-# @app.route('/dashboard/<report_type>')
-# def dashboard_u(report_type):
-#     return stat.universal_dashboard(report_type)
-# @app.route('/dashboard')
-# def dashboard():
-#     return stat.dashboard()
-#
-# @app.route('/get_remote_stats')
-# def get_remote_stats():
-#     return stat.load_data_2()
-#
-# @app.route('/stata')
-# def get_stata():
-#     return stat.get_stat()
-
-
-# @app.route('/pdf')
-# def generate_pdf():
-#     return to_pdf.generate_pdf()
 
 @app.route('/products',methods = ['GET','POST'])
 def products_list():
