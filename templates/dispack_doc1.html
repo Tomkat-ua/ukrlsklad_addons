@@ -30,12 +30,20 @@
                value="{{ data_h.NUM }}">
     </div>
     <div class="col-md-2 mb-0">
-        <label for="nd" class="form-label fw-bold">Дата документу:</label>
+        <label for="nd" class="form-label fw-bold">Дата проведення:</label>
         <input type="text"
                readonly
                class="form-control-plaintext text-dark"
                id="nd"
                value="{{ data_h.DATE_DOK.strftime('%d.%m.%Y') }}">
+    </div>
+    <div class="col-md-2 mb-0">
+        <label for="nd" class="form-label fw-bold">Дата документу:</label>
+        <input type="text"
+               readonly
+               class="form-control-plaintext text-dark"
+               id="und"
+               value="{{ data_h.USER_DOC_DATE.strftime('%d.%m.%Y') }}">
     </div>
 
     <div class="col-md-2 mb-0">

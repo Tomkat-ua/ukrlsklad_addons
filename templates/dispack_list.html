@@ -44,7 +44,8 @@
     <tr>
       <th>ID</th>
       <th>Номер акту</th>
-      <th>Дата акту</th>
+      <th>Дата проведення</th>
+      <th>Дата документу</th>
       <th>Найменування</th>
       <th>Серійний номер</th>
       <th>Підрозділ</th>
@@ -58,6 +59,7 @@
     <td >{{ row.NUM }}</td>
     <td >{{ row.NU }}</td>
     <td >{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+    <td >{{ row.USER_DOC_DATE.strftime('%d.%m.%Y') if row.USER_DOC_DATE and row.USER_DOC_DATE.year > 1 else 'б/д' }}</td>
     <td class="text-primary fw-bold col-limit" >{{ row.TOV_NAME }}</td>
     <td class="text-success fw-bold" >{{ row.TOVAR_SER_NUM }}</td>
     <td>{{ row.SKLAD_NAME }}</td>
@@ -91,8 +93,12 @@
                         <input type="text" id="nu" class="form-control form-control-sm flex-grow-1" name="nu" required>
                     </div>
                     <div class="d-flex align-items-center mb-3">
-                        <label for="nd" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <label for="nd" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата проведення</label>
                         <input type="date" id="nd" class="form-control form-control-sm flex-grow-1" name="nd" required>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="und" class="form-label fw-bold mb-0 me-2" style="white-space: nowrap;">Дата документу</label>
+                        <input type="date" id="und" class="form-control form-control-sm flex-grow-1" name="und" required>
                     </div>
 
                     <div class="d-flex align-items-center mb-3">

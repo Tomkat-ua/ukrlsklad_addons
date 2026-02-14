@@ -65,13 +65,15 @@ def add():
     try:
         nu = request.form.get('nu')
         nd = request.form.get('nd')
+        und = request.form.get('und')
         serial = request.form.get('serial')
         price = request.form.get('price')
+
         # sql = """ execute procedure import.dispacking(?,?,?,?) """
         # logs = db.data_module('select * from import.dispacking(?,?,?,?)', [serial, nu, nd, price])
         con = db.get_connection()
         cur = con.cursor()
-        logs = cur.callproc('import.dispacking', [serial, nu, nd, price])
+        logs = cur.callproc('import.dispacking', [serial, nu, nd, price,und])
         print(logs)
         con.commit()
         flash("✅ Документ успішно створено!", "success")
