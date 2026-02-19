@@ -10,7 +10,8 @@
            {% else %}
              Документ
            {% endif %}
-            № {{ data_h[0].NU }} від {{ data_h[0].DATE_DOK.strftime('%d.%m.%Y') }} від {{ data_h[0].SKLAD_NAME }}
+            № {{ data_h[0].NU }} від {{ data_h[0].DATE_DOK.strftime('%d.%m.%Y') if data_h[0].DATE_DOK else '[б/д]' }}
+            від {{ data_h[0].SKLAD_NAME }}
             ({{ data_h[0].NUM }})
         </h5>
     </div>
