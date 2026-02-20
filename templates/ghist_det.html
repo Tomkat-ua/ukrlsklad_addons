@@ -35,8 +35,7 @@
         <strong>Дата документу постачальника:</strong> {{ row.P_DATE_DOK }}</br>
         <strong>Ціна постачальника:</strong>
         <span class="badge rounded-pill bg-warning text-dark fs-6 px-4 py-2 shadow">
-         {#{{ "{:,.2f}".format(row.TOV_CENA).replace(",", " ").replace(".", ",") }} грн.#}
-            {{ row.TOV_CENA }} грн.
+            {{ row.TOV_CENA | currency_format_ua }}
         </span></br>
         <strong>Місце знаходження:</strong> {{ row.SKLAD_PLACE }}</br>
         <form action="{{ url_for('loss_add') }}" method="get" style="display:inline;">
