@@ -186,9 +186,10 @@ def pnakl_list():
     return pnakl.pnakl_list()
 
 #друк документи по приходу - list
-@app.route('/pnakl/docs/<int:doc_id>')
-def print_pnakl_docs(doc_id):
-    return pnakl.pnakl_docs(doc_id)
+@app.route('/pnakl/docs')
+def print_pnakl_docs():
+    list_id = request.args.get('list_id')
+    return pnakl.pnakl_docs(list_id)
 
 #друк документи по приходу - single
 @app.route('/docs/<int:dot_id>/<int:doc_id>/<int:tovar_id>')
@@ -236,6 +237,12 @@ from itertools import groupby
 @app.route('/incoming',methods = ['GET','POST'])
 def incoming():
     return pnakl.incoming_page()
+
+
+@app.route('/get_serials')
+def get_serials():
+    return pnakl.get_serials()
+
 
 
 @app.route('/products',methods = ['GET','POST'])

@@ -1,0 +1,253 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+
+<style>
+    /* 1. Фіксуємо панель пошуку */
+    .sticky-panel {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        background-color: white;
+    }
+
+    /* 2. Фіксуємо головну шапку таблиці */
+    #tList thead th {
+        position: sticky;
+        top: 62px; /* Висота панелі пошуку */
+        z-index: 1025;
+        background-color: #212529 !important;
+        border-top: 1px solid #454d55;
+        white-space: nowrap;
+    }
+
+    /* 3. Фіксуємо рядки з документами */
+    .table-light-sticky {
+        position: sticky;
+        top: 93px; /* Під шапкою таблиці */
+        z-index: 1020;
+    }
+
+    .table-light-sticky td {
+        background-color: #f8f9fa !important;
+        border-bottom: 2px solid #dee2e6 !important;
+    }
+
+    /* 4. Контроль ширини та переносів */
+    #tList {
+        table-layout: auto;
+        width: 100%;
+    }
+
+    /* Обмежуємо колонку з товаром, щоб не розтягувала екран */
+    .col-tovar {
+        min-width: 250px;
+        word-wrap: break-word;
+        white-space: normal !important; /* Дозволяємо перенос тексту */
+    }
+
+    .tov-name {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        line-height: 1.2;
+        display: block;
+        color: #212529;
+    }
+
+    /* Допоміжні стилі */
+    .btn-xs {
+        padding: 1px 5px;
+        font-size: 0.75rem;
+    }
+
+/* 1. Робимо анімацію розгортання миттєвою (150мс - це стандарт "відгуку" ока) */
+.accordion-collapse {
+    transition: height 0.15s ease-out !important;
+}
+
+/* 2. Прибираємо анімацію повороту іконки або робимо її швидкою */
+.accordion-button::after {
+    transition: transform 0.1s ease-in-out !important;
+}
+
+/* 3. Щоб контент не "дрижав" при появі */
+.serial-content {
+    min-height: 40px; /* Резервуємо місце під спінер, щоб рядок не схлопувався */
+}
+
+/* 4. Прискорюємо зникнення спінера */
+.spinner-border {
+    animation-duration: 0.5s !important;
+}
+
+</style>
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded sticky-panel">
+    <h5 class="mb-0 me-3 text-nowrap">{{ title }}</h5>
+    <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
+        <div class="input-group input-group-sm">
+            <input class="form-control" type="search" placeholder="Шукати товар, артикул..." name="search" value="{{ search }}">
+            <button class="btn btn-success" type="submit">Шукати</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive" style="overflow-x: visible;">
+    <table class="table table-sm table-bordered align-middle" id="tList">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 50px;" class="text-center">#</th>
+                <th>Товар / Артикул</th>
+                <th style="width: 100px;" class="text-center">Кількість</th>
+                <th style="width: 150px;" class="text-center">Ціна</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nu, items ,unicum_count,unicum_list in grouped_data %}
+            {% set ids = unicum_list | map(attribute='DOC_ID') | join(',') %}
+                <tr class="table-light-sticky">
+                    <td colspan="4" class="py-2 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-folder2-open text-warning me-2"></i>
+                                    <strong>
+                                        [{{ nu }} {{ items[0].DATE_DOK.strftime('%d.%m.%Y') }}]
+                                        <span class="text-primary ms-1">{{ items[0].CLIENT }}</span>
+                                    </strong>
+                                </div>
+                                <div class="ms-4  mt-1">
+                                    <span class="text-muted ">
+                                        <code>[
+                                            {{ items[0].A_NAME }},
+                                            {{ items[0].DOC_NAME }} № {{ items[0].P_NU }} від
+                                            {{ items[0].P_DATE_DOK.strftime('%d.%m.%Y') if items[0].P_DATE_DOK and items[0].P_DATE_DOK.year > 1 else 'б/д' }}
+                                            ] </code>
+
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="text-end d-none d-sm-block">
+                                    <div class="badge rounded-pill bg-secondary d-block mb-1">
+                                        {{ items|length }} поз.
+                                    </div>
+                                </div>
+<!--                                <a href="/pnakl/docs/{{ items[0].DOC_ID }}"-->
+                                   <a href="/pnakl/docs?list_id={{ ids }}"
+                                   class="btn btn-sm btn-outline-secondary py-1" style="font-size: 0.75rem;">
+                                   Друк <i class="bi bi-printer"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                {% for item in items %}
+                <tr>
+                    <td class="text-center text-muted small py-1">{{ loop.index }}</td>
+                    <td class="ps-4 py-1 col-tovar">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="w-100">
+                                <div class="tov-name fw-bold">{{ item.TOV_NAME }}</div>
+
+                                <div style="font-size: 0.7rem;" class="text-muted mt-1">
+                                    <span class="me-2">Товар ID: <strong>{{ item.TOVAR_ID }}</strong></span>
+                                    <span class="me-2">Код мат.: <strong>{{ item.TOV_CODE }}</strong></span>
+                                    <span>Док. ID: <strong>{{ item.DOC_ID }}</strong></span>
+                                </div>
+                                <div class="accordion accordion-flush mt-2" id="acc-{{ item.TOVAR_ID }}-{{ item.DOC_ID }}">
+                                    <div class="accordion-item bg-transparent">
+                                        <div class="accordion-header">
+                                            <button class="accordion-button collapsed p-0 bg-transparent shadow-none serial-loader-btn"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ item.TOVAR_ID }}-{{ item.DOC_ID }}"
+                                                    data-tovar="{{ item.TOVAR_ID }}"
+                                                    data-doc="{{ item.DOC_ID }}">
+                                                <i class="bi bi-cpu me-1"></i> Серійні номери
+                                            </button>
+                                            <div id="collapse-{{ item.TOVAR_ID }}-{{ item.DOC_ID }}" class="accordion-collapse collapse" style="transition: none;">
+<!--                                            <div id="collapse-{{ item.TOVAR_ID }}-{{ item.DOC_ID }}" class="accordion-collapse collapse">-->
+                                                <div class="accordion-body p-2 border rounded mt-1 bg-light">
+                                                    <div class="serial-content text-center">
+                                                        <div class="spinner-border spinner-border-sm text-secondary"></div> завантаження...
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div id="collapse-{{ loop.index }}"
+                                             class="accordion-collapse collapse"
+                                             data-bs-parent="#acc-{{ item.TOVAR_ID }}-{{ item.DOC_ID }}">
+                                            <div class="accordion-body p-2 border rounded mt-1 bg-light" style="font-size: 0.75rem;">
+                                                <div class="row">
+                                                    <div class="col-4 text-muted">S/N:</div>
+                                                    <div class="col-8"><strong>{{ item.SERIAL_NUM or '—' }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-4 text-muted">Опис:</div>
+                                                    <div class="col-8 text-secondary">{{ item.SERIAL_DESC or 'немає опису' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="/mnakl?tovar_id={{ item.TOVAR_ID }}"
+                               class="btn btn-sm btn-outline-secondary ms-3 py-0"
+                               style="font-size: 0.7rem; white-space: nowrap;">
+                               Видача по Товар ID
+                            </a>
+                        </div>
+                    </td>
+                    <td class="text-center py-1 fw-bold">{{ item.TOV_KOLVO }}</td>
+                    <td class="text-end py-1 fw-bold {{ 'text-danger' if item.TOV_CENA == 0 else '' }}">
+                        {{ "{:,.2f}".format(item.TOV_CENA) }} <small>грн</small>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.querySelectorAll('.serial-loader-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tovarId = this.dataset.tovar;
+        const docId = this.dataset.doc;
+        const targetId = this.dataset.bsTarget;
+        const contentDiv = document.querySelector(targetId).querySelector('.serial-content');
+
+        // Якщо дані вже завантажені — не робимо запит повторно
+        if (contentDiv.dataset.loaded === "true") return;
+
+        fetch(`/get_serials?tovar_id=${tovarId}&doc_id=${docId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length === 0) {
+                    contentDiv.innerHTML = "Дані відсутні";
+                } else {
+                    let html = '<table class="table table-sm mb-0" style="font-size: 0.7rem;">';
+                    data.forEach(sn => {
+                        html += `<tr><td><b>${sn.TOVAR_SER_NUM}</b></td><td>${sn.TOVAR_SER_DESCR || ''}</td></tr>`;
+                    });
+                    html += '</table>';
+                    contentDiv.innerHTML = html;
+                }
+                contentDiv.dataset.loaded = "true";
+            });
+    });
+});
+</script>
+
+
+
+{% endblock %}

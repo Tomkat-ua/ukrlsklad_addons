@@ -5,11 +5,32 @@
 
 <div class="d-flex flex-column gap-2 mb-2 p-3 bg-light border rounded">
     <h5 class="mb-0">{{ title }}</h5>
-        <h6 class="mb-0 text-muted">Папка : {{ data_header.NU.split('/')[0] }}</h6>
+        <h6 class="mb-0 text-muted">Папка : {{ data_header.NU }}</h6>
+        <h6 class="mb-0 text-muted">Дата приходу : {{ data_header.DATE_DOK.strftime('%d.%m.%Y') if data_header.DATE_DOK }}</h6>
         <h6 class="mb-0 text-muted">Постачальник : {{ data_header.CLIENT }}</h6>
-        <h6 class="mb-0 text-muted">Номер документу постачальника : {{ data_header.P_NU }}</h6>
-        <h6 class="mb-0 text-muted">Дата документу постачальника : {{ data_header.P_DATE_DOK }}</h6>
-        <h6 class="mb-0 text-muted">Тип документу постачальника : {{ data_header.DOPOLN3 }}</h6>
+        <h6 class="mb-0 text-muted">Підстава: згідно {{ data_header.DOC_TYPE }} № {{ data_header.CL_NU }} від
+                        {{ data_header.CL_DATE_DOK.strftime('%d.%m.%Y')
+                            if data_header.CL_DATE_DOK and data_header.CL_DATE_DOK.year > 1
+                            else 'б/д'}}
+        </h6>
+      {#  <h6 class="mb-0 text-muted">
+            Дата документу постачальника :
+            {{ data_header.CL_DATE_DOK.strftime('%d.%m.%Y')
+            if data_header.CL_DATE_DOK and data_header.CL_DATE_DOK.year > 1
+            else 'б/д'}}
+        </h6> #}
+</div>
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <table>
+        {% for row in data_details %}
+        <tr>
+           <td>
+               {{ row }}
+           </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">

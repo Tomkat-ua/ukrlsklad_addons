@@ -54,8 +54,6 @@ def doc(doc_id,dt):
         for item in data_dr:
             total_r += item['TOV_SUMA']
 
-
-
         return render_template("dispack_doc1.html", title=title, dt=dt, data_dr=data_dr,data_dl=data_dl
                                ,total_l=total_l,total_r=total_r,data_h = data_h[0],znakl_l_id=znakl_l_id
                                ,docname = 'Акт зміни якісного стану')
