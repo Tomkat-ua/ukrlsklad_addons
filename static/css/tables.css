@@ -98,9 +98,23 @@
     font-weight: bold;
 }
 
-/* Інтерактивність (Ховер на групу рядків) */
+/* Підсвітка для звичайних рядків */
+.table-main tbody tr:hover td {
+    background-color: rgba(13, 110, 253, 0.05) !important;
+    color: #000 !important; /* Щоб текст був чітким */
+    box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.05) !important;
+}
+
+/* Якщо рядок має колір від mark_colors (наприклад, червоний або жовтий),
+   цей селектор зробить підсвітку трохи темнішою/насиченішою при наведенні */
+.table-main tbody tr:hover {
+    filter: brightness(0.95);
+    cursor: pointer;
+}
+
+/* Інтерактивність (Ховер на групу рядків)
 .row-main:hover,
 .row-main:hover + .row-details,
 .row-details:hover {
     background-color: rgba(13, 110, 253, 0.04) !important;
-}
+}*/
