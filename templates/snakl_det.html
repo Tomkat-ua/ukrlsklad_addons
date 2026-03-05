@@ -32,7 +32,12 @@
   {% for row in data %}
   <tr>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOVAR_ID }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_NAME }}({{ row.SERIAL }})</td>
+    <td style="padding-top: 1px; padding-bottom: 1px;">
+        {{ row.TOV_NAME }}
+        {% if row.SERIAL %}
+            ({{ row.SERIAL }})
+        {% endif %}
+    </td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_KOLVO }}</td>
     <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.TOV_CENA | currency_format_ua }}</td>
   </tr>
