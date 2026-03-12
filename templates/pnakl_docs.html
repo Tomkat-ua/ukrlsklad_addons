@@ -71,13 +71,13 @@
     </div>
 </div>
 
-
 <table>
-
     {% for doc in doc_list %}
 <tr>
     <td>
-       {{ doc.NAME }}
+        <a href="/docs/{{ doc.BLOB_ID | int }}/{{ docs_id }}/{{ doc.TOV_ID | int }}?name={{ doc.NAME }}">
+             {{ doc.NAME }} --> {{ doc.TOV_NAME }}
+        </a>
     </td>
 </tr>
 {% endfor %}

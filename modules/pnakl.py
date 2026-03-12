@@ -48,7 +48,32 @@ def build_tree(rows):
 def pnakl_docs(docs_id):
 
     # sql = """select * from print_docs.dot_list_by_doc(?) where blob_id in ( 3,4,8,9) order by 2"""
-    # doc_list = db.data_module(sql,[doc_id])
+    sql = """execute block
+returns (
+     name      varchar(250)
+    ,tov_id    tint
+    ,TOV_NAME  ttovar_name
+    ,TOV_KOLVO tcost
+    ,BLOB_ID   tint
+    )
+as
+begin
+   for
+    select t.id,t.name from doc_print_tmpl t where id in (8,9)
+    into blob_id,name
+    do begin
+        for
+            select tov_id,TOV_NAME,sum( TOV_KOLVO)
+            from print_docs.pnakl_doc_details(?,100)
+            group by 1,2
+            into tov_id,TOV_NAME, TOV_KOLVO
+        do  begin
+               -- name = name ||'-->' ||TOV_NAME;
+                suspend;
+           end
+    end
+end """
+    doc_list = db.data_module(sql,[docs_id])
     data_header = get_data_header(docs_id)
     data_details = get_data_details(docs_id)
     # doc_tree = build_tree(doc_list)
@@ -56,9 +81,10 @@ def pnakl_docs(docs_id):
     return render_template("pnakl_docs.html",
                            title= 'Документи по приходу',
                            # doc_tree = doc_tree,doc_id = doc_id,
+                           docs_id = docs_id,
                            data_header = data_header[0],
                            data_details = data_details,
-                           # doc_list=doc_list
+                           doc_list=doc_list
                            )
 
 def get_serials():
