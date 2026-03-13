@@ -30,7 +30,6 @@ def pnakl_list():
     doc_data = get_data_list(function_name,search)
     for row in doc_data:
         total = total + row['TOV_KOLVO']
-    print(total)
     return  render_template("pnakl_list.html", title='Приход майна',
                             data= doc_data,
                             search=search,
@@ -82,7 +81,6 @@ end """
     data_header = get_data_header(docs_id)
     data_details = get_data_details(docs_id)
     # doc_tree = build_tree(doc_list)
-    print(data_details)
     return render_template("pnakl_docs.html",
                            title= 'Документи по приходу',
                            # doc_tree = doc_tree,doc_id = doc_id,
@@ -114,7 +112,7 @@ def incoming_page():
     if request.method == 'POST':
         search = request.form.get('search')
     raw_data = get_data_list('incoming_page',search)
-    print(raw_data)
+
     # Групуємо за полем 'NU'
     # groupby повертає (ключ, ітератор_групи)
 
@@ -131,10 +129,9 @@ def incoming_page():
 
         # Передаємо: номер, всі записи, кількість унікальних, список унікальних об'єктів
         grouped2.append((nu, items, len(unique_items_list), unique_items_list))
-
-    # print(grouped2[0])
-
-
-
-    return render_template('incoming.html', grouped_data=grouped2,search=search,list_id='list_id')
+    total = 0
+    for nu, items,le,uil in grouped2:
+        for item in items:
+            total = total + item['TOV_KOLVO']
+    return render_template('incoming.html', grouped_data=grouped2,search=search,list_id='list_id',total = total)
 

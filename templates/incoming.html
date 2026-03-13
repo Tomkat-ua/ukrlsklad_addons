@@ -104,6 +104,12 @@
                 <th style="width: 100px;" class="text-center">Кількість</th>
                 <th style="width: 150px;" class="text-center">Ціна</th>
             </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Total: {{ total }}</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
             {% for nu, items ,unicum_count,unicum_list in grouped_data %}
