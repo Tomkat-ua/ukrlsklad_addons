@@ -2,6 +2,7 @@ from flask import  request,render_template,flash,redirect,url_for,session,jsonif
 from . import db
 
 
+
 def serials_search():
     result = []
     sql = """select sn.num as id, sn.name from sklad_names sn
@@ -98,7 +99,8 @@ def serials_check():
                            total_acc=total_acc,
                            is_multi_sklad=is_multi_sklad,
                            main_sklad=main_sklad,
-                           column_data=data_serials)
+                           column_data=data_serials,
+                           title = 'Перевірка сер. номерів')
 
 def add_to_actv():
     # Дістаємо дані з сесії
