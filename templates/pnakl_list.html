@@ -49,8 +49,22 @@
       <th>Кількість</th>
       <th>Ціна</th>
     </tr>
+
   </thead>
     <tbody>
+    <tr class="table-dark">
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> Total :  {{ total }} </td>
+                <td> </td>
+    </tr>
+
   {% for row in data %}
   <tr>
     <td title="Друк документів"><a href="/pnakl/docs/{{ row.DOC_ID }}">{{ row.DOC_ID }}</a></td>

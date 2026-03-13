@@ -26,11 +26,16 @@ def pnakl_list():
         search = '%'
     else:
         search = request.form.get('search')
-
+    total = 0
     doc_data = get_data_list(function_name,search)
-    return  render_template("pnakl_list.html", title='Приход майна',data= doc_data,search=search,pname_1 = '/')
-
-
+    for row in doc_data:
+        total = total + row['TOV_KOLVO']
+    print(total)
+    return  render_template("pnakl_list.html", title='Приход майна',
+                            data= doc_data,
+                            search=search,
+                            pname_1 = '/',
+                            total = total)
 
 def build_tree(rows):
     tree = {}
