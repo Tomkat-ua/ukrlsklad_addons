@@ -9,11 +9,16 @@ def serials_search():
                 where  sn.visible =1 and sn.num >=? order by 2"""
     sklads = db.data_module(sql, [300000001])
     if request.method == 'POST':
-        sql = "select * from usadd_web.get_serials_by_tov_sklad(?,?)"
+        # sql = "select * from usadd_web.get_serials_by_tov_sklad(?,?)"
+        sql = "select serial from usadd_web.get_serials_by_tov_sklads(?,?)"
         tov_id = request.form.get('search_tovar', '').strip()
         sklad_id = request.form.get('sklad_id', '').strip() or None
-        if sklad_id == "None":
-            sklad_id = None
+        print('sklad_id',sklad_id)
+        # if sklad_id == "None":
+        #     sklad_id = None
+        # if sklad_id == None:
+        #     print('ALL SKLADS !!!!!!!!')
+
         result= db.data_module(sql, [tov_id, sklad_id])
         total = len(result)
         sql = "select tn.name from tovar_name tn where tn.num = ?"
