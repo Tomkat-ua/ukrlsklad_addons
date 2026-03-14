@@ -5,15 +5,26 @@ from . import db
 title = 'Єдиний акт списання'
 
 def snakl_list():
+    sql_l2 = """   select  ts.tovar_ser_num,sd.tov_name,s.nu,s.date_dok
+           ,tools.pars_atribute(s.dopoln5,'USER_DOC_DATE') as USER_DOC_DATE
+           ,sn.name
+            from tovar_serials ts
+                inner join snakl_ sd on sd.pid = ts.doc_id and sd.tovar_id = ts.tovar_id
+                inner join snakl s on s.num = sd.pid
+                inner join sklad_names sn on sn.num = sd.sklad_id
+           where ts.doc_type_id = 11 and ts.tovar_ser_num like ? """
+
     if request.method == 'GET':
         sql = 'select * from usadd_web.snakl'
         data = db.data_module(sql, '')
-        return render_template('snakl_list.html',title=title,data = data)
+        data_l2 = db.data_module(sql_l2, ['%'])
+        return render_template('snakl_list.html',title=title,data = data,data2 = data_l2)
     if request.method == 'POST':
         search_str = request.form['search']
         sql = 'select * from usadd_web.snakl where serial like ?'
         data = db.data_module(sql, [search_str])
-        return render_template('snakl_list.html', title=title, data=data,search=search_str)
+        data_l2 = db.data_module(sql_l2, [search_str])
+        return render_template('snakl_list.html', title=title, data=data,search=search_str,data2 = data_l2)
 
 
 def snakl_det(id):

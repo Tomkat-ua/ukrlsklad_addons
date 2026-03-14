@@ -1,7 +1,6 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
-
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
     <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
@@ -18,50 +17,139 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}?v={{ app_version }}">
 
-<!--<table id="tList" class="table table-sm table-compact table-hover ">-->
-<table id="tList" class="table table-main ">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Номер акту</th>
-      <th>Дата проводки</th>
-      <th>Дата документу</th>
-      <th>Сума акту</th>
-      <th>Підрозділ</th>
-      <th>Серійний номер</th>
-      <th>Документи</th>
-      <th>Мітка</th>
-      <th>Дії</th>
-    </tr>
-  </thead>
-<tbody>
-  {% for row in data %}
-  <tr class = "{{ mark_colors.get(row.DOC_MARK_TYPE, '') }}">
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
-    <td> {{ row.USER_DOC_DATE }}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_SUMM | currency_format_ua }}
-        {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
-    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
-    <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
-    <td>{% if row.ACTVR_NU %}
-        <strong>Акт ВР:</strong> <a href="/dispack/doc1/{{ row.ACTVR_ID | int }}"> {{ row.ACTVR_NU }}</a> <br>
-        {% endif %}
-        {% if row.UNIDOCUM_NU %}
-        <strong>Втрата:</strong> <a href="/loss_edit/{{ row.UNIDOCUM_ID | int }}">{{ row.UNIDOCUM_NU }}</a> <br>
-        {% endif %}
-    </td>
-    <td>{{ row.DOC_MARK_TYPE }}</td>
-    <td>
-     <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
-    </td>
-  </tr>
-  {% endfor %}
-</tbody>
-</table>
+<ul class="nav nav-tabs custom-tabs" id="tableTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active py-1" id="main-tab" data-bs-toggle="tab" data-bs-target="#main-panel" type="button" role="tab">
+            Акти списання
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link py-1" id="second-tab" data-bs-toggle="tab" data-bs-target="#second-panel" type="button" role="tab">
+            Списане майно
+        </button>
+    </li>
+</ul>
 
+<div class="tab-content bg-white border-start border-end border-bottom p-2" id="tableTabsContent">
+    <div class="tab-pane fade show active" id="main-panel" role="tabpanel" aria-labelledby="main-tab">
+<!--        <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">-->
+<!--            <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">-->
+<!--                <div class="input-group input-group-sm table-panell">-->
+<!--                    <input class="form-control input-serial " type="search" placeholder="Серійний..." name="search" value="{{ search }}">-->
+<!--                    <button class="btn btn-success" type="submit">Шукати</button>-->
+<!--                </div>-->
+<!--                <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">-->
+<!--                    📋 Копіювати-->
+<!--                </button>-->
+<!--            </form>-->
+<!--        </div>-->
+        <table id="tList" class="table table-main w-100">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Номер акту</th>
+                    <th>Дата проводки</th>
+                    <th>Дата документу</th>
+                    <th>Сума акту</th>
+                    <th>Підрозділ</th>
+                    <th>Серійний номер</th>
+                    <th>Документи</th>
+                    <th>Мітка</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr class="{{ mark_colors.get(row.DOC_MARK_TYPE, '') }}">
+                    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NUM }}</td>
+                    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.NU }}</td>
+                    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+                    <td> {{ row.USER_DOC_DATE }}</td>
+                    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.DOC_SUMM | currency_format_ua }}
+                        {% if row.IS_MOVE == 0 %} ⚠️ {% endif %}</td>
+                    <td style="padding-top: 1px; padding-bottom: 1px;">{{ row.SKLAD_NAME }}</td>
+                    <td class="text-success fw-bold" style="padding-top: 1px; padding-bottom: 1px;">{{ row.SERIAL }}</td>
+                    <td>{% if row.ACTVR_NU %}
+                        <strong>Акт ВР:</strong> <a href="/dispack/doc1/{{ row.ACTVR_ID | int }}"> {{ row.ACTVR_NU }}</a> <br>
+                        {% endif %}
+                        {% if row.UNIDOCUM_NU %}
+                        <strong>Втрата:</strong> <a href="/loss_edit/{{ row.UNIDOCUM_ID | int }}">{{ row.UNIDOCUM_NU }}</a> <br>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.DOC_MARK_TYPE }}</td>
+                    <td>
+                        <a href="/snakl/{{ row.NUM }}" class="btn btn-sm btn-outline-secondary btn-xs">Деталі <i class="bi bi-pencil"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="second-panel" role="tabpanel" aria-labelledby="second-tab">
+        <table id="tListSecond" class="table table-main w-100">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Найменування</th>
+                    <th>Сер. номер</th>
+                    <th>Номер ЄАС</th>
+                    <th>Дата проводки ЄАС</th>
+                    <th>Дата ЄАС</th>
+                    <th>Підрозділ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row2 in data2 %}
+                <tr>
+<!--                    <td colspan="6" class="text-center py-4">Дані другого списку поки не завантажені...</td>-->
+                    <td>{{ row2.TOV_NAME }}</td>
+                    <td>{{ row2.TOVAR_SER_NUM }}</td>
+                    <td>{{ row2.NU }}</td>
+                    <td>{{ row2.DATE_DOK.strftime('%d.%m.%Y') }}</td>
+                    <td>{{ row2.USER_DOC_DATE }}</td>
+                    <td>{{ row2.NAME }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
+<script>
+    // Важливо: перераховуємо ширину колонок при перемиканні вкладок
+    // Без цього DataTables у другій вкладці може "схлопнутися"
+    document.addEventListener('DOMContentLoaded', function() {
+        var triggerTabList = [].slice.call(document.querySelectorAll('button[data-bs-toggle="tab"]'))
+        triggerTabList.forEach(function (triggerEl) {
+            triggerEl.addEventListener('shown.bs.tab', function (event) {
+                if ($.fn.DataTable.isDataTable('#tList')) {
+                    $('#tList').DataTable().columns.adjust();
+                }
+                if ($.fn.DataTable.isDataTable('#tListSecond')) {
+                    $('#tListSecond').DataTable().columns.adjust();
+                }
+            })
+        });
+    });
+</script>
+
+<style>
+    /* Легкий стайлінг вкладок, щоб вони пасували до твоєї таблиці */
+    .custom-tabs .nav-link {
+        font-size: 0.85rem;
+        color: #6c757d;
+        border-radius: 4px 4px 0 0;
+    }
+    .custom-tabs .nav-link.active {
+        font-weight: bold;
+        color: #0d6efd;
+        border-bottom-color: #fff;
+    }
+    .tab-content {
+        border-top: none;
+    }
+</style>
 
 {% endblock %}
