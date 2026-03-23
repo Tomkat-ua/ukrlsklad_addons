@@ -90,7 +90,7 @@ function copyTable(selector = '#tList') {
 }
 
 $(document).ready(function() {
-    $('#tList').DataTable({
+    $('#tList, #tListSecond').DataTable({
         "paging": true,
         "lengthMenu": [ [10, 25, 30, 50, -1], [10, 25,30, 50, "Всі"] ],
         "pageLength": 25,

@@ -1,6 +1,23 @@
 {% extends "base_tmp.html" %}
 {% block content %}
 
+<style>
+    /* Легкий стайлінг вкладок */
+    .custom-tabs .nav-link {
+        font-size: 0.85rem;
+        color: #6c757d;
+        border-radius: 4px 4px 0 0;
+    }
+    .custom-tabs .nav-link.active {
+        font-weight: bold;
+        color: #0d6efd;
+        border-bottom-color: #fff;
+    }
+    .tab-content {
+        border-top: none;
+    }
+</style>
+
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
     <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
@@ -136,21 +153,6 @@
     });
 </script>
 
-<style>
-    /* Легкий стайлінг вкладок, щоб вони пасували до твоєї таблиці */
-    .custom-tabs .nav-link {
-        font-size: 0.85rem;
-        color: #6c757d;
-        border-radius: 4px 4px 0 0;
-    }
-    .custom-tabs .nav-link.active {
-        font-weight: bold;
-        color: #0d6efd;
-        border-bottom-color: #fff;
-    }
-    .tab-content {
-        border-top: none;
-    }
-</style>
+
 
 {% endblock %}
