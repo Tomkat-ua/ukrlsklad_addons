@@ -5,25 +5,8 @@ from . import db
 title = 'Єдиний акт списання'
 
 def snakl_list():
-    # sql_l2 = """   select  ts.tovar_ser_num,sd.tov_name,s.nu,s.date_dok
-    #        ,tools.pars_atribute(s.dopoln5,'USER_DOC_DATE') as USER_DOC_DATE
-    #        ,sn.name
-    #         from tovar_serials ts
-    #             inner join snakl_ sd on sd.pid = ts.doc_id and sd.tovar_id = ts.tovar_id
-    #             inner join snakl s on s.num = sd.pid
-    #             inner join sklad_names sn on sn.num = sd.sklad_id
-    #        where ts.doc_type_id = 11 and ts.tovar_ser_num like ? """
-    sql_l2 = """select s.num,s.nu,s.date_dok,sd.tov_name,sd.tov_kolvo,sd.tov_cena
-                ,tools.pars_atribute(s.dopoln5,'USER_DOC_DATE') as USER_DOC_DATE
-                ,sn.name as sklad_name
-                ,(select first 1 ts.tovar_ser_num from tovar_serials ts
-                    where ts.doc_id = s.num ) as serial
-                from snakl  s
-                  inner join snakl_ sd on sd.pid = s.num
-                  inner join sklad_names sn on sn.num = sd.sklad_id
-                where s.num in  (select ts.doc_id from tovar_serials ts
-                                where ts.doc_id = s.num and ts.doc_type_id =11
-                                and ts.tovar_ser_num like ? )"""
+
+    sql_l2 = """select * from usadd_web.snakl_l2 (?)"""
 
     if request.method == 'GET':
         sql = 'select * from usadd_web.snakl'

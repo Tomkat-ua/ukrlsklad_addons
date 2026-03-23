@@ -25,9 +25,7 @@
             <input class="form-control input-serial " type="search" placeholder="Серійний..." name="search" value="{{ search }}">
             <button class="btn btn-success" type="submit">Шукати</button>
         </div>
-        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">
-            📋 Копіювати
-        </button>
+
     </form>
 </div>
 
@@ -49,17 +47,9 @@
 
 <div class="tab-content bg-white border-start border-end border-bottom p-2" id="tableTabsContent">
     <div class="tab-pane fade show active" id="main-panel" role="tabpanel" aria-labelledby="main-tab">
-<!--        <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">-->
-<!--            <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">-->
-<!--                <div class="input-group input-group-sm table-panell">-->
-<!--                    <input class="form-control input-serial " type="search" placeholder="Серійний..." name="search" value="{{ search }}">-->
-<!--                    <button class="btn btn-success" type="submit">Шукати</button>-->
-<!--                </div>-->
-<!--                <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">-->
-<!--                    📋 Копіювати-->
-<!--                </button>-->
-<!--            </form>-->
-<!--        </div>-->
+        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">
+            📋 Копіювати
+        </button>
         <table id="tList" class="table table-main w-100">
             <thead class="table-dark">
                 <tr>
@@ -105,11 +95,16 @@
     </div>
 
     <div class="tab-pane fade" id="second-panel" role="tabpanel" aria-labelledby="second-tab">
+        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable2()">
+            📋 Копіювати
+        </button>
         <table id="tListSecond" class="table table-main w-100">
             <thead class="table-secondary">
                 <tr>
                     <th>Найменування</th>
                     <th>Сер. номер</th>
+                    <th>Кількість</th>
+                    <th>Ціна</th>
                     <th>Номер ЄАС</th>
                     <th>Дата проводки ЄАС</th>
                     <th>Дата ЄАС</th>
@@ -119,9 +114,10 @@
             <tbody>
                 {% for row2 in data2 %}
                 <tr>
-<!--                    <td colspan="6" class="text-center py-4">Дані другого списку поки не завантажені...</td>-->
                     <td>{{ row2.TOV_NAME }}</td>
                     <td>{{ row2.SERIAL }}</td>
+                    <td>{{ row2.TOV_KOLVO | int }}</td>
+                    <td>{{ row2.TOV_CENA | currency_format_ua }}</td>
                     <td>{{ row2.NU }}</td>
                     <td>{{ row2.DATE_DOK.strftime('%d.%m.%Y') }}</td>
                     <td>{{ row2.USER_DOC_DATE }}</td>
@@ -134,7 +130,23 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/tables.js') }}"></script>
-
+<script>
+    function copyTable2(selector = '#tListSecond') {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    const range = document.createRange();
+    range.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    try {
+        document.execCommand('copy');
+        alert('Таблицю скопійовано!');
+    } catch (err) {
+        console.error('Не вдалося скопіювати', err);
+    }
+    window.getSelection().removeAllRanges();
+}
+</script>
 <script>
     // Важливо: перераховуємо ширину колонок при перемиканні вкладок
     // Без цього DataTables у другій вкладці може "схлопнутися"
