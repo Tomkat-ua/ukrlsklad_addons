@@ -75,6 +75,7 @@
                         {% if row.UNIDOCUM_NU %}
                         <strong>Втрата:</strong> <a href="/loss_edit/{{ row.UNIDOCUM_ID | int }}">{{ row.UNIDOCUM_NU }}</a> <br>
                         {% endif %}
+                        <strong>ОД:</strong>{{ row.OD_NU }}
                     </td>
                     <td>{{ row.DOC_MARK_TYPE }}</td>
                     <td>
