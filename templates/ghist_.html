@@ -39,8 +39,8 @@
     <thead class="table-dark">
     <tr>
       <th>TOVAR_ID</th>
-      <th>Серійний Номер</th>
       <th>Код номенк.</th>
+      <th>Серійний Номер</th>
       <th>Найменування</th>
       <th>Підрозділ</th>
       <th>Статус</th>
@@ -51,8 +51,8 @@
     {% for row in rows %}
     <tr>
       <td >{{ row.TOVAR_ID }}</td>
-      <td class="fw-bold text-success" >{{ row.TOVAR_SER_NUM }}</td>
       <td >{{ row.KOD }}</td>
+      <td class="fw-bold text-success" >{{ row.TOVAR_SER_NUM }}</td>
       <td class="fw-bold text-primary col-limit" >{{ row.TOV_NAME }}</td>
       <td>{{ row.PLACE }}</td>
       <td >
