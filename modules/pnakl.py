@@ -132,7 +132,6 @@ def incoming_page():
     total = 0
     for nu, items,le,uil in grouped2:
         for item in items:
-            print(item)
             total = total + item['TOV_KOLVO']
     return render_template('incoming.html', grouped_data=grouped2,search=search,list_id='list_id',total = total,title = title)
 

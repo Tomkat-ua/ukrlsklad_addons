@@ -3,14 +3,48 @@ from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
-from modules import aruns,doc_tmpl
+from modules import aruns,doc_tmpl,orders_od,sklads
 #from modules import pivot,export,stat
-
+from modules import db
 app = Flask(__name__)
 
 local_ip         = config.local_ip
 
 app.secret_key = config.api_key  # потрібен для flash-повідомлень
+
+
+# Глобальна змінна (завантажується один раз при старті сервера)
+
+GLOBAL_MENU = db.data_module("SELECT * FROM WEB_MENU where env containing ? ORDER BY ORD", [config.env])
+# config.env
+
+@app.context_processor
+def inject_menu():
+    return dict(sidebar_menu=get_menu_tree())
+
+
+def get_menu_tree():
+    # 1. Отримуємо всі пункти з БД
+    raw_menu = GLOBAL_MENU#db.data_module("SELECT ID, PARENT_ID, NAME, URL, ICON, ORD FROM WEB_MENU ORDER BY ORD", [])
+
+    menu_tree = []
+    # Створюємо допоміжний словник для швидкого пошуку за ID
+    nodes = {item['ID']: {**item, 'children': []} for item in raw_menu}
+
+    for item in raw_menu:
+        node = nodes[item['ID']]
+        parent_id = item['PARENT_ID']
+
+        if parent_id is None or parent_id == '' or parent_id == 0:
+            # Це корінь (пункт першого рівня)
+            menu_tree.append(node)
+        else:
+            # Це підпункт — додаємо його в 'children' відповідного батька
+            if parent_id in nodes:
+                nodes[parent_id]['children'].append(node)
+
+    return menu_tree
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -131,9 +165,13 @@ def ghist_details(row_id):
 # @app.route("/edit/<int:row_id>")
 
 ########### SKLADS ###########################
-# @app.route("/sklad",methods = ['GET','POST'])
-# def sklad_list():
-#     return sklads.get_list()
+@app.route("/sklads",methods = ['GET','POST'])
+def sklad_list():
+    return sklads.get_list()
+
+@app.route('/sklad_save', methods=['POST'])
+def sklad_save():
+    return sklads.sklad_save()
 #
 # @app.route("/sklad/<int:sklad_id>")
 # def sklad_details(sklad_id):
@@ -176,6 +214,10 @@ def dispack_add():
 def dispack_disacc(id):
     return dispack.process_disacc(id)
 
+########### ORDERS_OD ########################
+@app.route('/orders-od')
+def order_od_list():
+    return orders_od.orders_list()
 ########### ARUNS ############################
 @app.route('/aruns')
 def aruns_l():
@@ -192,10 +234,10 @@ def print_pnakl_docs():
     return pnakl.pnakl_docs(list_id)
 
 #друк документи по приходу - single
-@app.route('/docs/<int:dot_id>/<int:doc_id>/<int:tovar_id>')
-def print_docs(dot_id,doc_id,tovar_id):
+@app.route('/docs/<int:dot_id>/<int:docs_id>/<int:tovar_id>')
+def print_docs(dot_id,docs_id,tovar_id):
     name = request.args.get('name')
-    return doc_tmpl.print_full_report(dot_id,doc_id,tovar_id,name)
+    return doc_tmpl.print_full_report(dot_id,docs_id,tovar_id,name)
 ########### MNAKL ############################
 @app.route('/mnakl',methods = ['GET','POST'])
 def mnakl_list():
