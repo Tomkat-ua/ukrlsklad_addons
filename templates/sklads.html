@@ -1,0 +1,94 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white py-1"><h5>Підрозділи (Master)</h5></div>
+            <div class="card-body p-2">
+                <table id="masterTable" class="table table-sm table-hover table-bordered w-100" style="cursor: pointer;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>NUM</th>
+                            <th>NAME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in parent %}
+                        <tr data-id="{{ p.NUM }}">
+                            <td>{{ p.NUM }}</td>
+                            <td>{{ p.NAME }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white py-1"><h5>Склади (Detail)</h5></div>
+            <div class="card-body p-2">
+                <table id="detailTable" class="table table-sm table-striped table-bordered w-100">
+                    <thead class="table-light">
+                        <tr>
+                            <th>NUM</th>
+                            <th>VISIBLE</th>
+                            <th>SKLAD_NAME</th>
+                            <th>PARENT_ID</th>
+                            <th>PARENT_NAME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in sklady %}
+                        <tr>
+                            <td>{{ s.NUM }}</td>
+                            <td>{{ "✅" if s.VISIBLE == 1 else "❌" }}</td>
+                            <td>{{ s.SKLAD_NAME }}</td>
+                            <td>{{ s.PARENT_ID }}</td>
+                            <td>{{ s.PARENT_NAME }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Ініціалізація Master-таблиці
+    var master = $('#masterTable').DataTable({
+        paging: true,
+        pageLength: 25,
+        dom: 'ftp', // Тільки фільтр та пагінація
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json' }
+    });
+
+    // Ініціалізація Detail-таблиці
+    var detail = $('#detailTable').DataTable({
+        paging: false,
+        dom: 'Bfrtip',
+        buttons: ['excel', 'copy'],
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json' }
+    });
+
+    // ЛОГІКА ЗВ'ЯЗКУ:
+    $('#masterTable tbody').on('click', 'tr', function () {
+        // Виділяємо активний рядок візуально
+        $(this).addClass('table-primary').siblings().removeClass('table-primary');
+
+        // Отримуємо ID підрозділу (NUM)
+        var masterId = $(this).data('id');
+
+        // Фільтруємо другу таблицю по колонці PARENT_ID (індекс 3, якщо рахувати з 0)
+        // column(3) - це PARENT_ID. Використовуємо точний пошук через регуляку
+        detail.column(3).search('^' + masterId + '$', true, false).draw();
+    });
+});
+</script>
+
+{% endblock %}
+
