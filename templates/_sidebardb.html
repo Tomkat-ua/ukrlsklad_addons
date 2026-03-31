@@ -1,0 +1,124 @@
+<nav id="sidebar" class="bg-dark text-white sidebar">
+  <ul class="nav flex-column">
+
+    {% for item in sidebar_menu %}
+      {# Зберігаємо індекс головного пункту, щоб використовувати його у вкладеному циклі #}
+      {% set parent_index = loop.index %}
+
+      <li class="nav-item">
+        {% if item.children %}
+          <a class="nav-link text-white d-flex justify-content-between align-items-center"
+             data-bs-toggle="collapse"
+             href="#submenu_{{ item.ID }}"
+             role="button"
+             aria-expanded="false"
+             aria-controls="submenu_{{ item.ID }}">
+            <span>
+                <i class="bi {{ item.ICON or 'bi-box' }}"></i>
+                [ {{ parent_index }} ] {{ item.NAME }}
+            </span>
+            <i class="bi bi-chevron-down small"></i>
+          </a>
+
+          <div class="collapse" id="submenu_{{ item.ID }}">
+            <ul class="nav flex-column ms-3 mt-1">
+              {% for child in item.children %}
+                <li class="nav-item">
+                  <a class="nav-link text-secondary p-1" href="{{ child.URL }}">
+                    {# Тут використовуємо збережений parent_index та поточний loop.index #}
+                    - [ {{ parent_index }}.{{ loop.index }} ] {{ child.NAME }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+        {% else %}
+          <a class="nav-link text-white" href="{{ item.URL }}">
+            <i class="bi {{ item.ICON or 'bi-circle' }}"></i>
+            [ {{ parent_index }} ] {{ item.NAME }}
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+
+  </ul>
+</nav>
+
+<style>
+    /* Основний контейнер сайдбару */
+    .sidebar {
+      height: 100vh;
+      background-color: #212529; /* Темніший колір для солідності */
+      padding-top: 1rem;
+      position: sticky;
+      top: 0;
+      overflow-y: auto; /* Додаємо прокрутку, якщо пунктів буде забагато */
+    }
+
+    /* Стилі для посилань */
+    #sidebar .nav-link {
+      color: #adb5bd !important;
+      padding: 0.8rem 1rem;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    /* Ефект наведення */
+    #sidebar .nav-link:hover {
+      color: #fff !important;
+      background-color: #343a40;
+      padding-left: 1.2rem; /* Легкий ефект зсуву */
+    }
+
+    /* Активний пункт (підсвічується через JS) */
+    #sidebar .nav-link.active {
+      color: #fff !important;
+      background-color: #0d6efd !important;
+      font-weight: 500;
+      border-radius: 4px;
+    }
+
+    /* Стилі для випадаючих списків */
+    .collapse .nav-link {
+      font-size: 0.85rem !important;
+      color: #6c757d !important;
+    }
+
+    .collapse .nav-link:hover {
+      color: #f8f9fa !important;
+    }
+
+    /* Маленька іконка стрілочки */
+    .bi-chevron-down {
+      transition: transform 0.3s ease;
+    }
+
+    /* Повертаємо стрілочку, коли меню відкрите */
+    [aria-expanded="true"] .bi-chevron-down {
+      transform: rotate(180deg);
+    }
+</style>
+
+<script>
+$(document).ready(function() {
+    let currentPath = window.location.pathname;
+
+    $('#sidebar .nav-link').each(function() {
+        let linkPath = $(this).attr('href');
+
+        if (linkPath && currentPath === linkPath) {
+            $(this).addClass('active');
+
+            // Якщо це вкладений пункт — автоматично розкриваємо батьківське меню
+            $(this).closest('.collapse').addClass('show');
+
+            // Додаємо клас active батьківській кнопці (опціонально)
+            let parentButton = $(this).closest('.collapse').prev('.nav-link');
+            if (parentButton.length) {
+                parentButton.addClass('active-parent text-white');
+            }
+        }
+    });
+});
+</script>
