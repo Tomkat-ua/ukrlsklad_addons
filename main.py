@@ -3,7 +3,7 @@ from version import __version__
 from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
-from modules import aruns,doc_tmpl,orders_od,sklads
+#from modules import aruns,doc_tmpl,orders_od,sklads
 #from modules import pivot,export,stat
 from modules import db
 app = Flask(__name__)
