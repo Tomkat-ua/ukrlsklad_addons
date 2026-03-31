@@ -1,0 +1,134 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+        <div class="input-group input-group-sm table-panell">
+            <button class="btn btn-sm btn-outline-primary"
+                    onclick="openAddModal()">➕ Новий склад
+            </button>
+        </div>
+</div>
+
+<table id="tList" class="table table-sm table-bordered align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>NUM</th>
+            <th>VISIBLE</th>
+            <th>Назва складу</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        {# Групуємо дані по полю PARENT #}
+        {% for group in data | groupby('PARENT') %}
+            {# Виводимо заголовок групи (Назва підрозділу) #}
+            <tr class="table-secondary">
+                <td colspan="3" class="fw-bold text-primary">
+                    {{ group.grouper if group.grouper else "--- Без підрозділу ---" }}
+                </td>
+            </tr>
+
+            {# Виводимо всі склади цієї групи #}
+            {% for row in group.list %}
+            <tr>
+                <td>{{ row.NUM }}</td>
+                <td class="text-center">{{ "✅" if row.VISIBLE == 1 else "❌" }}</td>
+                <td>&#8203;{{ row.SKLAD_NAME }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary" title = "Редагувати"
+                          onclick="openEditModal('{{ row.NUM }}', '{{ row.SKLAD_NAME }}', '{{ row.VISIBLE }}', '{{ row.PARENT_ID }}')">📝
+                  </button>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- MODAL -->
+<div class="modal fade" id="editSkladModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content" method="POST" action="/sklad_save">
+            <div class="modal-header">
+                <h5 class="modal-title">Редагувати склад: <span id="display_num"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="sklad_id" id="form_sklad_id">
+
+                <div class="mb-3">
+                    <label>Назва складу</label>
+                    <input type="text" name="sklad_name" id="form_name" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Підрозділ</label>
+                    <select name="parent_id" id="form_parent" class="form-select form-select-sm">
+                        <option value="">-- Без підрозділу --</option>
+                        {% for p in data_parents %}
+                            <option value="{{ p.NUM }}">{{ p.NAME }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" name="is_visible" id="form_visible" value="1" class="form-check-input">
+                    <label class="form-check-label">Видимий</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditModal(num, name, visible, parentId) {
+    // 1. Логування для відладки (відкрий консоль F12)
+    console.log("Редагування складу №:", num);
+    console.log("Отриманий ParentID:", parentId);
+
+    // 2. Базові поля
+    document.getElementById('display_num').innerText = num;
+    document.getElementById('form_sklad_id').value = num;
+    document.getElementById('form_name').value = name;
+    document.getElementById('form_visible').checked = (visible == "1");
+
+    // 3. Робота з селектором підрозділу
+    let parentSelect = document.getElementById('form_parent');
+
+    // Скидаємо вибір
+    parentSelect.value = "";
+
+    // Обробка значення: прибираємо пробіли та перевіряємо на порожнечу
+    if (parentId && parentId !== 'None' && parentId !== 'null' && parentId !== '') {
+        let cleanId = parentId.toString().trim();
+
+        // Спробуємо встановити значення
+        parentSelect.value = cleanId;
+
+        // Перевірка: якщо після встановлення value все ще порожній,
+        // значить в списку option немає такого ID
+        if (parentSelect.value !== cleanId) {
+            console.warn("Попередження: ID " + cleanId + " не знайдено в списку <option>");
+        }
+    }
+
+    new bootstrap.Modal(document.getElementById('editSkladModal')).show();
+}
+
+function openAddModal() {
+    document.getElementById('display_num').innerText = "Новий склад";
+    document.getElementById('form_sklad_id').value = ""; // Порожній ID
+    document.getElementById('form_name').value = "";
+    document.getElementById('form_parent').value = "";
+    document.getElementById('form_visible').checked = true; // За замовчуванням видимий
+
+    new bootstrap.Modal(document.getElementById('editSkladModal')).show();
+}
+
+</script>
+
+
+{% endblock %}
