@@ -228,6 +228,24 @@ def aruns_l():
 def pnakl_list():
     return pnakl.pnakl_list()
 
+########### MNAKL #############################
+@app.route('/mnakl_list',methods = ['GET','POST'])
+def mnakl_list2():
+    return mnakl.mnakl_list2()
+
+@app.route('/mnakl_details/<int:doc_id>')
+def mnakl_details(doc_id):
+    return mnakl.get_details(doc_id)
+
+@app.route('/mnakl_serials/<int:doc_id>/<int:tovar_id>')
+def mnakl_serials(doc_id, tovar_id):
+    return mnakl.get_serials(doc_id, tovar_id)
+
+@app.route('/mnakl',methods = ['GET','POST'])
+def mnakl_list():
+    return mnakl.mnakl_list()
+
+###############################################
 #друк документи по приходу - list
 @app.route('/pnakl/docs')
 def print_pnakl_docs():
@@ -239,10 +257,7 @@ def print_pnakl_docs():
 def print_docs(dot_id,docs_id,tovar_id):
     name = request.args.get('name')
     return doc_tmpl.print_full_report(dot_id,docs_id,tovar_id,name)
-########### MNAKL ############################
-@app.route('/mnakl',methods = ['GET','POST'])
-def mnakl_list():
-    return mnakl.mnakl_list()
+
 
 ########### SNAKL ############################
 @app.route('/snakl',methods = ['GET','POST'])

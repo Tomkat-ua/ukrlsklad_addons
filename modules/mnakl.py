@@ -64,7 +64,7 @@ def mnakl_list2():
                            )
 
 def get_details(doc_id):
-    sql = "SELECT PID, TOVAR_ID, TOV_NAME, TOV_KOLVO, TOV_ED FROM mnakl_ WHERE pid = ?"
+    sql = "SELECT PID, TOVAR_ID, TOV_NAME, TOV_KOLVO, TOV_ED , TOV_CENA  FROM mnakl_ WHERE pid = ?"
     data = db.data_module(sql, [doc_id])
     return jsonify(data)
 

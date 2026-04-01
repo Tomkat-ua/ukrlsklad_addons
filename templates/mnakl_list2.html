@@ -32,7 +32,7 @@
 <!--                    </div>-->
                 </div>
                 <div class="table-responsive flex-grow-1">
-                    <table class="table table-sm table-hover mb-0 sticky-header" id="table-l1">
+                    <table class="table table-sm table-hover mb-0 sticky-header w-100" id="table-l1">
                         <thead class="table-light">
                             <tr>
                                 <th width="10%">№</th>
@@ -45,7 +45,7 @@
                             {% for m in master_data %}
                             <tr onclick="loadDetails(this, '{{ m.NUM }}', '{{ m.NU }}')" class="cursor-pointer">
                                 <td><span class="badge bg-secondary">{{ m.NU }}</span></td>
-                                <td class="text-nowrap">{{ m.DATE_DOK }}</td>
+                                <td class="text-nowrap">{{ m.DATE_DOK.strftime('%d.%m.%Y') }}</td>
                                 <td class="small">{{ m.SKLAD_A }}</td>
                                 <td class="small">{{ m.SKLAD_B }}</td>
                             </tr>
@@ -64,8 +64,9 @@
                         <thead class="table-light sticky-top">
                             <tr>
                                 <th>Найменування товару</th>
+                                <th class="text-end" width="15%">Ціна</th>
                                 <th class="text-end" width="15%">Кіл-ть</th>
-                                <th width="10%">Од.</th>
+                                <th width="15%">Од.</th>
                             </tr>
                         </thead>
                         <tbody id="l2-body">
@@ -81,6 +82,16 @@
                 <div class="card-header bg-info text-dark py-1 d-flex justify-content-between align-items-center">
                     <span class="fw-bold"><i class="bi bi-qr-code"></i> Серійні номери (L3)</span>
                     <span id="l3-count" class="badge bg-white text-dark">0</span>
+
+        <button class="btn btn-xs btn-light border-secondary py-0 px-1"
+                onclick="copySerials('list')" title="Копіювати стовпчиком (для Excel)">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+        </button>
+        <button class="btn btn-xs btn-light border-secondary py-0 px-1"
+                onclick="copySerials('string')" title="Копіювати через кому">
+            <i class="bi bi-text-paragraph"></i>
+        </button>
+
                 </div>
                 <div class="table-responsive flex-grow-1 bg-white">
                     <table class="table table-sm table-striped mb-0">
@@ -106,6 +117,39 @@
 </div>
 
 <style>
+
+ /* Робимо елементи керування DataTable компактнішими */
+.dataTables_length label, .dataTables_filter label {
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
+.dataTables_filter input {
+    height: 30px;
+    margin-left: 10px;
+}
+
+.dataTables_paginate .pagination {
+    margin-bottom: 0;
+}
+
+.dataTables_paginate .page-link {
+    padding: 2px 8px;
+    font-size: 0.85rem;
+}
+
+/* Виправляємо відображення інфо-тексту */
+.dataTables_info {
+    font-size: 0.85rem;
+    padding-top: 5px !important;
+}
+
+/* Колір активної сторінки під колір нашої теми */
+.page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
     /* CSS для фіксації висоти без скролу всієї сторінки */
     body { overflow: hidden; }
 
@@ -142,26 +186,37 @@
 
 <script>
 $(document).ready(function() {
-    // Ініціалізація L1
     const tableL1 = $('#table-l1').DataTable({
-        "paging": false,          // Вимикаємо пагінацію, бо у нас свій скрол
-        "info": false,            // Ховаємо текст "Showing 1 to 10..."
-        "scrollY": "250px",       // Висота скролу (як ми хотіли)
-        "scrollCollapse": true,
+        "paging": true,            // Вмикаємо пагінацію
+        "pageLength": 10,          // Кількість рядків за замовчуванням
+        "lengthMenu": [10, 25, 50, 100], // Вибір кількості рядків користувачем
+        "searching": true,         // Пошук залишаємо
+        "info": true,              // Показувати "Записи з 1 по 10 з 500"
+        "ordering": true,          // Дозволяємо сортування колонок
+        "autoWidth": false,        // Вимикаємо авто-ширину, щоб не "стрибало"
         "language": {
-            "search": "Пошук:",   // Українізація
-            "zeroRecords": "Нічого не знайдено"
+            "url": "https://cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json" // Повна українізація
         },
-        "dom": '<"p-2 d-flex justify-content-between"f>t' // Тільки поле пошуку (f) та таблиця (t)
+        // Налаштування розташування елементів (Пошук, Таблиця, Пагінація)
+        "dom": '<"card-body p-2 d-flex justify-content-between"lf>rt<"card-footer py-2 d-flex justify-content-between"ip>',
+        "drawCallback": function() {
+            // Оновлюємо наш лічильник при кожному малюванні таблиці
+            const count = this.api().rows({ filter: 'applied' }).count();
+            $('#l1-count').text(count);
+
+            // Важливо: після переходу на іншу сторінку підсвітка може зникнути,
+            // тому ми не робимо тут нічого специфічного, подія click на tbody все обробить.
+        }
     });
 
-    // Оновлюємо наш лічильник при фільтрації
-    tableL1.on('draw', function() {
-        const count = tableL1.rows({ filter: 'applied' }).count();
-        $('#l1-count').text(count);
+    // Обробка кліку по рядку через делегування (працює навіть після зміни сторінки)
+    $('#table-l1 tbody').on('click', 'tr', function () {
+        // Видаляємо підсвітку у всіх
+        tableL1.$('tr.table-active').removeClass('table-active');
+        // Додаємо поточному
+        $(this).addClass('table-active');
     });
 });
-
 
 
 
@@ -187,11 +242,12 @@ function loadDetails(rowElement, docId, docNum) {
 
             if (data.length > 0) {
                 data.forEach(item => {
-                    html += `<tr onclick="loadSerials(this, '${docId}', '${item.TOVAR_ID}')" class="cursor-pointer">
-                                <td>${item.TOV_NAME}</td>
-                                <td class="text-end fw-bold">${item.TOV_KOLVO}</td>
-                                <td>${item.TOV_ED}</td>
-                             </tr>`;
+                            html += `<tr onclick="loadSerials(this, '${docId}', '${item.TOVAR_ID}')" class="cursor-pointer">
+                                        <td style="width: 55%;" class="text-start">${item.TOV_NAME}</td>
+                                        <td style="width: 15%;" class="text-end text-muted font-monospace small">${item.TOV_CENA}</td>
+                                        <td style="width: 15%;" class="text-end fw-bold text-primary">${item.TOV_KOLVO}</td>
+                                        <td style="width: 15%;" class="text-center">${item.TOV_ED}</td>
+                                     </tr>`;
                 });
             } else {
                 html = '<tr><td colspan="3" class="text-center text-muted">Дані відсутні</td></tr>';
@@ -244,7 +300,61 @@ function loadSerials(rowElement, docId, tovarId) {
 function clearActive(tableId) {
     document.querySelectorAll(`#${tableId} tr`).forEach(tr => tr.classList.remove('table-active'));
 }
-</script>
 
+function copySerials(type) {
+    const rows = document.querySelectorAll('#l3-body tr');
+    let serials = [];
+
+    rows.forEach(row => {
+        const snCell = row.cells[0];
+        // Перевіряємо, чи це не технічний рядок (наприклад, "Немає даних")
+        if (snCell && snCell.offsetWidth > 0 && !snCell.classList.contains('text-muted')) {
+            let text = snCell.textContent.trim();
+            if (text) serials.push(text);
+        }
+    });
+
+    if (serials.length === 0) {
+        alert('Нічого копіювати');
+        return;
+    }
+
+    let textToCopy = (type === 'list') ? serials.join('\n') : serials.join(', ');
+
+    // --- OLD SCHOOL METHOD (Працює всюди) ---
+    const textArea = document.createElement("textarea");
+    textArea.value = textToCopy;
+
+    // Робимо його невидимим, але додаємо в DOM
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            // Візуальний відгук (зміна іконки)
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('i');
+            const oldClass = icon.className;
+
+            icon.className = 'bi bi-check-lg text-success';
+            setTimeout(() => { icon.className = oldClass; }, 1500);
+        } else {
+            alert('Не вдалося скопіювати');
+        }
+    } catch (err) {
+        console.error('Fallback copy error:', err);
+        // Якщо навіть це не спрацювало, показуємо вікно, звідки можна скопіювати вручну
+        window.prompt("Браузер заблокував автокопіювання. Натисніть Ctrl+C:", textToCopy);
+    }
+
+    document.body.removeChild(textArea);
+}
+</script>
 
 {% endblock %}
