@@ -1,0 +1,250 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+    <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
+<!--        <div class="input-group input-group-sm table-panell">-->
+<!--            <input class="form-control input-serial " type="search" placeholder="Серійний..." name="search" value="{{ search }}">-->
+<!--            <button class="btn btn-success" type="submit">Шукати</button>-->
+<!--        </div>-->
+<!--        <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" onclick="copyTable()">-->
+<!--            📋 Копіювати-->
+<!--        </button>-->
+    </form>
+</div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<div class="container-fluid mt-2 px-3">
+    <div class="row" style="height: calc(100vh - 70px);">
+
+        <div class="col-md-8 d-flex flex-column h-100">
+
+            <div class="card shadow-sm mb-2 d-flex flex-column" style="flex: 2; min-height: 0;">
+                <div class="card-header bg-primary text-white py-1 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-collection"></i> Журнал накладних (L1)</span>
+<!--                    <div class="d-flex gap-2">-->
+<!--                        <input type="text" id="filterL1" class="form-control form-control-sm" placeholder="Пошук..." style="width: 150px;">-->
+<!--                        <span id="l1-count" class="badge bg-white text-dark">{{ master_data|length }}</span>-->
+<!--                    </div>-->
+                </div>
+                <div class="table-responsive flex-grow-1">
+                    <table class="table table-sm table-hover mb-0 sticky-header" id="table-l1">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="10%">№</th>
+                                <th width="15%">Дата</th>
+                                <th>Звідки (Склад А)</th>
+                                <th>Куди (Склад Б)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in master_data %}
+                            <tr onclick="loadDetails(this, '{{ m.NUM }}', '{{ m.NU }}')" class="cursor-pointer">
+                                <td><span class="badge bg-secondary">{{ m.NU }}</span></td>
+                                <td class="text-nowrap">{{ m.DATE_DOK }}</td>
+                                <td class="small">{{ m.SKLAD_A }}</td>
+                                <td class="small">{{ m.SKLAD_B }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow-sm d-flex flex-column" style="flex: 1; min-height: 0;">
+                <div class="card-header bg-secondary text-white py-1">
+                    <i class="bi bi-box-seam"></i> Склад вибраної накладної (L2)
+                </div>
+                <div class="table-responsive flex-grow-1">
+                    <table class="table table-sm table-hover mb-0" id="table-l2">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Найменування товару</th>
+                                <th class="text-end" width="15%">Кіл-ть</th>
+                                <th width="10%">Од.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="l2-body">
+                            <tr><td colspan="3" class="text-center text-muted py-4">Виберіть документ зверху...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 h-100">
+            <div class="card shadow-sm h-100 border-info d-flex flex-column">
+                <div class="card-header bg-info text-dark py-1 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-qr-code"></i> Серійні номери (L3)</span>
+                    <span id="l3-count" class="badge bg-white text-dark">0</span>
+                </div>
+                <div class="table-responsive flex-grow-1 bg-white">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Серійний номер</th>
+                                <th class="text-end">Ціна, грн</th>
+                            </tr>
+                        </thead>
+                        <tbody id="l3-body" class="font-monospace small">
+                            <tr><td colspan="2" class="text-center text-muted py-4">Очікування вибору товару...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-dark text-info py-2 fw-bold d-flex justify-content-between">
+                    <span>Разом по позиції:</span>
+                    <span id="l3-total-price">0.00</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* CSS для фіксації висоти без скролу всієї сторінки */
+    body { overflow: hidden; }
+
+    .cursor-pointer { cursor: pointer; }
+
+    /* Sticky header для всіх таблиць */
+    .sticky-header thead th {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 5;
+        box-shadow: inset 0 -1px 0 #dee2e6;
+    }
+
+    /* Підсвітка вибраного рядка */
+    .table-active {
+        background-color: #e7f1ff !important;
+        outline: 1px solid #0d6efd;
+    }
+
+    /* Анімація переходу */
+    .table-hover tbody tr {
+        transition: background-color 0.1s;
+    }
+
+    /* Тонкий скролбар для естетики */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #999; }
+</style>
+
+
+
+<script>
+$(document).ready(function() {
+    // Ініціалізація L1
+    const tableL1 = $('#table-l1').DataTable({
+        "paging": false,          // Вимикаємо пагінацію, бо у нас свій скрол
+        "info": false,            // Ховаємо текст "Showing 1 to 10..."
+        "scrollY": "250px",       // Висота скролу (як ми хотіли)
+        "scrollCollapse": true,
+        "language": {
+            "search": "Пошук:",   // Українізація
+            "zeroRecords": "Нічого не знайдено"
+        },
+        "dom": '<"p-2 d-flex justify-content-between"f>t' // Тільки поле пошуку (f) та таблиця (t)
+    });
+
+    // Оновлюємо наш лічильник при фільтрації
+    tableL1.on('draw', function() {
+        const count = tableL1.rows({ filter: 'applied' }).count();
+        $('#l1-count').text(count);
+    });
+});
+
+
+
+
+function loadDetails(rowElement, docId, docNum) {
+    // 1. Підсвітка в L1
+    // Шукаємо всі рядки в тілі таблиці L1 і прибираємо активний клас
+    const l1Table = document.getElementById('table-l1');
+    l1Table.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('table-active'));
+
+    // Додаємо підсвітку поточному рядку
+    rowElement.classList.add('table-active');
+
+    // Оновлюємо статус
+    const statusElem = document.getElementById('l1-status');
+    if(statusElem) statusElem.innerText = 'Док: ' + docNum;
+
+    // 2. Завантаження L2
+    fetch(`/mnakl_details/${docId}`)
+        .then(r => r.json())
+        .then(data => {
+            const l2Body = document.getElementById('l2-body');
+            let html = '';
+
+            if (data.length > 0) {
+                data.forEach(item => {
+                    html += `<tr onclick="loadSerials(this, '${docId}', '${item.TOVAR_ID}')" class="cursor-pointer">
+                                <td>${item.TOV_NAME}</td>
+                                <td class="text-end fw-bold">${item.TOV_KOLVO}</td>
+                                <td>${item.TOV_ED}</td>
+                             </tr>`;
+                });
+            } else {
+                html = '<tr><td colspan="3" class="text-center text-muted">Дані відсутні</td></tr>';
+            }
+
+            l2Body.innerHTML = html;
+
+            // Очищуємо L3 при зміні документа в L1
+            document.getElementById('l3-body').innerHTML = '<tr><td colspan="2" class="text-center text-muted py-4">Очікування вибору товару...</td></tr>';
+            document.getElementById('l3-count').innerText = '0';
+            document.getElementById('l3-total-price').innerText = '0.00';
+        })
+        .catch(err => console.error('Error L2:', err));
+}
+
+function loadSerials(rowElement, docId, tovarId) {
+    // 1. Підсвітка в L2
+    const l2Table = document.getElementById('table-l2');
+    l2Table.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('table-active'));
+    rowElement.classList.add('table-active');
+
+    // 2. Завантаження L3
+    fetch(`/mnakl_serials/${docId}/${tovarId}`)
+        .then(r => r.json())
+        .then(data => {
+            const l3Body = document.getElementById('l3-body');
+            let html = '';
+            let total = 0;
+
+            if (data.length > 0) {
+                data.forEach(sn => {
+                    let price = parseFloat(sn.PRICE) || 0;
+                    total += price;
+                    html += `<tr>
+                                <td class="font-monospace">${sn.TOVAR_SER_NUM}</td>
+                                <td class="text-end text-success fw-bold">${price.toFixed(2)}</td>
+                             </tr>`;
+                });
+            } else {
+                html = '<tr><td colspan="2" class="text-center text-muted py-4">Серійні номери відсутні</td></tr>';
+            }
+
+            l3Body.innerHTML = html;
+            document.getElementById('l3-count').innerText = data.length;
+            document.getElementById('l3-total-price').innerText = total.toLocaleString('uk-UA', {minimumFractionDigits: 2});
+        })
+        .catch(err => console.error('Error L3:', err));
+}
+
+function clearActive(tableId) {
+    document.querySelectorAll(`#${tableId} tr`).forEach(tr => tr.classList.remove('table-active'));
+}
+</script>
+
+
+{% endblock %}
