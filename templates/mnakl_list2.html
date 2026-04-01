@@ -35,7 +35,8 @@
                     <table class="table table-sm table-hover mb-0 sticky-header w-100" id="table-l1">
                         <thead class="table-light">
                             <tr>
-                                <th width="10%">№</th>
+                                <th width="15%">ID</th>
+                                <th width="15%">№</th>
                                 <th width="15%">Дата</th>
                                 <th>Звідки (Склад А)</th>
                                 <th>Куди (Склад Б)</th>
@@ -44,6 +45,7 @@
                         <tbody>
                             {% for m in master_data %}
                             <tr onclick="loadDetails(this, '{{ m.NUM }}', '{{ m.NU }}')" class="cursor-pointer">
+                                <td><code>{{ m.DOC_ID }} </code></td>
                                 <td><span class="badge bg-secondary">{{ m.NU }}</span></td>
                                 <td class="text-nowrap">{{ m.DATE_DOK.strftime('%d.%m.%Y') }}</td>
                                 <td class="small">{{ m.SKLAD_A }}</td>
@@ -189,7 +191,7 @@ $(document).ready(function() {
     const tableL1 = $('#table-l1').DataTable({
         "paging": true,            // Вмикаємо пагінацію
         "pageLength": 10,          // Кількість рядків за замовчуванням
-        "lengthMenu": [10, 25, 50, 100], // Вибір кількості рядків користувачем
+        "lengthMenu": [ [10, 25, 30, 50, -1], [10, 25,30, 50, "Всі"] ], // Вибір кількості рядків користувачем
         "searching": true,         // Пошук залишаємо
         "info": true,              // Показувати "Записи з 1 по 10 з 500"
         "ordering": true,          // Дозволяємо сортування колонок

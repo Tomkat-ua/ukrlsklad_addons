@@ -30,7 +30,7 @@ order by m.date_dok
     return  render_template("mnakl_list.html", title='Видача майна',data= data,search='')
 
 def mnakl_list2():
-    sql = """ select m.num,m.nu,m.date_dok ,sn_a.name as sklad_a,sn_b.name as sklad_b
+    sql = """ select m.num as doc_id, m.num,m.nu,m.date_dok ,sn_a.name as sklad_a,sn_b.name as sklad_b
                 from mnakl m
                   inner join sklad_names sn_a on sn_a.num = m.sklad_id
                   inner join sklad_names sn_b on sn_b.num = m.to_sklad_id
