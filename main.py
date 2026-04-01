@@ -4,7 +4,7 @@ from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
 from modules import aruns,sklads
-#from modules import aruns,doc_tmpl,orders_od,sklads
+from modules import doc_tmpl,orders_od
 #from modules import pivot,export,stat
 from modules import db
 app = Flask(__name__)
@@ -216,7 +216,7 @@ def dispack_disacc(id):
     return dispack.process_disacc(id)
 
 ########### ORDERS_OD ########################
-@app.route('/orders-od')
+@app.route('/orders-od',methods = ['GET','POST'])
 def order_od_list():
     return orders_od.orders_list()
 ########### ARUNS ############################
