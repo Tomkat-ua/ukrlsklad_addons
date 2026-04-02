@@ -27,9 +27,7 @@ def index():
     if request.method == "POST":
         tov_serial = request.form['tov_serial']
         tov_name   = request.form['tov_name']
-
         data = data_for_module([tov_serial,tov_name],'list')
-        print(data)
         if data:
             return render_template('ghist_.html', title=title,
                                    rows = data,

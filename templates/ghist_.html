@@ -43,6 +43,7 @@
       <th>Серійний Номер</th>
       <th>Найменування</th>
       <th>Підрозділ</th>
+      <th>Ціна</th>
       <th>Статус</th>
       <th>Дії</th>
     </tr>
@@ -55,6 +56,7 @@
       <td class="fw-bold text-success" >{{ row.TOVAR_SER_NUM }}</td>
       <td class="fw-bold text-primary col-limit" >{{ row.TOV_NAME }}</td>
       <td>{{ row.PLACE }}</td>
+      <td>{{ row.PRICE | currency_format_ua }}</td>
       <td >
         <span class="badge rounded-pill fs-6 px-3 py-2 shadow status-badge"
               style="background-color: {{ row.STATUS_COLOR }}; color: #000; border: 1px solid rgba(0,0,0,0.1);">
