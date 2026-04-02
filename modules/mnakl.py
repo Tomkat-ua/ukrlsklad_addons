@@ -3,7 +3,6 @@ import sys
 from . import db
 # import config
 
-title = 'Видача майна'
 
 def mnakl_list():
     tov_code = request.args.get('tov_code')
@@ -34,29 +33,11 @@ def mnakl_list2():
                 from mnakl m
                   inner join sklad_names sn_a on sn_a.num = m.sklad_id
                   inner join sklad_names sn_b on sn_b.num = m.to_sklad_id
-                where m.is_move = 1 and m.nu like ?
+                where m.is_move = 1 
                 order by m.num desc
                 """
     search = ''
-    if request.method == 'POST':
-        search = request.form.get('search')
-        # sql = """ select m.num,m.nu,m.date_dok ,sn_a.name as sklad_a,sn_b.name as sklad_b
-        #             from mnakl m
-        #               inner join sklad_names sn_a on sn_a.num = m.sklad_id
-        #               inner join sklad_names sn_b on sn_b.num = m.to_sklad_id
-        #             where m.is_move = 1 and m.num like ?
-        #             order by m.num desc
-        #             """
-        data = db.data_module(sql, [search])
-    else:
-        # sql = """ select m.num,m.nu,m.date_dok ,sn_a.name as sklad_a,sn_b.name as sklad_b
-        #             from mnakl m
-        #               inner join sklad_names sn_a on sn_a.num = m.sklad_id
-        #               inner join sklad_names sn_b on sn_b.num = m.to_sklad_id
-        #             where m.is_move = 1
-        #             order by m.num desc
-        #             """
-        data = db.data_module(sql,['%'])
+    data = db.data_module(sql,'')
     return render_template('mnakl_list2.html'
                            ,title = 'Накладні на переміщення'
                            ,master_data = data
@@ -64,7 +45,13 @@ def mnakl_list2():
                            )
 
 def get_details(doc_id):
-    sql = "SELECT PID, TOVAR_ID, TOV_NAME, TOV_KOLVO, TOV_ED , TOV_CENA  FROM mnakl_ WHERE pid = ?"
+    sql = ("""select
+                md.PID as doc_id ,md.TOVAR_ID
+                ,md.TOV_NAME     ,md.TOV_CENA
+                ,md.TOV_KOLVO    ,md.TOV_ED  ,tn.kod
+                from mnakl_ md
+                    inner join tovar_name tn on tn.num = md.tovar_id
+                where md.pid = ?""")
     data = db.data_module(sql, [doc_id])
     return jsonify(data)
 

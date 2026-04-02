@@ -25,7 +25,6 @@ def data_for_module(param,mod):
 def index():
     ######### LIST #######################
     if request.method == "POST":
-
         tov_serial = request.form['tov_serial']
         tov_name   = request.form['tov_name']
 

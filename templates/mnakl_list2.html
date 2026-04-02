@@ -66,9 +66,10 @@
                         <thead class="table-light sticky-top">
                             <tr>
                                 <th>Найменування товару</th>
+                                <th>Номенкл. №</th>
                                 <th class="text-end" width="15%">Ціна</th>
-                                <th class="text-end" width="15%">Кіл-ть</th>
-                                <th width="15%">Од.</th>
+                                <th class="text-end" width="10%">Кіл-ть</th>
+                                <th width="10%">Од.</th>
                             </tr>
                         </thead>
                         <tbody id="l2-body">
@@ -246,9 +247,10 @@ function loadDetails(rowElement, docId, docNum) {
                 data.forEach(item => {
                             html += `<tr onclick="loadSerials(this, '${docId}', '${item.TOVAR_ID}')" class="cursor-pointer">
                                         <td style="width: 55%;" class="text-start">${item.TOV_NAME}</td>
+                                        <td style="width: 15%;" class="text-start">${item.KOD}</td>
                                         <td style="width: 15%;" class="text-end text-muted font-monospace small">${item.TOV_CENA}</td>
-                                        <td style="width: 15%;" class="text-end fw-bold text-primary">${item.TOV_KOLVO}</td>
-                                        <td style="width: 15%;" class="text-center">${item.TOV_ED}</td>
+                                        <td style="width: 10%;" class="text-end fw-bold text-primary">${item.TOV_KOLVO}</td>
+                                        <td style="width: 10%;" class="text-center">${item.TOV_ED}</td>
                                      </tr>`;
                 });
             } else {
