@@ -20,22 +20,25 @@ def generator():
     prefix = ''
     serial_len = 0
     crow = 0
+    date_ = gen_date()
     if request.method == 'POST':
         prefix = request.form.get('pref','').strip()
         serial_len = int(request.form.get('len','').strip())
         crow = int(request.form.get('crow', '0').strip() or 0)
+        date_ = request.form.get('date', '0').strip() or gen_date()
         prefix_len = len(prefix)
         for n in range(1,crow + 1):
             tail = str(n)
-            if prefix_len + len(tail)+len(gen_date()) < serial_len:
-                tail = tail.rjust(serial_len - prefix_len - len(gen_date()),"0")
-            result.append(prefix+gen_date() +tail)
+            if prefix_len + len(tail) + len(date_) < serial_len:
+                tail = tail.rjust(serial_len - prefix_len - len(date_),"0")
+            result.append(prefix + date_ +tail)
     return render_template('serials_gen.html'
                            ,title = 'Генерація серійників'
                            ,data  = result
                            ,pref  = prefix
                            ,len   = serial_len
-                           ,crow  = crow)
+                           ,crow  = crow
+                           ,date  = date_)
 
 
 
