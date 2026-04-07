@@ -44,8 +44,10 @@
                         <button class="btn btn-success btn-sm w-100 fw-bold shadow-sm" type="submit">
                             ✨ Генерувати
                         </button>
+                        <button class="btn btn-secondary btn-sm w-100 fw-bold shadow-sm" onclick="copyTable()">
+                            📋 Копіювати
+                        </button>
                     </div>
-
                 </div>
             </form>
         </div>
@@ -53,17 +55,20 @@
 </div>
 
 <table id="tList">
-   <tr>
-     <th></th>
-   </tr>
-<tbody>
+   <thead>
+    <tr>
+       <th>SERIALS</th>
+    </tr>
+   </thead>
+   <tbody>
 {% for row in data %}
-  <tr>
-      <td> {{ row }}</td>
-  </tr>
+    <tr>
+       <td> {{ row }}</td>
+    </tr>
 {% endfor %}
-</tbody>
+    </tbody>
 </table>
 
-<!--<script src="{{ url_for('static', filename='js/tables.js') }}"></script>-->
+<script src="{{ url_for('static', filename='js/tables.js') }}"></script>
+
 {% endblock %}
