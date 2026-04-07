@@ -3,16 +3,29 @@
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
         <form class="d-flex align-items-center gap-2 m-0" method="post" style="flex-grow: 1; max-width: 800px;">
-            <input class="form-control input-serial " type="search" placeholder="Префікс..." name="pref">
-            <input class="form-control input-serial " type="number" placeholder="Довжина..." name="len">
-            <input class="form-control input-serial " type="number" placeholder="Кількість..." name="crow">
+<div class="row g-3">
+    <div class="col-md-4">
+        <label for="pref" class="form-label text-secondary small">Серійний префікс</label>
+        <input class="form-control" type="search" id="pref" name="pref" placeholder="Напр: ABC" value="{{ pref }}">
+    </div>
+    <div class="col-md-4">
+        <label for="len" class="form-label text-secondary small">Довжина номера</label>
+        <input class="form-control" type="number" id="len" name="len" placeholder="0" value="{{ len }}">
+    </div>
+    <div class="col-md-4">
+        <label for="crow" class="form-label text-secondary small">Кількість рядків</label>
+        <input class="form-control" type="number" id="crow" name="crow" placeholder="0" value="{{ crow }}">
+    </div>
+</div>
             <button class="btn btn-success" type="submit">Генерувати</button>
-            <button type="button" class="btn btn-outline-dark btn-sm text-nowrap"> 📋 Копіювати</button>
+<!--            <button type="button" class="btn btn-outline-dark btn-sm text-nowrap"> 📋 Копіювати</button>-->
+
+
     </form>
 </div>
 
 
-<table>
+<table id="tList">
    <tr>
      <th>Номер</th>
    </tr>
@@ -25,5 +38,5 @@
 </tbody>
 </table>
 
-
+<!--<script src="{{ url_for('static', filename='js/tables.js') }}"></script>-->
 {% endblock %}

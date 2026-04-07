@@ -16,10 +16,10 @@ def gen_date():
 
 
 def generator():
-    # prefix = ''
-    # serial_len=0
-    # crow = 0
     result = []
+    prefix = ''
+    serial_len = 0
+    crow = 0
     if request.method == 'POST':
         prefix = request.form.get('pref','').strip()
         serial_len = int(request.form.get('len','').strip())
@@ -32,7 +32,10 @@ def generator():
             result.append(prefix+gen_date() +tail)
     return render_template('serials_gen.html'
                            ,title = 'Генерація серійників'
-                           ,data = result)
+                           ,data  = result
+                           ,pref  = prefix
+                           ,len   = serial_len
+                           ,crow  = crow)
 
 
 
