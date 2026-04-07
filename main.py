@@ -4,7 +4,7 @@ from flask import Flask, render_template,request
 from gevent.pywsgi import WSGIServer
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
 from modules import aruns,sklads
-from modules import doc_tmpl,orders_od,serial_gen
+from modules import doc_tmpl,orders_od#,serial_gen
 #from modules import pivot,export,stat
 from modules import db
 app = Flask(__name__)
