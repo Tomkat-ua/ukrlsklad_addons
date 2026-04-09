@@ -23,12 +23,6 @@ def snakl_list():
 
 def snakl_det(id):
     title = 'Списання/Деталі'
-    # menu.append('Деталі')
-
-    # sql_h = """ select s.num,s.nu,s.date_dok
-    #             ,sn.name as sklad_name from snakl s
-    #              inner  join sklad_names sn on sn.num = s.sklad_id
-    #             where s.num = ? """
     sql_h = """ select
 s.num,s.nu, cast(USER_DOC_DATE as date) as date_dok
 ,s.sklad_NAME

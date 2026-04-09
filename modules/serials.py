@@ -13,12 +13,6 @@ def serials_search():
         sql = "select serial from usadd_web.get_serials_by_tov_sklads(?,?)"
         tov_id = request.form.get('search_tovar', '').strip()
         sklad_id = request.form.get('sklad_id', '').strip() or None
-        print('sklad_id',sklad_id)
-        # if sklad_id == "None":
-        #     sklad_id = None
-        # if sklad_id == None:
-        #     print('ALL SKLADS !!!!!!!!')
-
         result= db.data_module(sql, [tov_id, sklad_id])
         total = len(result)
         sql = "select tn.name from tovar_name tn where tn.num = ?"
@@ -50,32 +44,34 @@ def serials_check():
     # Розбиваємо текст на рядки та видаляємо зайві пробіли
     serial_list = [line.strip() for line in raw_data.split('\n') if line.strip()]
     raw_text = request.form.get('serials', '')
-    results = []
     formatted_serials = ",".join([str(s).strip() for s in serial_list])
     sql_list = 'select * from usadd_web.GET_SERIALS_LIST(?)'
     data_serials = db.data_module(sql_list,[formatted_serials])
-    results = []
     total_acc = 0  # На обліку
     total_sap = 0  # Списано
     total_err = 0  # Не знайдено
     total = len(data_serials)
 
-    for row in data_serials:
-        print(row['STATUS_COLOR'])
-        sn = row['TOVAR_SER_NUM']
-        if row['NAME']:  # Якщо ім'я товару є, значить знайшли в базі
-            dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
-            status_text = f"""{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} 
-            | {row['SKLAD_NAME']} {dup_label} | {row['PRICE']}"""
-            state = row['STATUS'].strip() if row['STATUS'] else ""
-            if state == 'На обліку':
-                total_acc += 1
-            elif state == 'Списано (акт пуску)':
-                total_sap += 1
-        else:
-            status_text = "Не знайдено"
-            total_err += 1
-        results.append({'sn': sn, 'status': status_text,'c_ex':row['C_EX'] })
+    # errors = []
+    # for row in data_serials:
+    #     # sn = row['TOVAR_SER_NUM']
+    #     if row['NAME']:  # Якщо ім'я товару є, значить знайшли в базі
+
+            # dup_label = f" [--- ДУБЛЬ: {row['C_EX']} ---]" if row['C_EX'] > 1 else ""
+
+            # status_text = f"""{row['NUM']} | {row['KOD']} | {row['NAME']} | {row['STATUS']} | {row['SKLAD_NAME']} {dup_label} | {row['PRICE']}"""
+
+            # state = row['STATUS'].strip() if row['STATUS'] else ""
+
+            # if state == 'На обліку':
+            #     total_acc += 1
+            # elif state == 'Списано (акт пуску)':
+            #     total_sap += 1
+            # data_serials.append(dup_label)
+        # else:
+        #     status_text = "Не знайдено"
+        #     total_err += 1
+        # results.append({'sn': sn, 'status': status_text,'c_ex':row['C_EX'] })
 
 
 #### GROUP LIST #############3
@@ -95,7 +91,10 @@ def serials_check():
         is_multi_sklad = len(unique_sklads) > 1
         main_sklad = list(unique_sklads)[0] if unique_sklads else None
 
-    return render_template('serial_check.html', results=results,
+    for row in data_serials:
+        print(row)
+
+    return render_template('serial_check.html', #results=results,
                            raw_data=raw_text,
                            total=total,
                            total_err=total_err,
