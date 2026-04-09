@@ -91,9 +91,6 @@ def serials_check():
         is_multi_sklad = len(unique_sklads) > 1
         main_sklad = list(unique_sklads)[0] if unique_sklads else None
 
-    for row in data_serials:
-        print(row)
-
     return render_template('serial_check.html', #results=results,
                            raw_data=raw_text,
                            total=total,
