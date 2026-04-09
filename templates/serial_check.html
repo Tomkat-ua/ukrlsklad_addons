@@ -95,7 +95,6 @@
             <th>STATUS</th>
             <th>SKLAD_NAME</th>
             <th>KIT_TYPE</th>
-            <th>ERRORS</th>
         </tr>
     </thead>
     <tbody>
@@ -109,14 +108,11 @@
             <td>{{ row.STATUS }}</td>
             <td>{{ row.SKLAD_NAME }}</td>
             <td>{{ row.KIT_TYPE }}</td>
-            <td>{{ row.ERRORS }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<!--{% for row in results%}-->
-<!--<p>{{ results }}</p> <br>-->
-<!--{% endfor %}-->
+
 
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
