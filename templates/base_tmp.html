@@ -226,23 +226,26 @@ function downloadTableAsCSV(fileName) {
 }
 
 function downloadTableAsXLSX(fileName, widths=null) {
-    if (!fileName) fileName = "table"; // дефолт
+    if (!fileName) fileName = "table";
 
-        const now = new Date();
-        const datePart = now.toISOString().split('T')[0]; // 2025-10-09
-        const time = now.toTimeString().split(' ')[0];    // 16:47:33
-        const [hours, minutes] = time.split(':');
-        const timePart = `${hours}-${minutes}`;           // 16-47
-        const fileNameFull = `${fileName}_${datePart}_${timePart}`;
+    const now = new Date();
+    const datePart = now.toISOString().split('T')[0];
+    const time = now.toTimeString().split(' ')[0];
+    const [hours, minutes] = time.split(':');
+    const timePart = `${hours}-${minutes}`;
+    const fileNameFull = `${fileName}_${datePart}_${timePart}`;
 
-    // Якщо передані ширини — використовуємо їх
+    let table = document.getElementById("tList");
+    let wb = XLSX.utils.book_new();
+
+    // ДОДАЄМО {raw: true} — це зчитає дані як текст і Excel не буде їх ламати
+    let ws = XLSX.utils.table_to_sheet(table, { raw: true });
+
+    // ВИПРАВЛЕНО: переносимо налаштування ширини сюди (ПІСЛЯ створення ws)
     if (widths && Array.isArray(widths)) {
         ws['!cols'] = widths.map(px => ({ wch: Math.round(px / 7) }));
     }
 
-    let table = document.getElementById("tList");
-    let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.table_to_sheet(table);
     XLSX.utils.book_append_sheet(wb, ws, "Таблиця");
     XLSX.writeFile(wb, fileNameFull + ".xlsx");
     alert(`✅ Файл "${fileNameFull}.xlsx" збережено`);
