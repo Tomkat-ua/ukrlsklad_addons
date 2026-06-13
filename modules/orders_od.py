@@ -10,5 +10,4 @@ def orders_list():
     else:
         sql = " select * from usadd_web.orders_od  "
         data = db.data_module(sql,'')
-    print(data)
     return render_template('orders_od.html',title = 'Накази ОД',data = data,search = search)
