@@ -1,0 +1,100 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+
+    <form class="d-flex align-items-center gap-2 m-0" method="GET" style="flex-grow: 1; max-width: 900px;">
+        <div class="input-group input-group-sm">
+
+            <!-- Склад -->
+            <span class="input-group-text bg-white">🏭 Склад</span>
+            <select class="form-select" name="sklad_id" required>
+                {% for sklad in sklads %}
+                    <option value="{{ sklad.SKLAD_ID }}" {% if sklad.SKLAD_ID|int == sklad_id_select|int %}selected{% endif %}>
+                        {{ sklad.NAME }}
+                    </option>
+                {% endfor %}
+            </select>
+            <!-- ДАТА З (автоматично буде "сьогодні - 30 днів") -->
+            <span class="input-group-text bg-white ms-2">З</span>
+            <input type="date" class="form-control" name="from_date" value="{{ from_date }}">
+
+            <!-- ДАТА ПО (автоматично буде "сьогодні") -->
+            <span class="input-group-text bg-white ms-1">По</span>
+            <input type="date" class="form-control" name="to_date" value="{{ to_date }}">
+
+            <button class="btn btn-primary fw-bold ms-1" type="submit">
+                🔍 Показати
+            </button>
+
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive border rounded shadow-sm">
+    <table class="table table-sm table-hover  align-middle mb-0">
+        <thead class="table-dark text-nowrap align-middle">
+            <tr>
+<!--                <th scope="col" class="text-center" style="width: 40px;">#</th>-->
+                <th scope="col">ID<br>товару</th>
+                <th scope="col">Код<br>номенкл.</th>
+                <th scope="col">Найменування<br>товару</th>
+                <th scope="col" class="text-center">Од.<br>вим.</th>
+                <th scope="col" class="text-end">Початковий<br>залишок</th>
+                <th scope="col" class="text-end text-success">Прихід</th>
+                <th scope="col" class="text-end text-danger">Видача</th>
+                <th scope="col" class="text-end fw-bold">Кінцевий<br>залишок</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+<!--                    <td class="text-center text-muted fs-7">{{ loop.index }}</td>-->
+                    <td><code>
+                        <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_id=row.TOV_ID, from_date=from_date, to_date=to_date) }}"
+                           target="_blank"
+                           class="text-decoration-none "
+                           title="Рух по ID товару" >
+                            {{ row.TOV_ID }}
+                        </a>
+                    </code></td>
+                    <!-- Код товару як посилання в деталізацію -->
+                    <td><code>
+                        <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_kod=row.TOV_KOD, from_date=from_date, to_date=to_date) }}"
+                           target="_blank"
+                           class="text-decoration-none "
+                           title="Рух по коду номентклатури" >
+                            {{ row.TOV_KOD }}
+                        </a>
+                    </code></td>
+                    <td>{{ row.TOV_NAME }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border">{{ row.ED_IZM }}</span>
+                    </td>
+                    <td class="text-end">
+                        {{ "{:,.2f}".format(row.TOTAL_B) if row.TOTAL_B is not none else "0.00" }}
+                    </td>
+                    <td class="text-end text-success">
+                        {{ "{:,.2f}".format(row.Q_IN) if row.Q_IN is not none else "0.00" }}
+                    </td>
+                    <td class="text-end text-danger">
+                        {{ "{:,.2f}".format(row.Q_OUT) if row.Q_OUT is not none else "0.00" }}
+                    </td>
+                    <td class="text-end fw-bold bg-light">
+                        {{ "{:,.2f}".format(row.TOTAL_E) if row.TOTAL_E is not none else "0.00" }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">
+                        📁 Даних за вибраними параметрами (склад / дати) не знайдено.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}

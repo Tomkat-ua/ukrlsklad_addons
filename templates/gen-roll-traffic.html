@@ -1,0 +1,113 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+    <h5 class="mb-0 me-3">{{ title }}</h5>
+
+    <form class="d-flex align-items-center gap-2 m-0" method="GET" style="flex-grow: 1; max-width: 900px;">
+        <div class="input-group input-group-sm">
+
+            <!-- Склад -->
+            <span class="input-group-text bg-white">🏭 Склад</span>
+            <select class="form-select" name="sklad_id" required>
+                {% for sklad in sklads %}
+                    <option value="{{ sklad.SKLAD_ID }}" {% if sklad.SKLAD_ID|int == sklad_id_select|int %}selected{% endif %}>
+                        {{ sklad.NAME }}
+                    </option>
+                {% endfor %}
+            </select>
+            <!-- ДАТА З (автоматично буде "сьогодні - 30 днів") -->
+            <span class="input-group-text bg-white ms-2">З</span>
+            <input type="date" class="form-control" name="from_date" value="{{ from_date }}">
+
+            <!-- ДАТА ПО (автоматично буде "сьогодні") -->
+            <span class="input-group-text bg-white ms-1">По</span>
+            <input type="date" class="form-control" name="to_date" value="{{ to_date }}">
+
+            <button class="btn btn-primary fw-bold ms-1" type="submit">
+                🔍 Показати
+            </button>
+
+        </div>
+    </form>
+</div>
+
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 75vh;">
+            <table class="table table-sm table-hover table-striped align-middle mb-0 border-top">
+                <thead class="table-dark text-nowrap align-middle sticky-top">
+                    <tr>
+                        <th scope="col" class="text-center" style="width: 40px;">#</th>
+                        <th scope="col" class="text-center">Тип</th>
+                        <th scope="col">Дата<br>документа</th>
+                        <th scope="col">№ Документа</th>
+                        <th scope="col">Тип документа</th>
+                        <th scope="col">Код<br>товару</th>
+                        <th scope="col">Найменування товару</th>
+                        <th scope="col" class="text-end">Кількість</th>
+                        <th scope="col" class="text-end">Ціна</th>
+                        <th scope="col" class="text-end">Сума</th>
+                        <th scope="col">Контрагент / Клієнт</th>
+                        <th scope="col">Примітка / Опис</th>
+                    </tr>
+                </thead>
+                <tbody>
+{% for row in data %}
+    <!-- Прихід, якщо кількість більше 0 АБО BALANCE дорівнює '+', '1' чи 1 -->
+    {% set is_plus = (row.TOV_KOLVO|default(0)|float > 0) or (row.BALANCE|string in ['+', '1']) %}
+
+    <tr>
+        <td class="text-center text-muted fs-7">{{ loop.index }}</td>
+
+        <!-- 2. BALANCE (+/-) Бейдж -->
+        <td class="text-center">
+            {% if is_plus %}
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 fs-7">+ Прихід</span>
+            {% else %}
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 fs-7">- Витрата</span>
+            {% endif %}
+        </td>
+
+        <td class="text-nowrap fs-7">{{ row.DOC_DATE | default('') }}</td>
+        <td class="fw-bold text-nowrap">{{ row.DOC_NU | default('') }}</td>
+        <td class="fs-7 text-muted text-nowrap">{{ row.DOC_TYPE_NAME | default('') }}</td>
+        <td class="fw-bold text-nowrap">{{ row.TOV_KOD | default('') }}</td>
+        <td class="text-wrap" style="min-width: 200px;">{{ row.TOV_NAME | default('') }}</td>
+
+        <!-- 8. Кількість з блідо-зеленим або жовтим фоном -->
+        <td class="text-end fw-bold text-nowrap {% if is_plus %}bg-success-subtle text-success{% else %}bg-warning-subtle text-dark{% endif %}">
+            {{ "{:,.2f}".format(row.TOV_KOLVO | default(0)) }}
+        </td>
+
+        <td class="text-end text-muted text-nowrap">
+            {{ "{:,.2f}".format(row.TOV_CENA | default(0)) }}
+        </td>
+
+        <!-- 10. Сума -->
+        <td class="text-end fw-semibold text-nowrap">
+            {% if row.TOV_KOLVO is defined and row.TOV_CENA is defined %}
+                {{ "{:,.2f}".format(row.TOV_KOLVO|float * row.TOV_CENA|float) }}
+            {% else %}
+                0.00
+            {% endif %}
+        </td>
+
+        <td class="text-nowrap fs-7" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+            {{ row.CLIENT_NAME | default('—') }}
+        </td>
+        <td class="text-muted fs-7 text-wrap" style="min-width: 180px;">
+            {{ row.DOC_DESCR | default('') }}
+        </td>
+    </tr>
+{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

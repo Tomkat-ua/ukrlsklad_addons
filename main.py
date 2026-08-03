@@ -271,16 +271,22 @@ def snakl_det(id):
     return snakl.snakl_det(id)
 
 ########### PACKS ############################
-@app.route('/packs',methods=['GET', 'POST'])
-def packs_list():
-    print(request.method)
-    if request.method == 'GET':
-        return packs.packs_get()
-    if request.method == 'POST':
-        return packs.packs_post()
-@app.route('/packs_details/<int:master_id>')
-def packs_det(master_id):
-    return packs.get_details(master_id)
+@app.route('/packs_list')
+def pack_list():
+    return packs.packs_list()
+
+@app.route('/pack/create', methods=['POST'])
+def pack_create():
+    return packs.pack_create()
+
+@app.route('/pack/edit/<int:pack_num>')
+def pack_edit(pack_num):
+    return packs.pack_edit_page(pack_num)
+
+# @app.route('/pack/save_details/<int:pack_num>', methods=['POST'])
+# def pack_save():
+#     return packs.
+
 
 ########### SERIALS CHECK ####################
 @app.route('/scheck',methods=['GET','POST'])
@@ -292,7 +298,22 @@ def run_1():
     return serials.add_to_actv()
 #############################################################################################
 ########### TEST #############################
-from itertools import groupby
+from modules  import gen_roll
+@app.route('/gen_roll/uv',methods = ['GET','POST'])
+def uv():
+    sklad_id = request.args.get('sklad_id')
+    from_date_str = request.args.get('from_date')  # "2026-08-01"
+    to_date_str = request.args.get('to_date')  # "2026-08-01"
+    return gen_roll.uv_sklad(sklad_id,from_date_str,to_date_str)
+
+@app.route('/gen_roll/traffic',methods = ['GET','POST'])
+def traffic():
+    sklad_id      = request.args.get('sklad_id')
+    from_date_str = request.args.get('from_date')  # "2026-08-01"
+    to_date_str   = request.args.get('to_date')  # "2026-08-01"
+    tov_id_str    = request.args.get('tov_id')
+    tov_kod_str   = request.args.get('tov_kod')
+    return gen_roll.traffic_sklad(sklad_id,from_date_str,to_date_str,tov_id_str,tov_kod_str)
 
 
 @app.route('/incoming',methods = ['GET','POST'])
