@@ -61,7 +61,7 @@
 <!--                    <th scope="col" class="text-center" style="width: 40px;">#</th>-->
                     <th scope="col" class="text-center" style="width: 50px;">Тип</th>
                     <th scope="col" style="width: 100px;">Дата<br>документа</th>
-                    <th scope="col" style="width: 100px;">№<br>Документа</th>
+                    <th scope="col" style="width: 150px;">№<br>Документа</th>
                     <th scope="col" style="width: 150px;">Тип<br>документа</th>
                     <th scope="col" style="width: 100px;">Код<br>товару</th>
                     <th scope="col" style="min-width: 300px;">Найменування товару</th>
@@ -112,7 +112,7 @@
                         <td class="fs-7 font-monospace fw-bold text-primary-emphasis" style="max-width: 200px;">
                                 {{ row.CLIENT_NAME }}
                         </td>
-                        <td class="text-muted fs-7" style="max-width: 250px;">
+                        <td style="max-width: 380px; font-size: 13px;">
                             {{ row.DOC_DESCR | default('') }}
                         </td>
                     </tr>
