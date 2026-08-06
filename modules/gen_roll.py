@@ -48,15 +48,26 @@ def uv_sklad(sklad_id=None, from_date_str=None, to_date_str=None):
 
 
 
-def traffic_sklad(sklad_id, from_date_str=None, to_date_str=None,tov_id_str=None,tov_kod_str=None):
-    from_date, to_date = parse_dates(from_date_str, to_date_str)
-    tov_id = None
-    if tov_id_str:
-        tov_id = int(tov_id_str)
+def traffic_sklad(sklad_id, from_date_str=None, to_date_str=None,tov_id=None,tov_kod_str=None):
+    data = ''
+    if not sklad_id:
+        sklad_id = request.args.get('sklad_id', 300000001)
+
+    # from_date, to_date = parse_dates(from_date_str, to_date_str)
+    # tov_id = None
+
+    # Дати
+    today = datetime.now().date()
+    default_from = today - timedelta(days=30)
+    from_date = from_date_str if from_date_str else default_from.strftime('%Y-%m-%d')
+    to_date = to_date_str if to_date_str else today.strftime('%Y-%m-%d')
 
     sklads = sklad_list()
-    sql = 'select * from general_roll.traffic_sklad(?,?,?,?,?)'
-    data = db.data_module(sql, [int(sklad_id), from_date, to_date,tov_id,tov_kod_str])
+
+    if request.args:
+
+        sql = 'select * from general_roll.traffic_sklad(?,?,?,?,?)'
+        data = db.data_module(sql, [int(sklad_id), from_date, to_date,tov_id,tov_kod_str])
     return render_template('gen-roll-traffic.html',
                            data=data,
                            title='Рух майна по підрозділу',

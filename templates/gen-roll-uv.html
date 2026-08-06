@@ -32,9 +32,11 @@
     </form>
 </div>
 
-<div class="table-responsive border rounded shadow-sm">
-    <table class="table table-sm table-hover  align-middle mb-0">
-        <thead class="table-dark text-nowrap align-middle">
+<!-- Додано max-height та overflow-auto для внутрішнього скролу -->
+<div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh;">
+    <table class="table table-sm table-hover align-middle mb-0">
+        <!-- Додано sticky-top position-sticky top-0 для фіксації заголовка -->
+        <thead class="table-dark text-nowrap align-middle sticky-top position-sticky top-0" style="z-index: 2;">
             <tr>
 <!--                <th scope="col" class="text-center" style="width: 40px;">#</th>-->
                 <th scope="col">ID<br>товару</th>
@@ -95,6 +97,5 @@
         </tbody>
     </table>
 </div>
-
 
 {% endblock %}
