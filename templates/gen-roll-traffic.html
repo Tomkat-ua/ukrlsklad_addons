@@ -45,14 +45,21 @@
                         </label>
                     </div>
                 </div>
+            <!-- ПРИХОВАНІ ПОЛЯ ДЛЯ ПЕРЕДАЧІ TOV_ID ТА TOV_KOD -->
+        {% if request.args.get('tov_id') %}
+            <input type="hidden" name="tov_id" value="{{ request.args.get('tov_id') }}">
+        {% endif %}
 
-                </div>
-            </form>
-        </div>
+        {% if request.args.get('tov_kod') %}
+            <input type="hidden" name="tov_kod" value="{{ request.args.get('tov_kod') }}">
+        {% endif %}
+            </div>
+        </form>
+    </div>
 
     <!-- ТАБЛИЦЯ Z ЗАХИСТОМ ВІД ДОВГИХ СЛІВ, ФІКСОВАНИМ ЗАГОЛОВКОМ ТА ЗАКРУГЛЕННЯМИ -->
     <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh; width: 100%;">
-        <table class="table table-sm table-hover table-striped align-middle mb-0"
+        <table class="table table-sm table-hover  align-middle mb-0"
                style="word-break: break-word; overflow-wrap: anywhere;">
 
             <!-- Фіксація заголовку -->
@@ -75,8 +82,6 @@
                     {% set is_plus = (row.TOV_KOLVO|default(0)|float > 0) or (row.BALANCE|string in ['+', '1']) %}
 
                     <tr>
-<!--                        <td class="text-center text-muted fs-7">{{ loop.index }}</td>-->
-
                         <td class="text-center">
                             {% if is_plus %}
                                 <span class="badge bg-success-subtle text-success border border-success-subtle px-2 fs-7"> + </span>
