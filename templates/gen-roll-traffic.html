@@ -64,7 +64,7 @@
                     <th scope="col" style="width: 100px;">№<br>Документа</th>
                     <th scope="col" style="width: 150px;">Тип<br>документа</th>
                     <th scope="col" style="width: 100px;">Код<br>товару</th>
-                    <th scope="col" style="min-width: 220px;">Найменування товару</th>
+                    <th scope="col" style="min-width: 300px;">Найменування товару</th>
                     <th scope="col" class="text-end" style="width: 100px;">Кількість</th>
                     <th scope="col" class="text-end" style="width: 90px;">Ціна</th>
                     <th scope="col" style="min-width: 100px;">Контрагент / Клієнт</th>
@@ -88,14 +88,15 @@
 
 <!--                        <td class="text-nowrap fs-7">{{ row.DOC_DATE | default('') }}</td>-->
                         <td class="text-nowrap fs-7">{{ (row.DOC_DATE | string)[:10] if row.DOC_DATE else '' }}</td>
-                        <td class="fw-bold text-nowrap">{{ row.DOC_NU | default('') }}</td>
-                        <td class="fs-7 text-muted">{{ row.DOC_TYPE_NAME | default('') }}</td>
-                        <td class="fw-bold text-nowrap">{{ row.TOV_KOD | default('') }}</td>
+                        <td class="fs-7 font-monospace fw-bold text-primary-emphasis">{{ row.DOC_NU | default('') }}</td>
+<!--                        <td class="fs-7 text-muted">{{ row.DOC_TYPE_NAME | default('') }}</td>-->
+                        <td style="max-width: 300px; font-size: 13px;">{{ row.DOC_TYPE_NAME | default('') }}</td>
+                        <td class="fs-7 font-monospace fw-bold text-primary-emphasis">{{ row.TOV_KOD | default('') }}</td>
 
                         <!-- Примусове ламання довгих текстових блоків -->
 <!--                        <td style="max-width: 300px;">{{ row.TOV_NAME | default('') }}</td>-->
 <!--                        <td class="fs-7 text-wrap" style="max-width: 300px;">{{ row.TOV_NAME | default('') }}</td>-->
-                        <td style="max-width: 300px; font-size: 13px;">{{ row.TOV_NAME | default('') }}</td>
+                        <td style="max-width: 380px; font-size: 13px;">{{ row.TOV_NAME | default('') }}</td>
 
                         <td class="text-end fw-bold text-nowrap {% if is_plus %}bg-success-subtle text-success{% else %}bg-warning-subtle text-dark{% endif %}">
                             {{ "{:,.2f}".format(row.TOV_KOLVO | default(0)) }}
@@ -105,10 +106,12 @@
                             {{ "{:,.2f}".format(row.TOV_CENA | default(0)) }}
                         </td>
 
-                        <td class="fs-7" style="max-width: 200px;">
-                            {{ row.CLIENT_NAME | default('—') }}
+<!--                        <td class="fs-7" style="max-width: 200px;">-->
+<!--                            {{ row.CLIENT_NAME | default('—') }}-->
+<!--                        </td>-->
+                        <td class="fs-7 font-monospace fw-bold text-primary-emphasis" style="max-width: 200px;">
+                                {{ row.CLIENT_NAME }}
                         </td>
-
                         <td class="text-muted fs-7" style="max-width: 250px;">
                             {{ row.DOC_DESCR | default('') }}
                         </td>
