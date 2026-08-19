@@ -16,11 +16,11 @@
                     </option>
                 {% endfor %}
             </select>
-            <!-- ДАТА З (автоматично буде "сьогодні - 30 днів") -->
+            <!-- ДАТА З -->
             <span class="input-group-text bg-white ms-2">З</span>
             <input type="date" class="form-control" name="from_date" value="{{ from_date }}">
 
-            <!-- ДАТА ПО (автоматично буде "сьогодні") -->
+            <!-- ДАТА ПО -->
             <span class="input-group-text bg-white ms-1">По</span>
             <input type="date" class="form-control" name="to_date" value="{{ to_date }}">
 
@@ -30,15 +30,21 @@
 
         </div>
     </form>
+
+    <!-- ПОЛЕ МИТТЄВОГО ПОШУКУ ПО ТАБЛИЦІ -->
+    <div class="ms-auto" style="min-width: 220px;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-text bg-white">🔎</span>
+            <input type="text" id="tableSearchInput" class="form-control" placeholder="Пошук у таблиці...">
+        </div>
+    </div>
 </div>
 
-<!-- Додано max-height та overflow-auto для внутрішнього скролу -->
+<!-- Контейнер таблиці -->
 <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh;">
-    <table class="table table-sm table-hover align-middle mb-0">
-        <!-- Додано sticky-top position-sticky top-0 для фіксації заголовка -->
+    <table class="table table-sm table-hover align-middle mb-0" id="mainDataTable">
         <thead class="table-dark text-nowrap align-middle sticky-top position-sticky top-0" style="z-index: 2;">
             <tr>
-<!--                <th scope="col" class="text-center" style="width: 40px;">#</th>-->
                 <th scope="col">ID<br>товару</th>
                 <th scope="col">Код<br>номенкл.</th>
                 <th scope="col">Найменування<br>товару</th>
@@ -53,21 +59,19 @@
         <tbody>
             {% for row in data %}
                 <tr>
-<!--                    <td class="text-center text-muted fs-7">{{ loop.index }}</td>-->
                     <td><code>
                         <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_id=row.TOV_ID, from_date=from_date, to_date=to_date) }}"
                            target="_blank"
-                           class="text-decoration-none "
+                           class="text-decoration-none"
                            title="Рух по ID товару" >
                             {{ row.TOV_ID }}
                         </a>
                     </code></td>
-                    <!-- Код товару як посилання в деталізацію -->
                     <td><code>
                         <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_kod=row.TOV_KOD, from_date=from_date, to_date=to_date) }}"
                            target="_blank"
-                           class="text-decoration-none "
-                           title="Рух по коду номентклатури" >
+                           class="text-decoration-none"
+                           title="Рух по коду номенклатури" >
                             {{ row.TOV_KOD }}
                         </a>
                     </code></td>
@@ -93,7 +97,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="8" class="text-center py-4 text-muted">
+                    <td colspan="9" class="text-center py-4 text-muted">
                         📁 Даних за вибраними параметрами (склад / дати) не знайдено.
                     </td>
                 </tr>
@@ -101,5 +105,18 @@
         </tbody>
     </table>
 </div>
+
+<!-- Скрипт миттєвої фільтрації -->
+<script>
+document.getElementById('tableSearchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#mainDataTable tbody tr');
+
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 
 {% endblock %}
