@@ -45,6 +45,7 @@
                         </label>
                     </div>
                 </div>
+
             <!-- ПРИХОВАНІ ПОЛЯ ДЛЯ ПЕРЕДАЧІ TOV_ID ТА TOV_KOD -->
         {% if request.args.get('tov_id') %}
             <input type="hidden" name="tov_id" value="{{ request.args.get('tov_id') }}">
@@ -55,10 +56,17 @@
         {% endif %}
             </div>
         </form>
+                <!-- ПОЛЕ МИТТЄВОГО ПОШУКУ ПО ТАБЛИЦІ -->
+        <div class="ms-auto" style="min-width: 220px;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white">🔎</span>
+                <input type="text" id="tableSearchInput" class="form-control" placeholder="Пошук у таблиці...">
+            </div>
+        </div>
     </div>
 
     <!-- ТАБЛИЦЯ Z ЗАХИСТОМ ВІД ДОВГИХ СЛІВ, ФІКСОВАНИМ ЗАГОЛОВКОМ ТА ЗАКРУГЛЕННЯМИ -->
-    <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh; width: 100%;">
+    <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh; width: 100%;"id="mainDataTable">
         <table class="table table-sm table-hover  align-middle mb-0"
                style="word-break: break-word; overflow-wrap: anywhere;">
 
@@ -124,5 +132,16 @@
     </div>
 
 </div>
+<!-- Скрипт миттєвої фільтрації -->
+<script>
+document.getElementById('tableSearchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#mainDataTable tbody tr');
 
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 {% endblock %}
