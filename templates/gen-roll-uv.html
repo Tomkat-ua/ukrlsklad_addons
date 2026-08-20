@@ -49,7 +49,7 @@
                 <th scope="col">Код<br>номенкл.</th>
                 <th scope="col">Найменування<br>товару</th>
                 <th scope="col" class="text-center">Од.<br>вим.</th>
-                <th scope="col" class="text-center">Ціна</th>
+<!--                <th scope="col" class="text-center">Ціна</th>-->
                 <th scope="col" class="text-end">Початковий<br>залишок</th>
                 <th scope="col" class="text-end text-success">Прихід</th>
                 <th scope="col" class="text-end text-danger">Видача</th>
@@ -79,9 +79,9 @@
                     <td class="text-center">
                         <span class="badge bg-light text-dark border">{{ row.ED_IZM }}</span>
                     </td>
-                    <td> <code>
-                        <span>{{ row.TOV_PRICE | currency_format_ua }}</span></code>
-                    </td>
+<!--                    <td> <code>-->
+<!--                        <span>{{ row.TOV_PRICE | currency_format_ua }}</span></code>-->
+<!--                    </td>-->
                     <td class="text-end">
                         {{ "{:,.2f}".format(row.TOTAL_B) if row.TOTAL_B is not none else "0.00" }}
                     </td>
