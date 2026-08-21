@@ -298,10 +298,10 @@ def run_1():
     return serials.add_to_actv()
 #############################################################################################
 ########### CUR_STATE
-from modules  import cur_state
-@app.route('/cur-state')
-def get_cur_state():
-    return cur_state.get_cur_state()
+# from modules  import cur_state
+# @app.route('/cur-state')
+# def get_cur_state():
+#     return cur_state.get_cur_state()
 
 ########### GEN-GOLL #############################
 from modules  import gen_roll
