@@ -1,4 +1,4 @@
-from flask import  request,render_template,flash
+from flask import  request,render_template,jsonify
 from datetime import datetime,timedelta
 from  . import db
 
@@ -46,6 +46,25 @@ def uv_sklad(sklad_id=None, from_date_str=None, to_date_str=None):
                            sklad_id_select=int(sklad_id) if sklad_id else 300000001
                            )
 
+
+def gen_roll_uv_tovid(sklad_id,tov_kod,to_date):
+    # Робиш SQL-запит у БД конкретно для цього товару
+    print('to_date',to_date)
+    sql = """ SELECT
+          t.name   as tov_name,
+          t.num    as tovar_id,
+          t.kod    as tov_kod,
+          t.ed_izm as ei,
+          t.cena   as tov_cena,
+          SUM(s.z_kolvo + s.to_kolvo - s.from_kolvo ) as  tov_kol
+        FROM     sklad_view_1( ? ,? ,?  ) s, tovar_name t
+        WHERE    s.num = t.num AND     t.visible = 1 and t.kod = ? 
+        GROUP BY t.name, t.kod, t.num, t.ed_izm, t.cena
+        HAVING   (SUM(s.z_kolvo) > 0 OR SUM(s.to_kolvo) > 0 OR SUM(s.from_kolvo) >0) """
+    data = db.data_module(sql,[sklad_id,to_date,to_date,tov_kod])
+    print('data',data)
+    # Повертаєш окремий маленький шаблон-фрагмент
+    return jsonify(data)
 
 
 def traffic_sklad(sklad_id, from_date_str=None, to_date_str=None,tov_id=None,tov_kod=None):

@@ -297,7 +297,13 @@ def serial_scheck():
 def run_1():
     return serials.add_to_actv()
 #############################################################################################
-########### TEST #############################
+########### CUR_STATE
+from modules  import cur_state
+@app.route('/cur-state')
+def get_cur_state():
+    return cur_state.get_cur_state()
+
+########### GEN-GOLL #############################
 from modules  import gen_roll
 @app.route('/gen_roll/uv',methods = ['GET','POST'])
 def uv():
@@ -314,6 +320,13 @@ def traffic():
     tov_id_str    = request.args.get('tov_id')
     tov_kod_str   = request.args.get('tov_kod')
     return gen_roll.traffic_sklad(sklad_id,from_date_str,to_date_str,tov_id_str,tov_kod_str)
+
+@app.route('/gen_roll/uv/tovkod')
+def uv_det():
+    sklad_id = request.args.get('sklad_id')
+    tov_kod = request.args.get('tov_kod')
+    to_date_str = request.args.get('to_date')
+    return gen_roll.gen_roll_uv_tovid(sklad_id,tov_kod,to_date_str)
 
 
 @app.route('/incoming',methods = ['GET','POST'])

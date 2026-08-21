@@ -45,28 +45,27 @@
     <table class="table table-sm table-hover align-middle mb-0" id="mainDataTable">
         <thead class="table-dark text-nowrap align-middle sticky-top position-sticky top-0" style="z-index: 2;">
             <tr>
-                <th scope="col">ID<br>товару</th>
                 <th scope="col">Код<br>номенкл.</th>
                 <th scope="col">Найменування<br>товару</th>
                 <th scope="col" class="text-center">Од.<br>вим.</th>
-<!--                <th scope="col" class="text-center">Ціна</th>-->
                 <th scope="col" class="text-end">Початковий<br>залишок</th>
                 <th scope="col" class="text-end text-success">Прихід</th>
                 <th scope="col" class="text-end text-danger">Видача</th>
                 <th scope="col" class="text-end fw-bold">Кінцевий<br>залишок</th>
+                <th scope="col">Дії</th>
             </tr>
         </thead>
         <tbody>
             {% for row in data %}
                 <tr>
-                    <td><code>
-                        <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_id=row.TOV_ID, from_date=from_date, to_date=to_date) }}"
-                           target="_blank"
-                           class="text-decoration-none"
-                           title="Рух по ID товару" >
-                            {{ row.TOV_ID }}
-                        </a>
-                    </code></td>
+<!--                    <td><code>-->
+<!--                        <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_id=row.TOV_ID, from_date=from_date, to_date=to_date) }}"-->
+<!--                           target="_blank"-->
+<!--                           class="text-decoration-none"-->
+<!--                           title="Рух по ID товару" >-->
+<!--                            {{ row.TOV_ID }}-->
+<!--                        </a>-->
+<!--                    </code></td>-->
                     <td><code>
                         <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_kod=row.TOV_KOD, from_date=from_date, to_date=to_date) }}"
                            target="_blank"
@@ -83,16 +82,25 @@
 <!--                        <span>{{ row.TOV_PRICE | currency_format_ua }}</span></code>-->
 <!--                    </td>-->
                     <td class="text-end">
-                        {{ "{:,.2f}".format(row.TOTAL_B) if row.TOTAL_B is not none else "0.00" }}
+                        {{ "{:,.0f}".format(row.TOTAL_B) if row.TOTAL_B is not none else "0" }}
                     </td>
                     <td class="text-end text-success">
-                        {{ "{:,.2f}".format(row.Q_IN) if row.Q_IN is not none else "0.00" }}
+                        {{ "{:,.0f}".format(row.Q_IN) if row.Q_IN is not none else "0" }}
                     </td>
                     <td class="text-end text-danger">
-                        {{ "{:,.2f}".format(row.Q_OUT) if row.Q_OUT is not none else "0.00" }}
+                        {{ "{:,.0f}".format(row.Q_OUT) if row.Q_OUT is not none else "0" }}
                     </td>
                     <td class="text-end fw-bold bg-light">
-                        {{ "{:,.2f}".format(row.TOTAL_E) if row.TOTAL_E is not none else "0.00" }}
+                        {{ "{:,.0f}".format(row.TOTAL_E) if row.TOTAL_E is not none else "0" }}
+                    </td>
+                    <td>
+                        {% if row.TOV_KOD %}
+                            <a href="#"  onclick="showDetails('{{ sklad_id_select }}', '{{ row.TOV_KOD }}', '{{ row.TOV_NAME }}', '{{ to_date }}'); return false;">
+                                Ціни
+                            </a>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -106,6 +114,58 @@
     </table>
 </div>
 
+
+<!-- ОДНА МОДАЛКА В КІНЦІ ШАБЛОНУ -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white p-2 px-3">
+                <h6 class="modal-title mb-0" id="modalTitle">Деталізація</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" id="modalContent">
+                <!-- Сюди JS вставить таблицю -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDetails(skladID,tovKod, tovName,toDate) {
+    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    document.getElementById('modalTitle').innerText = `[${tovKod}] ${tovName}`;
+    document.getElementById('modalContent').innerHTML = '<div class="p-4 text-center">Завантаження...</div>';
+    modal.show();
+
+    // Запит до Flask
+    fetch(`/gen_roll/uv/tovkod?tov_kod=${tovKod}&sklad_id=${skladID}&to_date=${toDate}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.length) {
+                document.getElementById('modalContent').innerHTML = '<div class="p-3 text-center text-muted">Немає даних</div>';
+                return;
+            }
+
+            // Малюємо таблицю прямо в JS
+            let html = `<table class="table table-sm table-striped mb-0 fs-7">
+                <tbody>`;
+            data.forEach(row => {
+                html += `<tr>
+                            <td class="text-center"><code>ID: ${row.TOVAR_ID || ''}</code></td>
+                            <td>${row.TOV_NAME || ''}</td>
+                            <td class="text-end text-nowrap">${Number(row.TOV_CENA || 0).toLocaleString('uk-UA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} грн.</td>
+                            <td class="text-end fw-bold text-nowrap">${row.TOV_KOL}
+                            <span class="badge bg-light text-dark border">${row.EI || ''}</span></td>
+                         </tr>`;
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('modalContent').innerHTML = html;
+        });
+}
+</script>
+
+
 <!-- Скрипт миттєвої фільтрації -->
 <script>
 document.getElementById('tableSearchInput').addEventListener('keyup', function() {
@@ -118,5 +178,4 @@ document.getElementById('tableSearchInput').addEventListener('keyup', function()
     });
 });
 </script>
-
 {% endblock %}
