@@ -1,5 +1,12 @@
 {% extends "base_tmp.html" %}
 {% block content %}
+<style>
+    /* Класичний фокус рядка (Grid Focus) */
+    tr.grid-row-active > td {
+        background-color: #e2eefd !important; /* Ніжно-синій колір активного рядка */
+     /*   box-shadow: inset 0 0 0 1px #0d6efd;*/ /* Тонка синя рамка навколо комірок */
+    }
+</style>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-2 p-2 bg-light border rounded">
     <h5 class="mb-0 me-3">{{ title }}</h5>
@@ -42,9 +49,10 @@
 
 <!-- Контейнер таблиці -->
 <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh;">
-    <table class="table table-sm table-hover align-middle mb-0" id="mainDataTable">
+    <table class="table table-sm table-hover align-middle mb-0 user-select-none" id="mainDataTable">
         <thead class="table-dark text-nowrap align-middle sticky-top position-sticky top-0" style="z-index: 2;">
             <tr>
+                <th scope="col" class="text-center" style="width: 40px;" title="Звірено">✓</th>
                 <th scope="col">Код<br>номенкл.</th>
                 <th scope="col">Найменування<br>товару</th>
                 <th scope="col" class="text-center">Од.<br>вим.</th>
@@ -57,20 +65,18 @@
         </thead>
         <tbody>
             {% for row in data %}
-                <tr>
-<!--                    <td><code>-->
-<!--                        <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_id=row.TOV_ID, from_date=from_date, to_date=to_date) }}"-->
-<!--                           target="_blank"-->
-<!--                           class="text-decoration-none"-->
-<!--                           title="Рух по ID товару" >-->
-<!--                            {{ row.TOV_ID }}-->
-<!--                        </a>-->
-<!--                    </code></td>-->
+                <!-- Клік по рядку робить його активним -->
+                <tr onclick="focusRow(this)">
+                    <!-- Чекбокс працює ОКРЕМО і не перебиває фокус -->
+                    <td class="text-center bg-transparent" onclick="event.stopPropagation();">
+                        <input type="checkbox" class="form-check-input cursor-pointer" onchange="toggleRowVerify(this)" title="Звірено">
+                    </td>
                     <td><code>
                         <a href="{{ url_for('traffic', sklad_id=sklad_id_select, tov_kod=row.TOV_KOD, from_date=from_date, to_date=to_date) }}"
                            target="_blank"
                            class="text-decoration-none"
-                           title="Рух по коду номенклатури" >
+                           title="Рух по коду номенклатури"
+                           onclick="event.stopPropagation();">
                             {{ row.TOV_KOD }}
                         </a>
                     </code></td>
@@ -78,9 +84,6 @@
                     <td class="text-center">
                         <span class="badge bg-light text-dark border">{{ row.ED_IZM }}</span>
                     </td>
-<!--                    <td> <code>-->
-<!--                        <span>{{ row.TOV_PRICE | currency_format_ua }}</span></code>-->
-<!--                    </td>-->
                     <td class="text-end">
                         {{ "{:,.0f}".format(row.TOTAL_B) if row.TOTAL_B is not none else "0" }}
                     </td>
@@ -90,12 +93,12 @@
                     <td class="text-end text-danger">
                         {{ "{:,.0f}".format(row.Q_OUT) if row.Q_OUT is not none else "0" }}
                     </td>
-                    <td class="text-end fw-bold bg-light">
+                    <td class="text-end fw-bold">
                         {{ "{:,.0f}".format(row.TOTAL_E) if row.TOTAL_E is not none else "0" }}
                     </td>
-                    <td>
+                    <td onclick="event.stopPropagation();">
                         {% if row.TOV_KOD %}
-                            <a href="#"  onclick="showDetails('{{ sklad_id_select }}', '{{ row.TOV_KOD }}', '{{ row.TOV_NAME }}', '{{ to_date }}'); return false;">
+                            <a href="#" onclick="showDetails('{{ sklad_id_select }}', '{{ row.TOV_KOD }}', '{{ row.TOV_NAME }}', '{{ to_date }}'); return false;">
                                 Ціни
                             </a>
                         {% else %}
@@ -106,7 +109,7 @@
             {% else %}
                 <tr>
                     <td colspan="9" class="text-center py-4 text-muted">
-                        📁 Даних за вибраними параметрами (склад / дати) не знайдено.
+                        📁 Даних за вибраними параметрами не знайдено.
                     </td>
                 </tr>
             {% endfor %}
@@ -114,6 +117,29 @@
     </table>
 </div>
 
+<!-- Логіка Grid: Окремо фокус, окремо відмітка "Звірено" -->
+<script>
+// 1. Фокус на один рядок (Grid Focus)
+function focusRow(row) {
+    // Знімаємо фокус з попередньо виділеного рядка
+    const activeRow = document.querySelector('#mainDataTable tr.grid-row-active');
+    if (activeRow) {
+        activeRow.classList.remove('grid-row-active');
+    }
+    // Ставимо фокус на новий
+    row.classList.add('grid-row-active');
+}
+
+// 2. Зелена підсвітка "Звірено" через чекбокс (не залежить від фокусу)
+function toggleRowVerify(checkbox) {
+    const row = checkbox.closest('tr');
+    if (checkbox.checked) {
+        row.classList.add('table-success');
+    } else {
+        row.classList.remove('table-success');
+    }
+}
+</script>
 
 <!-- ОДНА МОДАЛКА В КІНЦІ ШАБЛОНУ -->
 <div class="modal fade" id="detailsModal" tabindex="-1">
