@@ -36,7 +36,7 @@ def uv_sklad(sklad_id=None, from_date_str=None, to_date_str=None):
         from_date, to_date = parse_dates(from_date_str, to_date_str)
         sql = 'select * from general_roll.uv_sklad (?,?,?)'
         data = db.data_module(sql, [sklad_id, from_date, to_date])
-        print(data)
+
     return render_template('gen-roll-uv.html',
                            data=data,
                            title='Узагальнююча відомість',
@@ -49,7 +49,6 @@ def uv_sklad(sklad_id=None, from_date_str=None, to_date_str=None):
 
 def gen_roll_uv_tovid(sklad_id,tov_kod,to_date):
     # Робиш SQL-запит у БД конкретно для цього товару
-    print('to_date',to_date)
     sql = """ SELECT
           t.name   as tov_name,
           t.num    as tovar_id,
@@ -62,7 +61,6 @@ def gen_roll_uv_tovid(sklad_id,tov_kod,to_date):
         GROUP BY t.name, t.kod, t.num, t.ed_izm, t.cena
         HAVING   (SUM(s.z_kolvo) > 0 OR SUM(s.to_kolvo) > 0 OR SUM(s.from_kolvo) >0) """
     data = db.data_module(sql,[sklad_id,to_date,to_date,tov_kod])
-    print('data',data)
     # Повертаєш окремий маленький шаблон-фрагмент
     return jsonify(data)
 
@@ -73,7 +71,7 @@ def traffic_sklad(sklad_id, from_date_str=None, to_date_str=None,tov_id=None,tov
         sklad_id = request.args.get('sklad_id', 300000001)
 
     disable_tov_filter = request.args.get('disable_tov_filter', 0)
-    print("disable_tov_filter:",disable_tov_filter)
+
     # Дати
     today = datetime.now().date()
     default_from = today - timedelta(days=30)
