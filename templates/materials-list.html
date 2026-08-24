@@ -2,23 +2,49 @@
 {% block content %}
 
 <style>
+    /* Головний контейнер: не дає нічому виходити за межі контейнера */
+    .table-wrapper {
+        max-width: 100%;
+        overflow-x: auto;
+        border-radius: 6px;
+    }
+
+    /* Жорстко фіксуємо таблицю */
+    #materialsTable {
+        table-layout: fixed !important;
+        width: 100% !important;
+        margin-bottom: 0;
+    }
+
     .table-compact th, .table-compact td {
         padding: 0.25rem 0.5rem;
         font-size: 0.85rem;
+        vertical-align: middle;
     }
-    
+
+    /* Перший рядок: обрізаємо задовгий текст з трьох крапками */
+    tr.main-row td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     tr.main-row {
         border-top: 1px solid #dee2e6;
     }
 
+    /* Другий (допоміжний) рядок: дозволяємо перенос тексту, але ламаємо довгі слова */
     tr.sub-row > td {
-        padding-top: 0 !important;
+        padding-top: 0.1rem !important;
         padding-bottom: 0.4rem !important;
         background-color: #fafafa;
         font-size: 0.78rem;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        word-break: break-all !important; /* Гарантує, що довгі коди не розтягнуть таблицю */
     }
 
-    /* Стилі активного блоку */
+    /* Активний блок */
     tr.main-row.grid-row-active > td,
     tr.sub-row.grid-row-active > td {
         background-color: #e2eefd !important;
@@ -40,15 +66,15 @@
     }
 </style>
 
-<div class="container-fluid py-2">
-    <!-- Панель пошуку -->
+<div class="container-fluid py-2 overflow-hidden">
+    <!-- Пошук -->
     <div class="card mb-2 shadow-sm border-0 bg-light">
         <div class="card-body p-2">
             <div class="row g-2 align-items-center">
                 <div class="col-md-6 col-lg-5">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white">🔍</span>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Пошук (мін. 2 символи, підтримується %)..." autofocus autocomplete="off">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Пошук (мін. 2 символи, %)..." autofocus autocomplete="off">
                         <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">✕</button>
                     </div>
                 </div>
@@ -60,17 +86,17 @@
         </div>
     </div>
 
-    <!-- Таблиця з можливістю копіювання (user-select-none прибрано) -->
-    <div class="table-responsive border rounded shadow-sm bg-white" style="max-height: 78vh;">
+    <!-- Обгортка таблиці -->
+    <div class="table-wrapper border shadow-sm bg-white" style="max-height: 78vh; overflow-y: auto;">
         <table class="table table-sm table-hover align-middle table-compact mb-0" id="materialsTable">
             <thead class="table-dark sticky-top top-0" style="z-index: 2;">
                 <tr>
                     <th style="width: 70px;">ID</th>
-                    <th style="width: 130px;">NSN Orig</th>
-                    <th style="width: 120px;">Material</th>
-                    <th style="width: 130px;">NSN</th>
-                    <th>Найменування / Специфікація</th>
-                    <th style="width: 80px;" class="text-center">Од. вим.</th>
+                    <th style="width: 140px;">NSN Orig</th>
+                    <th style="width: 110px;">Material</th>
+                    <th style="width: 140px;">NSN</th>
+                    <th>Найменування (NAME_SHORT)</th>
+                    <th style="width: 90px;" class="text-center">Од. вим.</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -107,7 +133,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
 
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        fetch(`/api/materials?q=${encodeURIComponent(query)}`)
+        fetch(`/api/search_materials?q=${encodeURIComponent(query)}`)
             .then(res => res.json())
             .then(data => {
                 loader.style.display = 'none';
@@ -139,7 +165,7 @@ function renderTable(items) {
                 <td>${row.NSN_ORIG || ''}</td>
                 <td><code>${row.MATERIAL || ''}</code></td>
                 <td>${row.NSN || ''}</td>
-                <td class="fw-bold text-dark">${row.NAME_SHORT || '—'}</td>
+                <td class="fw-bold text-dark" title="${row.NAME_SHORT || ''}">${row.NAME_SHORT || '—'}</td>
                 <td class="text-center"><span class="badge bg-light text-dark border">${row.UNITS || ''}</span></td>
             </tr>
             <tr class="sub-row border-bottom" data-group="${rowId}" onclick="focusGroup('${rowId}')">
@@ -147,7 +173,7 @@ function renderTable(items) {
                 <td colspan="5">
                     ${row.NAME_LONG ? `<div class="text-secondary mb-1">📄 ${row.NAME_LONG}</div>` : ''}
                     <div class="text-muted">
-                        <span class="meta-item"><span class="meta-label">Тип мат:</span> ${row.TYPE_MATERIAL || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">Тип:</span> ${row.TYPE_MATERIAL || '—'}</span>
                         <span class="meta-item"><span class="meta-label">BPS:</span> ${row.TYPE_BPS || '—'}</span>
                         <span class="meta-item"><span class="meta-label">CAM:</span> ${row.TYPE_CAM || '—'}</span>
                         <span class="meta-item"><span class="meta-label">Profile SN:</span> ${row.PROFILE_SN || '—'}</span>
@@ -160,13 +186,9 @@ function renderTable(items) {
     tbody.innerHTML = html;
 }
 
-// Фокусуємо рядок тільки якщо користувач НЕ виділяє текст мишкою
 function focusGroup(groupId) {
     const selection = window.getSelection().toString();
-    if (selection.length > 0) {
-        // Якщо є виділений текст — ігноруємо клік
-        return;
-    }
+    if (selection.length > 0) return;
 
     document.querySelectorAll('#materialsTable tr.grid-row-active')
             .forEach(r => r.classList.remove('grid-row-active'));
