@@ -145,10 +145,15 @@ def loss_edit(id):
 def losses_list_nn():
     return losses_nn.losses_list()
 
-############ EXPORT ########################################
-# @app.route("/export")
-# def export_csv():
-#     return export.export_csv()
+############ MATERIALS ########################################
+from modules import materials
+@app.route("/materials")
+def r_materials():
+    return materials.materials_list()
+
+@app.route('/api/materials')
+def r_api_materials():
+    return materials.api_materials()
 
 ########### SERIAL#############################################
 @app.route("/serials",methods=['GET', 'POST'])

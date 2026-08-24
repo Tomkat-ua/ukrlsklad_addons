@@ -1,0 +1,185 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<style>
+    .table-compact th, .table-compact td {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    tr.main-row {
+        border-top: 1px solid #dee2e6;
+    }
+
+    tr.sub-row > td {
+        padding-top: 0 !important;
+        padding-bottom: 0.4rem !important;
+        background-color: #fafafa;
+        font-size: 0.78rem;
+    }
+
+    /* Стилі активного блоку */
+    tr.main-row.grid-row-active > td,
+    tr.sub-row.grid-row-active > td {
+        background-color: #e2eefd !important;
+    }
+    tr.main-row.grid-row-active > td {
+        box-shadow: inset 0 1px 0 #0d6efd, inset 1px 0 0 #0d6efd, inset -1px 0 0 #0d6efd;
+    }
+    tr.sub-row.grid-row-active > td {
+        box-shadow: inset 0 -1px 0 #0d6efd, inset 1px 0 0 #0d6efd, inset -1px 0 0 #0d6efd;
+    }
+
+    .meta-item {
+        margin-right: 12px;
+        display: inline-block;
+    }
+    .meta-label {
+        color: #6c757d;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container-fluid py-2">
+    <!-- Панель пошуку -->
+    <div class="card mb-2 shadow-sm border-0 bg-light">
+        <div class="card-body p-2">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white">🔍</span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Пошук (мін. 2 символи, підтримується %)..." autofocus autocomplete="off">
+                        <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">✕</button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="spinner-border spinner-border-sm text-primary search-spinner" id="loader" style="display:none;"></div>
+                    <span class="small text-muted ms-1" id="statusText">Очікування вводу...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблиця з можливістю копіювання (user-select-none прибрано) -->
+    <div class="table-responsive border rounded shadow-sm bg-white" style="max-height: 78vh;">
+        <table class="table table-sm table-hover align-middle table-compact mb-0" id="materialsTable">
+            <thead class="table-dark sticky-top top-0" style="z-index: 2;">
+                <tr>
+                    <th style="width: 70px;">ID</th>
+                    <th style="width: 130px;">NSN Orig</th>
+                    <th style="width: 120px;">Material</th>
+                    <th style="width: 130px;">NSN</th>
+                    <th>Найменування / Специфікація</th>
+                    <th style="width: 80px;" class="text-center">Од. вим.</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        ⌨️ Почніть вводити текст для пошуку...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+let searchTimeout = null;
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    const query = this.value.trim();
+    const loader = document.getElementById('loader');
+    const statusText = document.getElementById('statusText');
+    const tbody = document.getElementById('tableBody');
+
+    const cleanQuery = query.replace(/[%_\s]/g, '');
+
+    if (cleanQuery.length < 2) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5">⌨️ Введіть щонайменше 2 літери або цифри...</td></tr>';
+        statusText.innerText = 'Очікування вводу...';
+        loader.style.display = 'none';
+        return;
+    }
+
+    statusText.innerText = 'Пошук...';
+    loader.style.display = 'inline-block';
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        fetch(`/api/materials?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                loader.style.display = 'none';
+                statusText.innerText = `Знайдено записів: ${data.length}`;
+                renderTable(data);
+            })
+            .catch(err => {
+                loader.style.display = 'none';
+                statusText.innerText = 'Помилка запиту';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">❌ Помилка завантаження даних</td></tr>';
+            });
+    }, 300);
+});
+
+function renderTable(items) {
+    const tbody = document.getElementById('tableBody');
+    if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5">📁 Записи не знайдені</td></tr>';
+        return;
+    }
+
+    let html = '';
+    items.forEach(row => {
+        const rowId = `row_${row.ID}`;
+
+        html += `
+            <tr class="main-row" data-group="${rowId}" onclick="focusGroup('${rowId}')">
+                <td><code>${row.ID}</code></td>
+                <td>${row.NSN_ORIG || ''}</td>
+                <td><code>${row.MATERIAL || ''}</code></td>
+                <td>${row.NSN || ''}</td>
+                <td class="fw-bold text-dark">${row.NAME_SHORT || '—'}</td>
+                <td class="text-center"><span class="badge bg-light text-dark border">${row.UNITS || ''}</span></td>
+            </tr>
+            <tr class="sub-row border-bottom" data-group="${rowId}" onclick="focusGroup('${rowId}')">
+                <td></td>
+                <td colspan="5">
+                    ${row.NAME_LONG ? `<div class="text-secondary mb-1">📄 ${row.NAME_LONG}</div>` : ''}
+                    <div class="text-muted">
+                        <span class="meta-item"><span class="meta-label">Тип мат:</span> ${row.TYPE_MATERIAL || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">BPS:</span> ${row.TYPE_BPS || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">CAM:</span> ${row.TYPE_CAM || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">Profile SN:</span> ${row.PROFILE_SN || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">Items:</span> ${row.ITEMS || '—'}</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+// Фокусуємо рядок тільки якщо користувач НЕ виділяє текст мишкою
+function focusGroup(groupId) {
+    const selection = window.getSelection().toString();
+    if (selection.length > 0) {
+        // Якщо є виділений текст — ігноруємо клік
+        return;
+    }
+
+    document.querySelectorAll('#materialsTable tr.grid-row-active')
+            .forEach(r => r.classList.remove('grid-row-active'));
+    
+    document.querySelectorAll(`#materialsTable tr[data-group="${groupId}"]`)
+            .forEach(r => r.classList.add('grid-row-active'));
+}
+
+function clearSearch() {
+    const input = document.getElementById('searchInput');
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+}
+</script>
+{% endblock %}
