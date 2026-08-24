@@ -1,0 +1,195 @@
+{% extends "base_tmp.html" %}
+{% block content %}
+
+<style>
+    /* 1. Робимо обгортку адаптивною до залишкового простору */
+    .table-responsive-wrapper {
+        width: 100%;
+        max-height: 75vh;
+        overflow-y: auto;
+        overflow-x: auto; /* Дозволяє внутрішній скрол, якщо монітор замалий */
+    }
+
+    /* 2. Повертаємо таблиці стандартний авто-розмір */
+    #materialsTable {
+        width: 100% !important;
+        table-layout: auto !important;
+        margin-bottom: 0;
+    }
+
+    .table-compact th, .table-compact td {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+
+    /* 3. Фіксуємо тільки службові колонки */
+    #materialsTable th:nth-child(1) { width: 70px; }   /* ID */
+    #materialsTable th:nth-child(2) { width: 130px; }  /* NSN Orig */
+    #materialsTable th:nth-child(3) { width: 110px; }  /* Material */
+    #materialsTable th:nth-child(4) { width: 130px; }  /* NSN */
+    #materialsTable th:nth-child(6) { width: 90px; }   /* Од. вим. */
+
+    /* 4. Перший рядок: обрізаємо задовгий текст з трьома крапками */
+    tr.main-row td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px; /* Захист від розтягування */
+    }
+
+    /* 5. Другий рядок: перенос опису */
+    tr.sub-row > td {
+        white-space: normal !important;
+        word-break: break-word !important;
+        background-color: #fafafa;
+        font-size: 0.78rem;
+    }
+
+    /* Підсвічування активного ряду */
+    tr.main-row.grid-row-active > td,
+    tr.sub-row.grid-row-active > td {
+        background-color: #e2eefd !important;
+    }
+</style>
+
+<div class="py-2">
+    <!-- Пошук -->
+    <div class="card mb-2 shadow-sm border-0 bg-light">
+        <div class="card-body p-2">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white">🔍</span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Пошук (мін. 2 символи, %)..." autofocus autocomplete="off">
+                        <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">✕</button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="spinner-border spinner-border-sm text-primary search-spinner" id="loader" style="display:none;"></div>
+                    <span class="small text-muted ms-1" id="statusText">Очікування вводу...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблиця -->
+    <div class="table-responsive-fix border rounded shadow-sm bg-white">
+        <table class="table table-sm table-hover align-middle table-compact" id="materialsTable">
+            <thead class="table-dark sticky-top top-0" style="z-index: 2;">
+                <tr>
+                    <th style="width: 75px;">ID</th>
+                    <th style="width: 140px;">NSN Orig</th>
+                    <th style="width: 120px;">Material</th>
+                    <th style="width: 140px;">NSN</th>
+                    <!-- Прибираємо ширину, щоб займала весь вільний простір між NSN і Од. вим. -->
+                    <th>Найменування (NAME_SHORT)</th>
+                    <th style="width: 90px;" class="text-center">Од. вим.</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        ⌨️ Почніть вводити текст для пошуку...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+let searchTimeout = null;
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    const query = this.value.trim();
+    const loader = document.getElementById('loader');
+    const statusText = document.getElementById('statusText');
+    const tbody = document.getElementById('tableBody');
+
+    const cleanQuery = query.replace(/[%_\s]/g, '');
+
+    if (cleanQuery.length < 2) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5">⌨️ Введіть щонайменше 2 літери або цифри...</td></tr>';
+        statusText.innerText = 'Очікування вводу...';
+        loader.style.display = 'none';
+        return;
+    }
+
+    statusText.innerText = 'Пошук...';
+    loader.style.display = 'inline-block';
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        fetch(`/api/materials?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                loader.style.display = 'none';
+                statusText.innerText = `Знайдено записів: ${data.length}`;
+                renderTable(data);
+            })
+            .catch(err => {
+                loader.style.display = 'none';
+                statusText.innerText = 'Помилка запиту';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">❌ Помилка завантаження даних</td></tr>';
+            });
+    }, 300);
+});
+
+function renderTable(items) {
+    const tbody = document.getElementById('tableBody');
+    if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-5">📁 Записи не знайдені</td></tr>';
+        return;
+    }
+
+    let html = '';
+    items.forEach(row => {
+        const rowId = `row_${row.ID}`;
+
+        html += `
+            <tr class="main-row" data-group="${rowId}" onclick="focusGroup('${rowId}')">
+                <td><code>${row.ID}</code></td>
+                <td>${row.NSN_ORIG || ''}</td>
+                <td><code>${row.MATERIAL || ''}</code></td>
+                <td>${row.NSN || ''}</td>
+                <td class="fw-bold text-dark" title="${row.NAME_SHORT || ''}">${row.NAME_SHORT || '—'}</td>
+                <td class="text-center"><span class="badge bg-light text-dark border">${row.UNITS || ''}</span></td>
+            </tr>
+            <tr class="sub-row border-bottom" data-group="${rowId}" onclick="focusGroup('${rowId}')">
+                <td></td>
+                <td colspan="5">
+                    ${row.NAME_LONG ? `<div class="text-secondary mb-1">📄 ${row.NAME_LONG}</div>` : ''}
+                    <div class="text-muted">
+                        <span class="meta-item"><span class="meta-label">Тип:</span> ${row.TYPE_MATERIAL || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">BPS:</span> ${row.TYPE_BPS || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">CAM:</span> ${row.TYPE_CAM || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">Profile SN:</span> ${row.PROFILE_SN || '—'}</span>
+                        <span class="meta-item"><span class="meta-label">Items:</span> ${row.ITEMS || '—'}</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+function focusGroup(groupId) {
+    const selection = window.getSelection().toString();
+    if (selection.length > 0) return;
+
+    document.querySelectorAll('#materialsTable tr.grid-row-active')
+            .forEach(r => r.classList.remove('grid-row-active'));
+    
+    document.querySelectorAll(`#materialsTable tr[data-group="${groupId}"]`)
+            .forEach(r => r.classList.add('grid-row-active'));
+}
+
+function clearSearch() {
+    const input = document.getElementById('searchInput');
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+}
+</script>
+{% endblock %}
