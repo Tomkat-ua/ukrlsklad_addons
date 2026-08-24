@@ -66,7 +66,11 @@
     }
 </style>
 
-<div class="container-fluid py-2 overflow-hidden">
+
+<!-- Фіксуємо максимальну ширину блоку по центру або зліва -->
+<div class="container-fluid py-2" style="max-width: 1300px; margin-left: 0;">
+
+<!--<div class="container-fluid py-2 overflow-hidden">-->
     <!-- Пошук -->
     <div class="card mb-2 shadow-sm border-0 bg-light">
         <div class="card-body p-2">
@@ -133,7 +137,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
 
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        fetch(`/api/search_materials?q=${encodeURIComponent(query)}`)
+        fetch(`/api/materials?q=${encodeURIComponent(query)}`)
             .then(res => res.json())
             .then(data => {
                 loader.style.display = 'none';
