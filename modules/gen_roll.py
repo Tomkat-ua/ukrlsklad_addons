@@ -53,7 +53,7 @@ def gen_roll_uv_tovid(sklad_id,tov_kod,to_date):
           t.name   as tov_name,
           t.num    as tovar_id,
           t.kod    as tov_kod,
-          t.ed_izm as ei,
+          t.ed_izm as ED_IZM,
           t.cena   as tov_cena,
           SUM(s.z_kolvo + s.to_kolvo - s.from_kolvo ) as  tov_kol
         FROM     sklad_view_1( ? ,? ,?  ) s, tovar_name t
@@ -84,7 +84,6 @@ def traffic_sklad(sklad_id, from_date_str=None, to_date_str=None,tov_id=None,tov
         if disable_tov_filter == 1:
             tov_id = None
             tov_kod = None
-            # print(tov_id, tov_kod)
         sql = 'select * from general_roll.traffic_sklad(?,?,?,?,?)'
         data = db.data_module(sql, [int(sklad_id), from_date, to_date,tov_id,tov_kod])
     return render_template('gen-roll-traffic.html',

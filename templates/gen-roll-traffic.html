@@ -80,6 +80,7 @@
                     <th scope="col" style="width: 100px;">Код<br>товару</th>
                     <th scope="col" style="min-width: 200px;">Найменування товару</th>
                     <th scope="col" class="text-end" style="width: 100px;">Кількість</th>
+                    <th scope="col" class="text-center">Од.<br>вим.</th>
                     <th scope="col" class="text-end" style="width: 90px;">Ціна</th>
                     <th scope="col" style="min-width: 100px;">Контрагент / Клієнт</th>
                     <th scope="col" style="min-width: 80px;">Примітка / Опис</th>
@@ -109,7 +110,9 @@
                         <td class="text-end fw-bold text-nowrap {% if is_plus %}bg-success-subtle text-success{% else %}bg-warning-subtle text-dark{% endif %}">
                             {{ "{:,.2f}".format(row.TOV_KOLVO | default(0)) }}
                         </td>
-
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark border">{{ row.TOV_EI }}</span>
+                        </td>
                         <td class="text-end text-muted text-nowrap">
                             {{ "{:,.2f}".format(row.TOV_CENA | default(0)) }}
                         </td>
