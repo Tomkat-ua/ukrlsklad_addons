@@ -181,7 +181,7 @@ function showDetails(skladID,tovKod, tovName,toDate) {
                             <td>${row.TOV_NAME || ''}</td>
                             <td class="text-end text-nowrap">${Number(row.TOV_CENA || 0).toLocaleString('uk-UA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} грн.</td>
                             <td class="text-end fw-bold text-nowrap">${row.TOV_KOL}
-                            <span class="badge bg-light text-dark border">${row.EI || ''}</span></td>
+                            <span class="badge bg-light text-dark border">${row.ED_IZM || ''}</span></td>
                          </tr>`;
             });
 
