@@ -1,12 +1,19 @@
 import platform
 from version import __version__
+from gevent import monkey
+monkey.patch_all()
 from flask import Flask, render_template,request
-from gevent.pywsgi import WSGIServer
+from gevent.pywsgi import WSGIServer,WSGIHandler
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
 from modules import aruns,sklads
 from modules import doc_tmpl,orders_od,serial_gen
 #from modules import pivot,export,stat
 from modules import db
+
+class CustomHandler(WSGIHandler):
+    # Таймаут на читання з сокета (якщо браузер висить і нічого не надсилає)
+    time_out = 2
+
 app = Flask(__name__)
 
 local_ip         = config.local_ip
@@ -361,9 +368,9 @@ def product_delete_image(tovar_id):
 ########### MAIN ##############################################
 if __name__ == "__main__":
     if platform.system() == 'Windows':
-        http_server = WSGIServer((local_ip, config.server_port), app)
+        http_server = WSGIServer((local_ip, config.server_port), app,handler_class=CustomHandler)
         print(f"Running HTTP-SERVER on port - http://" + local_ip + ':' + str(config.server_port))
     else:
-        http_server = WSGIServer(('', int(config.server_port)), app)
+        http_server = WSGIServer(('', int(config.server_port)), app,handler_class=CustomHandler)
         print(f"Running HTTP-SERVER on port :" + str(config.server_port))
     http_server.serve_forever()
