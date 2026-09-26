@@ -12,20 +12,10 @@ def api_materials():
         if len(clean_text) < 2:
             return jsonify([])
 
-        # 2. ЖОДНОЇ САМОДІЯЛЬНОСТІ: передаємо `q` в SQL точно так, як ввів юзер.
-        # Ввів 'акб'   -> шукає ТОЧНО 'акб'
-        # Ввів 'акб%'  -> шукає все, що ПОЧИНАЄТЬСЯ на 'акб'
-        # Ввів '%акб%' -> шукає все, що МІСТИТЬ 'акб'
         search_param = q
 
         # 4. Виконуємо запит (ОБОВ'ЯЗКОВО з обмеженням FIRST 50 або FIRST 100)
-        sql = """
-                SELECT  *
-                FROM SLID_MATERIALS
-                WHERE 
-                    NAME_SHORT LIKE ? OR MATERIAL LIKE ?  or name_long like ?
-                ORDER BY ID DESC
-            """
+        sql = " select * from usadd_web.materials_search(?) "
 
         data = db.data_module(sql, [ search_param,search_param,search_param])
         return data
