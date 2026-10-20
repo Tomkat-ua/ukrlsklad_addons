@@ -2,7 +2,7 @@ import platform
 from version import __version__
 from gevent import monkey
 monkey.patch_all()
-from flask import Flask, render_template,request
+from flask import Flask, render_template,request, redirect, url_for, session
 from gevent.pywsgi import WSGIServer,WSGIHandler
 from modules import serials,  mnakl, losses_nn, ghist_, pnakl, reports, snakl, config, products, packs, losses, dispack
 from modules import aruns,sklads
@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 local_ip         = config.local_ip
 
-app.secret_key = config.api_key  # потрібен для flash-повідомлень
+app.secret_key = config.api_key
 
 
 # Глобальна змінна (завантажується один раз при старті сервера)
@@ -120,6 +120,17 @@ def inject_global_vars():
         }
     )
 
+
+from functools import wraps
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            # Якщо користувач НЕ авторизований — відправляємо його на сторінку /login
+            return redirect(url_for('login_page'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 ########## MAIN ####################
 @app.context_processor
 def inject_globals():
@@ -134,6 +145,21 @@ def inject_globals():
 @app.route('/')
 def index():
     return render_template('index.html',title= "Головна")
+
+#
+# @app.route('/login', methods=['POST'])
+# def login():
+#     username = request.form.get('username')
+#     password_input = request.form.get('password')
+#
+#     # ... ваша перевірка MD5 з бази УкрСклад ...
+#     if verify_ukrsklad_user(password_input, db_password_hash):
+#         # Зберігаємо ID або ім'я користувача у зашифрованій сесії
+#         session['user_id'] = user_id
+#         session['username'] = username
+#         return redirect(url_for('traffic'))  # Перенаправляємо на захищену сторінку
+#
+#     return "Невірний логін або пароль", 401
 
 ############# LOSSES ######################################
 @app.route('/losses', methods=['GET', 'POST'])
@@ -188,19 +214,6 @@ def sklad_list():
 @app.route('/sklad_save', methods=['POST'])
 def sklad_save():
     return sklads.sklad_save()
-#
-# @app.route("/sklad/<int:sklad_id>")
-# def sklad_details(sklad_id):
-#     return sklads.sklad_details(sklad_id)
-#
-# @app.route("/sklad/save", methods=["POST"])
-# def sklad_save():
-#     return sklads.sklad_save()
-#
-# @app.route("/sklad/update", methods=["POST"])
-# def sklad_update():
-#     return
-
 ############ REPORTS #########################
 @app.route("/reports",methods = ['GET','POST'])
 def reports_list():
@@ -262,16 +275,16 @@ def mnakl_list():
 
 ###############################################
 #друк документи по приходу - list
-@app.route('/pnakl/docs')
-def print_pnakl_docs():
-    list_id = request.args.get('list_id')
-    return pnakl.pnakl_docs(list_id)
-
-#друк документи по приходу - single
-@app.route('/docs/<int:dot_id>/<int:docs_id>/<int:tovar_id>')
-def print_docs(dot_id,docs_id,tovar_id):
-    name = request.args.get('name')
-    return doc_tmpl.print_full_report(dot_id,docs_id,tovar_id,name)
+# @app.route('/pnakl/docs')
+# def print_pnakl_docs():
+#     list_id = request.args.get('list_id')
+#     return pnakl.pnakl_docs(list_id)
+#
+# #друк документи по приходу - single
+# @app.route('/docs/<int:dot_id>/<int:docs_id>/<int:tovar_id>')
+# def print_docs(dot_id,docs_id,tovar_id):
+#     name = request.args.get('name')
+#     return doc_tmpl.print_full_report(dot_id,docs_id,tovar_id,name)
 
 
 ########### SNAKL ############################
@@ -309,11 +322,11 @@ def serial_scheck():
 def run_1():
     return serials.add_to_actv()
 #############################################################################################
-########### CUR_STATE
-# from modules  import cur_state
-# @app.route('/cur-state')
-# def get_cur_state():
-#     return cur_state.get_cur_state()
+
+@app.route('/invoice/<int:doc_id>')
+def view_invoice(doc_id):
+    import modules.print_doc as pd
+    return pd.generate_invoice_pdf(doc_id)
 
 ########### GEN-GOLL #############################
 from modules  import gen_roll
