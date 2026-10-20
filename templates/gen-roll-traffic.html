@@ -31,22 +31,22 @@
                 <button class="btn btn-primary fw-bold ms-1" type="submit">
                     🔍 Показати
                 </button>
-<!-- ЧЕКБОКС: ВІДКЛЮЧИТИ ФІЛЬТР ПО ТОВАРУ/КОДУ -->
-                <div class="input-group-text bg-white ms-2 pe-3">
-                    <div class="form-check form-switch m-0 d-flex align-items-center gap-1">
-                        <input class="form-check-input mt-0"
-                               type="checkbox"
-                               name="disable_tov_filter"
-                               value="1"
-                               id="disableTovFilter"
-                               {% if request.args.get('disable_tov_filter') == '1' %}checked{% endif %}>
-                        <label class="form-check-label text-nowrap small cursor-pointer" for="disableTovFilter">
-                            Всі товари (без фільтру ID/Код)
-                        </label>
-                    </div>
-                </div>
+                <!-- ЧЕКБОКС: ВІДКЛЮЧИТИ ФІЛЬТР ПО ТОВАРУ/КОДУ -->
+<!--                <div class="input-group-text bg-white ms-2 pe-3">-->
+<!--                    <div class="form-check form-switch m-0 d-flex align-items-center gap-1">-->
+<!--                        <input class="form-check-input mt-0"-->
+<!--                               type="checkbox"-->
+<!--                               name="disable_tov_filter"-->
+<!--                               value="1"-->
+<!--                               id="disableTovFilter"-->
+<!--                               {% if request.args.get('disable_tov_filter') == '1' %}checked{% endif %}>-->
+<!--                        <label class="form-check-label text-nowrap small cursor-pointer" for="disableTovFilter">-->
+<!--                            Всі товари (без фільтру ID/Код)-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-            <!-- ПРИХОВАНІ ПОЛЯ ДЛЯ ПЕРЕДАЧІ TOV_ID ТА TOV_KOD -->
+        <!-- ПРИХОВАНІ ПОЛЯ ДЛЯ ПЕРЕДАЧІ TOV_ID ТА TOV_KOD -->
         {% if request.args.get('tov_id') %}
             <input type="hidden" name="tov_id" value="{{ request.args.get('tov_id') }}">
         {% endif %}
@@ -56,18 +56,21 @@
         {% endif %}
             </div>
         </form>
-                <!-- ПОЛЕ МИТТЄВОГО ПОШУКУ ПО ТАБЛИЦІ -->
+        <!-- ПОЛЕ МИТТЄВОГО ПОШУКУ ПО ТАБЛИЦІ -->
         <div class="ms-auto" style="min-width: 220px;">
             <div class="input-group input-group-sm">
                 <span class="input-group-text bg-white">🔎</span>
                 <input type="text" id="tableSearchInput" class="form-control" placeholder="Пошук у таблиці...">
             </div>
         </div>
+        <div class="ms-auto" style="min-width: 220px;">
+            <button class="btn btn-sm btn-primary" onclick="downloadTableAsXLSX('tList1')">Зберегти як XLSX</button>
+        </div>
     </div>
 
     <!-- ТАБЛИЦЯ Z ЗАХИСТОМ ВІД ДОВГИХ СЛІВ, ФІКСОВАНИМ ЗАГОЛОВКОМ ТА ЗАКРУГЛЕННЯМИ -->
     <div class="table-responsive border rounded shadow-sm overflow-auto" style="max-height: 78vh; width: 100%;"id="mainDataTable">
-        <table class="table table-sm table-hover  align-middle mb-0"
+        <table class="table table-sm table-hover  align-middle mb-0" id="tList1"
                style="word-break: break-word; overflow-wrap: anywhere;">
 
             <!-- Фіксація заголовку -->
@@ -147,4 +150,7 @@ document.getElementById('tableSearchInput').addEventListener('keyup', function()
     });
 });
 </script>
+
+
+
 {% endblock %}
