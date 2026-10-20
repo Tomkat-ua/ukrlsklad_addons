@@ -337,6 +337,7 @@ def uv():
     to_date_str = request.args.get('to_date')  # "2026-08-01"
     return gen_roll.uv_sklad(sklad_id,from_date_str,to_date_str)
 
+
 @app.route('/gen_roll/traffic',methods = ['GET','POST'])
 def traffic():
     sklad_id      = request.args.get('sklad_id')
