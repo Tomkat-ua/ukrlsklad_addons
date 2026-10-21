@@ -14,7 +14,9 @@ def catalog_list(search_name,mode):
                 and (? is null or (TN.NAME like ?) or ( TN.kod  like ? ))
                 order by TN.NAME
                     """
-    data = db.data_module(sql,['%'+search_name+'%','%'+search_name+'%','%'+search_name+'%'])
+    if search_name:
+        search_name = '%'+search_name+'%'
+    data = db.data_module(sql,[search_name,search_name,search_name])
     if mode == 'web':
         return render_template('catalog.html'
                            ,ROWS=data
