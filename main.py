@@ -161,6 +161,16 @@ def index():
 #
 #     return "Невірний логін або пароль", 401
 
+# =============== MAIN ROUTES ====================================================================================
+############# CATALOG #####################################
+@app.route('/catalog')
+def catalog_web():
+    from modules import catalog
+    return catalog.catalog_list(request.args.get('search'),'web')
+@app.route('/catalog/api')
+def catalog_api():
+    from modules import catalog
+    return catalog.catalog_list(request.args.get('search'),'api')
 ############# LOSSES ######################################
 @app.route('/losses', methods=['GET', 'POST'])
 def losses_list():
