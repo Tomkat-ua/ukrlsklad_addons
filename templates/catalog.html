@@ -1,0 +1,255 @@
+{% extends "base_tmp.html" %}
+
+{% block content %}
+<style>
+  .catalog-wrapper {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 12px;
+  }
+
+  .catalog-table {
+    width: 100%;
+    margin-bottom: 0;
+    background-color: #ffffff;
+  }
+
+  .catalog-table th {
+    padding: 6px 10px !important;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6 !important;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .catalog-table td {
+    padding: 4px 10px !important;
+    vertical-align: middle !important;
+  }
+
+  /* Обмеження ширини для третьої колонки */
+  .col-name-container {
+    max-width: 420px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  .code-badge {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .slid-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #c7d2fe;
+    padding: 1px 5px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .zal-badge {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .mint-badge {
+    font-size: 11.5px;
+    font-weight: 600;
+    background-color: #f0fdf4; /* м'який світло-м'ятний фон */
+    color: #166534;            /* насичений темно-м'ятний/зелений текст */
+    border: 1px solid #bbf7d0; /* ніжний м'ятний кант */
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    line-height: 1.35;
+  }
+</style>
+
+<div class="catalog-wrapper py-2">
+
+<!-- Панель з заголовком, чекбоксом та пошуком -->
+<div class="d-flex justify-content-between align-items-center bg-white p-2 mb-2 rounded border shadow-sm">
+  <div>
+    <h6 class="m-0 font-weight-bold text-dark">Каталог товарів</h6>
+    <small class="text-muted" style="font-size: 11px;">
+      Всього позицій: <strong>{{ ROWS|length }}</strong>
+    </small>
+  </div>
+
+  <div class="d-flex align-items-center gap-3" style="gap: 15px;">
+    <!-- Чекбокс: приховувати нульові залишки (за замовчуванням checked) -->
+    <div class="form-check m-0 d-flex align-items-center">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="hideZeroStock"
+        checked
+        onchange="filterCatalogTable()"
+        style="cursor: pointer;"
+      >
+      <label class="form-check-label text-secondary font-weight-500 ml-1" for="hideZeroStock" style="font-size: 11px; cursor: pointer; user-select: none;">
+        Без нульових залишків
+      </label>
+    </div>
+
+    <!-- Поле пошуку -->
+    <div style="width: 170px;">
+      <input
+        type="text"
+        id="catalogSearchInput"
+        onkeyup="filterCatalogTable()"
+        placeholder="Пошук..."
+        class="form-control form-control-sm"
+        style="font-size: 11px;"
+      >
+    </div>
+  </div>
+</div>
+
+  <!-- Таблиця -->
+  <div class="bg-white rounded border shadow-sm overflow-hidden" style="width: 100%; min-width: 0;">
+    <div class="table-responsive" style="max-width: 100%; overflow-x: auto;">
+      <table class="table table-hover catalog-table" id="catalogTable">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 70px;"># NUM</th>
+            <th style="width: 120px;">Код</th>
+            <th>Найменування товару / матеріал</th>
+            <th class="text-center" style="width: 80px;">Од.</th>
+            <th class="text-right" style="width: 100px;">Ціна</th>
+            <th class="text-right" style="width: 100px;">Залишок</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in ROWS %}
+          <tr class="catalog-row" data-zal="{{ row.ZAL_KOLVO or 0 }}">
+
+            <!-- NUM -->
+            <td class="text-center text-nowrap">
+              <span class="code-badge">{{ row.NUM }}</span>
+            </td>
+
+            <!-- KOD -->
+            <td class="text-nowrap">
+              {% if row.KOD and row.KOD != '-' %}
+                <span class="code-badge">{{ row.KOD }}</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+
+            <!-- NAME_US + SLID (З перенесенням SLID_LONG_NAME під короткий бейдж) -->
+            <!-- NAME_US (м'ятний бейдж) + SLID_SHORT_NAME & SLID_LONG_NAME -->
+            <td>
+              <div class="col-name-container">
+                <!-- Обгортка NAME_US у м'ятний бейдж -->
+                <span class="mint-badge">
+                  {{ row.NAME_US }}
+                </span>
+
+                <!-- Блок матеріалу  під назвою -->
+                {% if row.SLID_SHORT_NAME and row.SLID_SHORT_NAME != '-- не визначено --' %}
+                  <div class="mt-1">
+                    <span class="slid-badge">{{ row.SLID_SHORT_NAME }}</span>
+                    <div class="text-muted mt-0.5" style="font-size: 10.5px; line-height: 1.1;">
+                      {{ row.SLID_LONG_NAME }}
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </td>
+
+            <!-- ED_IZM (Одиниці виміру) -->
+            <td class="text-center text-nowrap">
+              {% if row.ED_IZM and row.ED_IZM != '-' %}
+                <span class="font-weight-semibold text-secondary" style="font-size: 11px;">
+                  {{ row.ED_IZM }}
+                </span>
+              {% else %}
+                <span class="text-muted opacity-50" style="font-size: 11px;">—</span>
+              {% endif %}
+            </td>
+
+            <!-- CENA -->
+            <td class="text-right font-weight-bold text-nowrap">
+              {% if row.CENA %}
+                {{ "%.2f"|format(row.CENA) }} <small class="text-muted">₴</small>
+              {% else %}
+                <span class="text-muted font-weight-normal">0.00 ₴</span>
+              {% endif %}
+            </td>
+
+            <!-- ZAL_KOLVO -->
+            <td class="text-right text-nowrap">
+              {% if row.ZAL_KOLVO and row.ZAL_KOLVO > 0 %}
+                <span class="zal-badge">{{ "%.2f"|format(row.ZAL_KOLVO) }}</span>
+              {% else %}
+                <span class="text-muted">0.00</span>
+              {% endif %}
+            </td>
+
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-center py-4 text-muted">
+              Записів не знайдено
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function filterCatalogTable() {
+    const filterText = document.getElementById('catalogSearchInput').value.toLowerCase().trim();
+    const hideZero = document.getElementById('hideZeroStock').checked;
+    const rows = document.querySelectorAll('.catalog-row');
+
+    rows.forEach(row => {
+      const rowText = row.textContent.toLowerCase();
+      // Отримуємо значення залишку з data-атрибута
+      const stock = parseFloat(row.getAttribute('data-zal')) || 0;
+
+      const matchesSearch = rowText.includes(filterText);
+      const matchesStock = hideZero ? stock > 0 : true;
+
+      if (matchesSearch && matchesStock) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  // Запускаємо фільтрацію одразу після завантаження сторінки,
+  // щоб нулі приховалися автоматично згідно зі станом checked
+  document.addEventListener("DOMContentLoaded", function() {
+    filterCatalogTable();
+  });
+</script>
+{% endblock %}
