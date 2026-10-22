@@ -115,6 +115,20 @@
   .tag-btn:active {
     transform: translateY(1px);
   }
+
+  /* Стилі для чекбоксів-пігулок */
+  .tag-pill .tag-btn {
+    opacity: 0.55;
+    border-color: #cbd5e1;
+    color: #334155;
+    user-select: none;
+  }
+  .tag-pill.active .tag-btn {
+    opacity: 1;
+    background-color: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+  }
 </style>
 
 <div class="catalog-wrapper py-2">
@@ -127,6 +141,36 @@
       Всього позицій: <strong>{{ ROWS|length }}</strong>
     </small>
   </div>
+<button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tagsModal">
+  <i class="fas fa-tags"></i> Теги
+</button>
+
+{% if SELECTED_TAG_IDS %}
+  <div class="d-inline-flex align-items-center flex-wrap px-2 py-1 bg-light rounded border" style="gap: 5px; font-size: 11px;">
+    <span class="text-muted font-weight-bold mr-1">Активні теги:</span>
+
+    {% for tag in ALL_TAGS %}
+      {% if tag.TAG_ID in SELECTED_TAG_IDS %}
+        <span class="badge badge-primary d-inline-flex align-items-center px-2 py-1" style="background-color: #0284c7; color: #ffffff; font-weight: 500; font-size: 11px; border-radius: 4px;">
+          #{{ tag.VALUE_ }}
+          <a href="javascript:void(0)"
+             onclick="removeTag({{ tag.TAG_ID }})"
+             class="text-white ml-1 font-weight-bold"
+             style="margin-left: 6px; color: #ffffff !important; opacity: 0.9; cursor: pointer; text-decoration: none; font-size: 13px; line-height: 1;"
+             title="Вилучити тег">&times;</a>
+        </span>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Кнопка скидання всіх тегів -->
+    <a href="javascript:void(0)"
+       onclick="clearAllTagFilters()"
+       class="btn btn-sm btn-link text-danger p-0 ml-1"
+       style="font-size: 11px; text-decoration: underline;">
+      Скинути всі
+    </a>
+  </div>
+{% endif %}
 
   <div class="d-flex align-items-center gap-3" style="gap: 15px;">
     <!-- Чекбокс: приховувати нульові залишки (за замовчуванням checked) -->
@@ -279,6 +323,67 @@
 
 </div>
 
+
+
+
+<!-- Модальне вікно вибору тегів -->
+<div class="modal fade" id="tagsModal" tabindex="-1" role="dialog" aria-labelledby="tagsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+<!--      <div class="modal-header py-2 bg-light">-->
+<!--        <h6 class="modal-title font-weight-bold" id="tagsModalLabel" style="font-size: 13px;">-->
+<!--          Вибір тегів (Строгий фільтр AND)-->
+<!--        </h6>-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+      <div class="modal-header py-2 bg-light d-flex justify-content-between align-items-center">
+        <h6 class="modal-title font-weight-bold mb-0" id="tagsModalLabel" style="font-size: 13px;">
+          Вибір тегів (Строгий фільтр AND)
+        </h6>
+        <button type="button"
+                class="close btn-close border-0 bg-transparent p-0 m-0"
+                data-dismiss="modal"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                onclick="forceCloseModal(this)"
+                style="font-size: 20px; line-height: 1; color: #6c757d; cursor: pointer; outline: none; box-shadow: none;">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Поле швидкого фільтра по спискам тегів всередині модалки -->
+        <input type="text" id="tagSearchInput" class="form-control form-control-sm mb-2" placeholder="Пошук тегу..." onkeyup="filterTagsInModal()" style="font-size: 11px;">
+
+        <div id="modalTagsContainer" class="d-flex flex-wrap" style="gap: 5px; max-height: 260px; overflow-y: auto; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px;">
+          {% for tag in ALL_TAGS %}
+            {% set is_active = tag.TAG_ID in SELECTED_TAG_IDS %}
+            <label class="tag-pill mb-0 {% if is_active %}active{% endif %}" style="cursor: pointer;">
+              <input type="checkbox" class="tag-checkbox d-none" value="{{ tag.TAG_ID }}" {% if is_active %}checked{% endif %} onchange="toggleTagPill(this)">
+              <span class="tag-btn">#{{ tag.VALUE_ }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="modal-footer py-2 bg-light d-flex justify-content-between">
+        <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="clearAllTags()" style="font-size: 11px; text-decoration: none;">
+          Скинути все
+        </button>
+        <div>
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" style="font-size: 11px;">Скасувати</button>
+          <button type="button" class="btn btn-sm btn-primary" onclick="applyTagFilter()" style="font-size: 11px;">Застосувати</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <script>
   function filterCatalogTable() {
     const filterText = document.getElementById('catalogSearchInput').value.toLowerCase().trim();
@@ -313,5 +418,77 @@
   document.addEventListener("DOMContentLoaded", function() {
     filterCatalogTable();
   });
+
+ // Перемикання підсвічування кнопки при кліку
+  function toggleTagPill(checkbox) {
+    const label = checkbox.closest('.tag-pill');
+    if (checkbox.checked) {
+      label.classList.add('active');
+    } else {
+      label.classList.remove('active');
+    }
+  }
+
+  // Пошук по тегам всередині модального вікна
+  function filterTagsInModal() {
+    const query = document.getElementById('tagSearchInput').value.toLowerCase();
+    const pills = document.querySelectorAll('#modalTagsContainer .tag-pill');
+
+    pills.forEach(pill => {
+      const text = pill.textContent.toLowerCase();
+      pill.style.display = text.includes(query) ? '' : 'none';
+    });
+  }
+
+  // Скинути позначки
+  function clearAllTags() {
+    document.querySelectorAll('#modalTagsContainer .tag-checkbox').forEach(cb => {
+      cb.checked = false;
+      toggleTagPill(cb);
+    });
+  }
+
+  // Збиранне обраних ID та перезавантаження з ?tags=11,25
+  function applyTagFilter() {
+    const selectedIds = [];
+    document.querySelectorAll('#modalTagsContainer .tag-checkbox:checked').forEach(cb => {
+      selectedIds.push(cb.value);
+    });
+
+    const url = new URL(window.location.href);
+    if (selectedIds.length > 0) {
+      url.searchParams.set('tags', selectedIds.join(','));
+    } else {
+      url.searchParams.delete('tags');
+    }
+    window.location.href = url.toString();
+  }
+// Видалення одного конкретного тегу з URL
+function removeTag(tagId) {
+  const url = new URL(window.location.href);
+  const currentTags = url.searchParams.get('tags');
+
+  if (currentTags) {
+    // Розбиваємо список, прибираємо потрібний ID та збираємо назад
+    const tagArray = currentTags.split(',').filter(id => id != tagId);
+
+    if (tagArray.length > 0) {
+      url.searchParams.set('tags', tagArray.join(','));
+    } else {
+      url.searchParams.delete('tags');
+    }
+
+    window.location.href = url.toString();
+  }
+}
+
+// Повне скидання фільтра тегів
+function clearAllTagFilters() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('tags');
+  window.location.href = url.toString();
+}
 </script>
+
+
 {% endblock %}

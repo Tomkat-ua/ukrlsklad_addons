@@ -163,7 +163,7 @@ def index():
 
 # =============== MAIN ROUTES ====================================================================================
 ############# CATALOG #####################################
-@app.route('/catalog')
+@app.route('/catalog', methods=['GET', 'POST'])
 def catalog_web():
     from modules import catalog
     return catalog.catalog_list(request.args.get('search'),'web')
