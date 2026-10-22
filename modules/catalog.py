@@ -3,17 +3,21 @@ from . import db
 
 
 def catalog_list(search_name,mode):
-    sql = """ select TN.NUM, coalesce(TN.KOD, '-') as KOD, TN.NAME as NAME_US,
+    sql = """   select TN.NUM, coalesce(TN.KOD, '-') as KOD, TN.NAME as NAME_US,
                        coalesce(M.NAME_SHORT, '-- не визначено --') as SLID_SHORT_NAME,
                        coalesce(M.NAME_LONG,  '-- не визначено --') as SLID_LONG_NAME, 
                        TN.ED_IZM, TN.CENA,z.kolvo  as zal_kolvo
+                       ,cast( list(t.value_,',') as varchar(1000) ) as tag_list
                 from TOVAR_NAME TN
                     left join SLID_MATERIALS M on M.MATERIAL = TN.KOD
                     inner join tovar_zal z on z.tovar_id = tn.num  and z.sklad_id = 300000001
+                    left join tovar_tags_link l on l.tovar_id = tn.num
+                    left join tovar_tags      t on t.num = l.tag_id
                 where tn.visible = 1
-                and (? is null or (TN.NAME like ?) or ( TN.kod  like ? ))
+                    and (? is null or (TN.NAME like ?) or ( TN.kod  like ? ))
+                group by NUM,KOD,NAME_US,SLID_SHORT_NAME,SLID_LONG_NAME,ED_IZM,CENA,ZAL_KOLVO    
                 order by TN.NAME
-                    """
+          """
     if search_name:
         search_name = '%'+search_name+'%'
     data = db.data_module(sql,[search_name,search_name,search_name])
